@@ -41,22 +41,10 @@
                     </div>
 
                     <div class="hidden md:flex gap-x-8">
-                        <a href="/sistem-pakar"
-                            class="self-center rounded-md px-3 py-2 text-sm font-medium text-black hover:bg-gray-700 hover:text-white">
-                            Sistem Pakar
-                        </a>
-                        <a href="/rumah-sakit"
-                            class="self-center rounded-md px-3 py-2 text-sm font-medium text-black hover:bg-gray-700 hover:text-white">
-                            Rumah Sakit
-                        </a>
-                        <a href="/blog"
-                            class="self-center rounded-md px-3 py-2 text-sm font-medium text-black hover:bg-gray-700 hover:text-white">
-                            Blog
-                        </a>
-                        <a href="/masuk"
-                            class="self-center rounded-md px-3 py-2 text-sm font-medium text-black hover:bg-gray-700 hover:text-white">
-                            Masuk
-                        </a>
+                        <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar')"> Sistem Pakar </x-nav-link>
+                        <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit')"> Rumah Sakit </x-nav-link>
+                        <x-nav-link href="/blog" :active="request()->is('blog')"> Blog </x-nav-link>
+                        <x-nav-link href="/masuk" :active="request()->is('masuk')"> Masuk </x-nav-link>
                     </div>
 
                 </div>
@@ -66,18 +54,19 @@
             <div class="md:hidden" id="mobile-menu">
                 <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                     <!-- Current: "bg-gray-900 text-white", Default: "text-black hover:bg-gray-700 hover:text-white" -->
-                    <a href="/" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+                    <a href="/"
+                        class="{{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium"
                         aria-current="page">Home</a>
                     <a href="/sistem-pakar"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-black hover:bg-gray-700 hover:text-white">Sistem
+                        class="{{ request()->is('sistem-pakar') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Sistem
                         Pakar</a>
                     <a href="/rumah-sakit"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-black hover:bg-gray-700 hover:text-white">Rumah
+                        class="{{ request()->is('rumah-sakit') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Rumah
                         Sakit</a>
                     <a href="/blog"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-black hover:bg-gray-700 hover:text-white">Blog</a>
+                        class=" {{ request()->is('blog') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Blog</a>
                     <a href="/masuk"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-black hover:bg-gray-700 hover:text-white">Masuk</a>
+                        class="{{ request()->is('masuk') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Masuk</a>
                 </div>
 
             </div>
