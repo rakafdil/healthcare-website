@@ -19,7 +19,7 @@
   ```
 -->
     <div class="min-h-full">
-        <nav class="bg-white">
+        <nav class="bg-white sticky top-0 z-50">
             <div class="mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <!-- Kiri: Logo + Menu -->
