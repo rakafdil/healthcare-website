@@ -1,5 +1,5 @@
 <x-layout>
     <x-slot:heading></x-slot:heading>
 
-    @include('hospital.hospital')
+    @include('hospital.peta')
 </x-layout>

@@ -80,3 +80,11 @@ Route::get('/about', function () {
 Route::get('/masuk', function () {
     return view('masuk');
 });
+
+Route::get('/peta', function () {
+    return view('peta');
+});
+
+Route::get('/detail', function (){
+    return view('detail');
+});
