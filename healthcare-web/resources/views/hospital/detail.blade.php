@@ -14,7 +14,7 @@
         }
         
         body {
-            background-color: #f5f5f5;
+            background-color: #fffff;
         }
         
         .container {
@@ -36,7 +36,7 @@
             height: 550px;
             overflow: hidden;
             margin-bottom: 20px;
-            margin-top: -40px;
+            margin-top: -45px;
             left: 50%;
             right: 50%;
             margin-left: -50vw;

@@ -13,7 +13,7 @@
         }
         
         body {
-            background-color: #f5f5f5;
+            background-color: #fffff;
         }
         
         .hero-section {
@@ -22,7 +22,7 @@
             width: 100vw; /* Ubah menjadi viewport width */
             margin: 0;
             margin-bottom: 20px;
-            margin-top: -20px;
+            margin-top: -25px;
             background-color: #555;
             display: flex;
             align-items: center;
