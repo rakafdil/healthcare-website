@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body class="flex flex-col min-h-screen">
@@ -74,7 +73,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center gap-x-3 mb-4 md:mb-0">
                     <img class="h-8" src="{{ asset('assets/footer.png') }}" alt="Healthcare Logo">
-                    <span class="text-lg font-bold uppercase">HEALTH CARE</span>
+                    <span class="text-lg font-medium uppercase">HEALTH CARE</span>
                 </div>
                 
                 <div class="flex items-center gap-x-6">
