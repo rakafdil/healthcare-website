@@ -58,9 +58,11 @@ Route::get('/sistem-pakar/{user_id}', function ($user_id) {
 
     $user_history = Arr::first($history_penyakit, fn($history) => $history['user_id'] == $user_id);
 
-    dd($user_history);
-
-    return view('sistem-pakar');
+    return view('sistem-pakar', [
+        'steps' => 'step',
+        'user_id' => $user_id,
+        'history_penyakit' => $user_history ? $user_history['history_penyakit'] : null,
+    ]);
 });
 
 Route::get('/rumah-sakit', function () {
