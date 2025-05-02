@@ -22,7 +22,7 @@
                                         <img class="h-8" src="{{ asset('assets/Logo.png') }}" alt="Your Company">
                                     </div>
                                     <div class="text-1xl font-bold" style="color: #FF0763;">
-                                        Healthcare System
+                                        HEALTH CARE
                                     </div>
                                 </a>
                             </div>
