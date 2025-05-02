@@ -33,19 +33,70 @@
             <button type="submit">Lanjut</button>
         </form>
     @elseif($step == 2)
+        @php
+            $allSymptoms = ['Batuk', 'Demam', 'Sesak Napas', 'Pusing', 'Sakit Tenggorokan', 'Mual', 'Lemas']; // contoh
+        @endphp
+
         <form action="{{ url("/sistem-pakar/$user_id/symptoms?step=3") }}" method="POST">
             @csrf
 
             <div>
                 <label for="gejala">Apa yang Anda alami?</label><br>
-                <input type="text" id="gejala" name="gejala" required
-                    placeholder="Ketikkan apa yang Anda alami di sini" value="{{ old('gejala') }}">
+                <input type="text" id="gejala-input" placeholder="Ketik gejala..." autocomplete="off">
+                <ul id="suggestions" style="border: 1px solid #ccc; max-height: 100px; overflow-y: auto;"></ul>
+            </div>
+
+            <div>
+                <h4>Gejala yang dipilih:</h4>
+                <ul id="selected-symptoms"></ul>
+                <input type="hidden" name="gejala" id="gejala-hidden">
             </div>
 
             <br>
 
             <button type="submit">Lanjut</button>
         </form>
+
+        <script>
+            const symptoms = @json($allSymptoms);
+            const input = document.getElementById('gejala-input');
+            const suggestions = document.getElementById('suggestions');
+            const selectedList = document.getElementById('selected-symptoms');
+            const hiddenInput = document.getElementById('gejala-hidden');
+
+            let selected = [];
+
+            input.addEventListener('input', () => {
+                const keyword = input.value.toLowerCase();
+                suggestions.innerHTML = '';
+                if (keyword.length > 0) {
+                    symptoms
+                        .filter(item => item.toLowerCase().includes(keyword) && !selected.includes(item))
+                        .forEach(symptom => {
+                            const li = document.createElement('li');
+                            li.textContent = symptom;
+                            li.style.cursor = 'pointer';
+                            li.onclick = () => {
+                                selected.push(symptom);
+                                renderSelected();
+                                input.value = '';
+                                suggestions.innerHTML = '';
+                            };
+                            suggestions.appendChild(li);
+                        });
+                }
+            });
+
+            function renderSelected() {
+                selectedList.innerHTML = '';
+                selected.forEach((symptom, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1}. ${symptom}`;
+                    selectedList.appendChild(li);
+                });
+                hiddenInput.value = selected.join(',');
+            }
+        </script>
     @elseif($step == 3)
         <li>
 
