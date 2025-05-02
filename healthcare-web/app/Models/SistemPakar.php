@@ -59,9 +59,7 @@ class SistemPakar extends Model
 
     public static function steps(): array
     {
-        return [
-            'steps' => (new self())->steps,
-        ];
+        return (new self())->steps;
     }
 
     public static function getHistory(int $user_id): array

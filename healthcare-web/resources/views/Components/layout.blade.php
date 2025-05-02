@@ -30,10 +30,10 @@
                     </div>
 
                     <div class="hidden md:flex gap-x-8">
-                        <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar')"> Sistem Pakar </x-nav-link>
-                        <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit')"> Rumah Sakit </x-nav-link>
-                        <x-nav-link href="/blog" :active="request()->is('blog')"> Blog </x-nav-link>
-                        <x-nav-link href="/masuk" :active="request()->is('masuk')"> Masuk </x-nav-link>
+                        <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')"> Sistem Pakar </x-nav-link>
+                        <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')"> Rumah Sakit </x-nav-link>
+                        <x-nav-link href="/blog" :active="request()->is('blog') || request()->is('blog/*')"> Blog </x-nav-link>
+                        <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')"> Masuk </x-nav-link>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     <img class="h-8" src="{{ asset('assets/footer.png') }}" alt="Healthcare Logo">
                     <span class="text-lg font-medium uppercase">HEALTH CARE</span>
                 </div>
-                
+
                 <div class="flex items-center gap-x-6">
                     <!-- Social Media Icons -->
                     <a href="#" class="text-white hover:text-gray-200">
@@ -88,7 +88,7 @@
                         <img src="{{ asset('assets/email.png') }}" alt="email" class="h-6 w-6">
                     </a>
                 </div>
-                
+
                 <div class="mt-4 md:mt-0">
                     <a href="mailto:alomany.tif@gmail.com" class="text-white hover:text-gray-200">
                         alomany.tif@gmail.com

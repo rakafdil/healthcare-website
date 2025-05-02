@@ -8,7 +8,8 @@
         @endforeach
     </ul>
 
-    @isset($history)
+    @if (isset($user_id))
+        <a href="/sistem-pakar/{{ $user_id }}/symptoms">Tes di Sini!</a>
         <hr>
         <h2>Riwayat Pemeriksaan Anda:</h2>
         <ul>
@@ -18,5 +19,7 @@
                 </li>
             @endforeach
         </ul>
-    @endisset
+    @endif
+
+
 </x-layout>
