@@ -2,10 +2,19 @@
 
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 
 Route::get('/', function () {
-    return view('home');
-});
+    return view('home'); // Pastikan nama view-nya benar
+})->name('home');
+
+Route::get('/blog/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/blog/search', [BlogController::class, 'search'])->name('blog.search');
+Route::get('/baca-blog', function () {
+    return view('baca-blog');
+})->name('baca-blog');
+
+
 
 Route::get('/sistem-pakar', function () {
     return view('sistem-pakar', ['steps' => SistemPakar::steps()]);

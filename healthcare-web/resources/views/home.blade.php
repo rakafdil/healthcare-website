@@ -1,9 +1,13 @@
 <x-layout>
-    <x-slot:heading>
+    <x-slot name="heading">
+        Home    
+    </x-slot>
+ 
+        
         <div class="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-            <img src="{{ asset('assets/Desktop - 2.png') }}" class="w-full h-auto" alt="Full Width Image">
+            <img src="{{ asset('assets/Desktop - 2.png') }}" class="w-full h-screen" alt="Full Width Image">
             <!-- Overlay (optional, biar teksnya makin kelihatan) -->
-            <div class="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
+            <div class="absolute inset-0 bg-white/10 "></div>
 
             <!-- Hero Content -->
             <div class="relative z-10 flex flex-col justify-center items-start h-full px-8 max-w-screen-xl mx-auto">
@@ -17,9 +21,5 @@
                 </a>
             </div>
         </div>
-    </x-slot:heading>
-
-    <header>
-        <h1>Welcome to the Healthcare System</h1>
-    </header>
+    
 </x-layout>
