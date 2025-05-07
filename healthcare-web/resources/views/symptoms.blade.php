@@ -19,7 +19,7 @@
                     <br>
 
                     <div class="py-10">
-                        <label>Jenis Kelamin:</label><br>
+                        <label>Jenis Kelamin</label><br>
 
                         <input type="radio" id="laki-laki" name="gender" value="Laki-laki" required
                             {{ old('gender') == 'Laki-laki' ? 'checked' : '' }}>
