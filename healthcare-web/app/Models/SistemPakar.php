@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 
 class SistemPakar extends Model
 {
+    protected $table = 'sistem_pakar';
     public $steps = [
         '1. Pastikan Anda telah daftar dan masuk ke sistem, jika belum Anda dapat mendaftar terlebih dahulu.',
         '2. Jika sudah, Anda dapat menekan tombol di sebelah untuk melanjutkan pengecekan.',
@@ -60,14 +61,5 @@ class SistemPakar extends Model
     public static function steps(): array
     {
         return (new self())->steps;
-    }
-
-    public static function getHistory(int $user_id): array
-    {
-        $history = Arr::first(static::history(), fn($history) => $history['user_id'] == $user_id);
-        if (!$history) {
-            abort(404);
-        }
-        return $history;
     }
 }
