@@ -62,4 +62,13 @@ class SistemPakar extends Model
     {
         return (new self())->steps;
     }
+
+    public static function getHistory(int $user_id): array
+    {
+        $history = Arr::first(static::history(), fn($history) => $history['user_id'] == $user_id);
+        if (!$history) {
+            abort(404);
+        }
+        return $history;
+    }
 }
