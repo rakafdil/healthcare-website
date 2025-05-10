@@ -15,12 +15,12 @@ python --version
 ```
 Jika belum punya Python, download dari https://www.python.org/downloads/release/python-3100/
 
-2. Install Dependencies
+### 2. Install Dependencies
 Jalankan perintah berikut untuk menginstall semua library yang dibutuhkan:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Jalankan Notebook
+### 3. Jalankan Notebook
 Buka dan jalankan file main.ipynb menggunakan Jupyter Notebook, VS Code, atau Google Colab. Pastikan kernel yang digunakan sesuai dengan Python 3.10.
