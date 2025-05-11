@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- untuk keperluan snap-scroll page home-->
     @stack('styles')
 </head>
@@ -14,7 +14,7 @@
 <body class="flex flex-col min-h-screen">
     <div class="flex-grow">
         <!-- saya tambahkan id navbar untuk keperluan snap-scroll page home-->
-        <nav id="navbar" class="fixed bg-white sticky top-0 z-50">
+        <nav id="navbar" class="bg-white sticky top-0 z-50">
             <div class="mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <!-- Kiri: Logo + Menu -->
@@ -63,14 +63,14 @@
             </div>
         </nav>
 
-            <main>
-                {{ $slot }}            
-            </main>
-            
+        <main>
+            {{ $slot }}
+        </main>
+
     </div>
-    
-<!-- menyisipkan content snap-scroll untuk page home -->
-@yield('content')
+
+    <!-- menyisipkan content snap-scroll untuk page home -->
+    @yield('content')
 
     <!-- Footer Section -->
     <footer class="text-white" style="background-color: #499BE8;">
@@ -104,7 +104,7 @@
     </footer>
 
     <!-- Scripts js untuk snap-scroll page home-->
-    
+
     @stack('scripts')
 </body>
 

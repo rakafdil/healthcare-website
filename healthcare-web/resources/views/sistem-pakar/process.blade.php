@@ -218,12 +218,13 @@
 
                 @csrf
 
+                <label for="gejala" class="block text-xl font-semibold mb-3">Apa yang Anda alami?</label>
+                <input type="text" id="gejala-input" placeholder="Ketik gejala..." autocomplete="off"
+                    class="w-full px-4 py-2 border-2 border-black rounded-lg">
+                <ul id="suggestions" class="max-h-60 overflow-y-auto bg-white shadow-md rounded-md mt-1"
+                    style="display: none;"></ul>
                 <div class="mb-6">
-                    <label for="gejala" class="block text-xl font-semibold mb-3">Apa yang Anda alami?</label>
-                    <input type="text" id="gejala-input" placeholder="Ketik gejala..." autocomplete="off"
-                        class="w-full px-4 py-2 border-2 border-black rounded-lg">
-                    <ul id="suggestions" class="max-h-60 overflow-y-auto bg-white shadow-md rounded-md mt-1"
-                        style="display: none;"></ul>
+
                 </div>
 
                 <div class="mt-8 bg-gray-50 p-4 rounded-lg">

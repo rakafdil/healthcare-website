@@ -34,17 +34,26 @@ class MLController extends Controller
         $response = $client->post('http://127.0.0.1:5050/predict', [
             'json' => $symptomsObj
         ]);
-
-        // Decode the response from the Python API
+        // Ambil response JSON
         $result = json_decode($response->getBody()->getContents(), true);
 
-        // Return the prediction result
+        // Bersihkan precaution yang null atau NaN
+        foreach ($result as &$disease) {
+            if (isset($disease['precautions']) && is_array($disease['precautions'])) {
+                $disease['precautions'] = array_filter($disease['precautions'], function ($item) {
+                    return !is_null($item) && strtolower($item) !== 'nan';
+                });
+            }
+        }
+
+        // Convert ke object (biar bisa pake -> di Blade, opsional sih)
         $resultObject = json_decode(json_encode($result));
-        // dd($response);
+        // dd($resultObject);
+        // Kirim ke view
         return view('sistem-pakar.process', [
             'step' => 3,
             'user_id' => $request->user_id,
-            'result' => $resultObject
+            'result' => $resultObject,
         ]);
 
     }
