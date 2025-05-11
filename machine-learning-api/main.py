@@ -1,0 +1,88 @@
+from flask import Flask, request, jsonify
+import pickle
+import numpy as np
+import pandas as pd
+import json
+
+with open("symptom_index.json") as f:
+    symptoms = json.load(f)
+
+# Load the model
+model = pickle.load(open('ExtraTrees.pkl', 'rb'))
+
+diseases = [
+    '(vertigo) Paroymsal  Positional Vertigo', 'AIDS', 'Acne', 'Alcoholic hepatitis', 'Allergy', 
+    'Arthritis', 'Bronchial Asthma', 'Cervical spondylosis', 'Chicken pox', 'Chronic cholestasis', 
+    'Common Cold', 'Dengue', 'Diabetes', 'Dimorphic hemmorhoids(piles)', 'Drug Reaction', 
+    'Fungal infection', 'GERD', 'Gastroenteritis', 'Heart attack', 'Hepatitis B', 'Hepatitis C', 
+    'Hepatitis D', 'Hepatitis E', 'Hypertension', 'Hyperthyroidism', 'Hypoglycemia', 'Hypothyroidism', 
+    'Impetigo', 'Jaundice', 'Malaria', 'Migraine', 'Osteoarthristis', 'Paralysis (brain hemorrhage)', 
+    'Peptic ulcer diseae', 'Pneumonia', 'Psoriasis', 'Tuberculosis', 'Typhoid', 
+    'Urinary tract infection', 'Varicose veins', 'hepatitis A'
+]
+
+
+print(len(symptoms))
+desc=pd.read_csv("symptoms-datasets/symptom_Description.csv")
+prec=pd.read_csv("symptoms-datasets/symptom_precaution.csv")
+app = Flask(__name__)
+
+
+@app.route('/', methods=["GET"])
+def home():
+    return app.send_static_file('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    features=pd.Series([0]*131, index=symptoms)
+    print(len(features))
+    # Parse the JSON input
+    data = request.get_json(force=True)
+    print("Received symptoms:", data)
+
+    # Set features to 1 where symptoms are present
+    for symptom in data:
+        if symptom in features.index:
+            features[symptom] = 1
+
+    # Convert to NumPy and reshape
+    features = features.to_numpy().reshape(1, -1)
+    print("Feature vector:", features.tolist())
+
+    # Predict probabilities
+    proba = model.predict_proba(features)
+
+    # Top 5 predicted classes and their probabilities
+    top5_idx = np.argsort(proba[0])[-5:][::-1]
+    top5_proba = np.sort(proba[0])[-5:][::-1]
+    top5_diseases = [diseases[i] for i in top5_idx]
+
+    # Build response
+    response = []
+    for i in range(5):
+        disease = top5_diseases[i]
+        probability = float(top5_proba[i])
+        
+        # Disease description
+        disp = desc[desc['Disease'] == disease].values[0][1] if disease in desc["Disease"].unique() else "No description available"
+        
+        # Precautions
+        precautions = []
+        if disease in prec["Disease"].unique():
+            c = np.where(prec['Disease'] == disease)[0][0]
+            for j in range(1, len(prec.iloc[c])):
+                precautions.append(prec.iloc[c, j])
+        
+        # Add to response
+        response.append({
+            'disease': disease,
+            'probability': probability,
+            'description': disp,
+            'precautions': precautions
+        })
+
+    return jsonify(response)
+
+
+if __name__ == '__main__':
+    app.run(port=5050, debug=True, use_reloader=False)
