@@ -1,6 +1,6 @@
 <x-layout>
-    <x-slot name="heading">
-        Home    
+   <x-slot name="heading">
+        Home
     </x-slot>
 
     
@@ -75,41 +75,29 @@
     </div>
 
     
-    @push('styles')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css">
-    @endpush
-
-@section('content')
-<div id="fullpage">
-    <!-- Section 1 -->
-    <div class="section" id="section1">
-        <div class="h-full w-full flex items-center justify-center">
-            <h2 class="text-4xl font-bold">Section 1</h2>
+    <div>
+        <div id="fullPage" class="w-full h-screen">
+            <div class="section">
+                <h1>The First Section</h1>
+            </div>
+            <div class="section">
+                <h1>The Second Section</h1>
+            </div>
+            <div class="section">
+                <h1>The Third Section</h1>
+            </div>
         </div>
     </div>
-    <!-- Section 2 -->
-    <div class="section" id="section2">
-        <div class="h-full w-full flex items-center justify-center">
-            <h2 class="text-4xl font-bold">Section 2</h2>
-        </div>
-    </div>
-</div>
-@endsection
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.35/fullpage.min.js" integrity="sha512-at/DNhqW5WMYWKbz16l1lnf2XUuavpQ7j4+m6QEwj+gnjAght9yptWBfCKuJFW3naxfGgZYr0jUX13zzZd0TPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-@push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
-    <script>
-        new fullpage('#fullpage', {
-            autoScrolling: true,
-            scrollHorizontally: false,
-            navigation: true,
-            anchors: ['section1', 'section2'],
-            afterLoad: function(origin, destination) {
-                console.log("Berpindah ke section: ", destination.index);
-            }
+        <script>
+            new fullpage('#fullPage', {
+            autoScrolling: true
         });
-    </script>
-@endpush
+        </script>
+        
+
+   
     
 </x-layout>
