@@ -23,6 +23,7 @@ class MLController extends Controller
             return !is_null($value);
         });
 
+
         // Make all the array have value true
         $symptomsObj = [];
         foreach ($symptoms as $symptom) {
@@ -38,7 +39,7 @@ class MLController extends Controller
         $result = json_decode($response->getBody()->getContents(), true);
 
         // Bersihkan precaution yang null atau NaN
-        foreach ($result as &$disease) {
+        foreach ($result as $disease) {
             if (isset($disease['precautions']) && is_array($disease['precautions'])) {
                 $disease['precautions'] = array_filter($disease['precautions'], function ($item) {
                     return !is_null($item) && strtolower($item) !== 'nan';
@@ -194,6 +195,7 @@ class MLController extends Controller
             'kerak kuning yang keluar' => 'yellow_crust_ooze',
         ];
         $engName = $allSymptoms[$indName] ?? null;
+
         if ($engName) {
             return $engName;
         } else {
