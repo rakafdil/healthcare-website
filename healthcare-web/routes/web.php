@@ -57,7 +57,7 @@ Route::get('/sistem-pakar/history/{user_id}', function ($user_id) {
 
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
-});
+})->name('rumah-sakit');
 
 Route::get('/blog', function () {
     return view('blog');
