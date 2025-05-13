@@ -37,7 +37,7 @@ class MLController extends Controller
         ]);
         // Ambil response JSON
         $result = json_decode($response->getBody()->getContents(), true);
-
+        // dd($result);
         // Bersihkan precaution yang null atau NaN
         foreach ($result as $disease) {
             if (isset($disease['precautions']) && is_array($disease['precautions'])) {

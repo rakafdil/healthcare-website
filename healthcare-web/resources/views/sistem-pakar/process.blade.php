@@ -348,21 +348,10 @@
                 }
             </script>
         @elseif($step == 3)
-            <h2>Hasil Prediksi Penyakit</h2>
+            <h2 class="text-center font-medium mb-5">Kondisi - Kondisi yang Memungkinkan</h2>
             @foreach ($result as $item)
-                <div style="margin-bottom: 20px">
-                    <strong>{{ $item->disease }}</strong><br>
-                    Probabilitas: {{ number_format($item->probability * 100, 2) }}%<br>
-                    Deskripsi: {{ $item->description }}<br>
-                    Pencegahan:
-                    <ul>
-                        @foreach ($item->precautions as $p)
-                            <li>{{ $p }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                <x-diagnosis-list :item="$item" />
             @endforeach
-
 
             <a href="{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}" method="POST">
                 <button type="submit">Lanjut</button>

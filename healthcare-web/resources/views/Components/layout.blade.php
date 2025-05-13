@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <script src="//unpkg.com/alpinejs" defer></script>
 
 </head>
 
@@ -64,12 +64,12 @@
 
         <main>
             {{ $slot }}
-            
+
         </main>
-       
+
     </div>
 
-   
+
 
     <!-- Footer Section -->
     <footer class="text-white" style="background-color: #499BE8;">
@@ -102,7 +102,7 @@
         </div>
     </footer>
 
-    
+
 </body>
 
 </html>
