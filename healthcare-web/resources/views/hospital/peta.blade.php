@@ -191,7 +191,7 @@
         <div class="hero-text">
             <h1>RUMAH SAKIT</h1>
             <h2>KETERSEDIAAN KAMAR</h2>
-            <a href="/" class="btn">Beranda</a>
+            <a href="/rumah-sakit" class="btn">Pencarian</a>
         </div>
     </div>
     
@@ -428,20 +428,6 @@
         function clearMarkers() {
             markers.forEach(marker => marker.setMap(null));
             markers = [];
-        }
-        
-        // Use dummy data if API fails (for demonstration)
-        function useDummyData() {
-            const dummyHospitals = [
-                { id: 1, name: 'Rumah Sakit Bhakti Wira Tamtama', distance: '1.2 KM', capacity: '20/80', lat: centerLat - 0.02, lng: centerLng + 0.03, vicinity: 'Jl. Dr. Sutomo No.17', rating: '4.2' },
-                { id: 2, name: 'RSUD Dr. Soetomo', distance: '0.8 KM', capacity: '15/100', lat: centerLat + 0.01, lng: centerLng - 0.02, vicinity: 'Jl. Mayjen Prof. Dr. Moestopo No.6-8', rating: '4.5' },
-                { id: 3, name: 'Rumah Sakit Mitra Keluarga', distance: '0.5 KM', capacity: '35/50', lat: centerLat - 0.01, lng: centerLng - 0.01, vicinity: 'Jl. Raya Kemang No.39', rating: '4.3' },
-                { id: 4, name: 'RSUP Dr. Sardjito', distance: '1.0 KM', capacity: '40/80', lat: centerLat + 0.02, lng: centerLng + 0.02, vicinity: 'Jl. Kesehatan No.1', rating: '4.1' },
-                { id: 5, name: 'Rumah Sakit Hermina', distance: '1.5 KM', capacity: '25/60', lat: centerLat + 0.03, lng: centerLng - 0.03, vicinity: 'Jl. Jatinegara Barat No.126', rating: '4.4' }
-            ];
-            
-            displayHospitals(dummyHospitals);
-            addMarkersToMap(dummyHospitals);
         }
     </script>
     
