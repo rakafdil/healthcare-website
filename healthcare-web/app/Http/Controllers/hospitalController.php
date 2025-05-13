@@ -82,6 +82,46 @@ class HospitalController extends Controller
                         'gender' => 'male'
                     ]
                 ]
+            ],
+            '4' => [
+                'name' => 'RSUP Dr. Sardjito',
+                'address' => 'Jl. Kesehatan No.1',
+                'capacity' => '10/60',
+                'rating' => '4.1',
+                'doctors' => [
+                    [
+                        'name' => 'dr. Yudi Setiawan, Sp.THT',
+                        'specialty' => 'Telinga Hidung Tenggorokan',
+                        'schedule' => '08.00 - 12.00',
+                        'gender' => 'male'
+                    ],
+                    [
+                        'name' => 'dr. Lestari, Sp.KJ',
+                        'specialty' => 'Kedokteran Jiwa',
+                        'schedule' => '13.00 - 17.00',
+                        'gender' => 'female'
+                    ]
+                ]
+            ],
+            '5' => [
+                'name' => 'Rumah Sakit Hermina',
+                'address' => 'Jl. Jatinegara Barat No.126',
+                'capacity' => '25/70',
+                'rating' => '4.4',
+                'doctors' => [
+                    [
+                        'name' => 'dr. Budi Santoso, Sp.PD',
+                        'specialty' => 'Penyakit Dalam',
+                        'schedule' => '08.00 - 14.00',
+                        'gender' => 'male'
+                    ],
+                    [
+                        'name' => 'dr. Maya Sari, Sp.KK',
+                        'specialty' => 'Kulit dan Kelamin',
+                        'schedule' => '15.00 - 19.00',
+                        'gender' => 'female'
+                    ]
+                ]
             ]
         ];
         
