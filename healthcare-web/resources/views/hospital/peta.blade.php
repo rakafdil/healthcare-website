@@ -277,7 +277,7 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
             // Make API request
-            fetch(`/api/hospitals/nearby?lat=${lat}&lng=${lng}`, {
+            fetch(`/api/nearby-hospitals?lat=${lat}&lng=${lng}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -385,7 +385,7 @@
                     <td>${hospital.name}</td>
                     <td>${hospital.distance}</td>
                     <td>${hospital.capacity}</td>
-                    <td><a href="/detail" class="see-more">See More</a></td>
+                    <td><a href="/hospital/${hospital.id}" class="see-more">See More</a></td>
                 `;
                 hospitalList.appendChild(row);
             });
@@ -408,8 +408,7 @@
                         <p><strong>Jarak:</strong> ${hospital.distance}</p>
                         <p><strong>Kapasitas:</strong> ${hospital.capacity}</p>
                         <p><strong>Rating:</strong> ${hospital.rating}</p>
-                        <a href="/detail" style="color: #3498db; text-decoration: none;">Lihat Detail</a>
-                        // <a href="/hospital/detail/${hospital.id}" style="color: #3498db; text-decoration: none;">Lihat Detail</a>
+                        <a href="/hospital/${hospital.id}" style="color: #3498db; text-decoration: none;">Lihat Detail</a>
                     </div>
                 `;
                 

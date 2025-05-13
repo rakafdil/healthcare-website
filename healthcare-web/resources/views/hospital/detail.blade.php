@@ -242,6 +242,17 @@
         const urlParams = new URLSearchParams(window.location.search);
         const hospitalId = window.location.pathname.split('/').pop();
         
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil hospital_id dari halaman
+            const hospitalId = {{ $hospital_id ?? 'null' }};
+            
+            if (hospitalId) {
+                loadHospitalDetails(hospitalId);
+            } else {
+                console.error('Hospital ID not provided');
+                window.location.href = '/peta'; // Redirect to map if no ID
+            }
+        });
         // Function to load hospital details
         function loadHospitalDetails(id) {
             // In a real application, you would fetch this data from your backend
@@ -262,6 +273,19 @@
             .then(data => {
                 // Update hospital information with fetched data
                 updateHospitalInfo(data);
+                //Ambil data kapasitas dari endpoint baru
+                return fetch(`/api/hospital/capacity/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+            })
+            .then(response => response.json())
+            .then(capacityData => {
+                const capacity = `${capacityData.current}/${capacityData.total}`;
+                document.getElementById('hospitalCapacity').textContent = `Kapasitas: ${capacity}`;
             })
             .catch(error => {
                 console.error('Error fetching hospital data:', error);

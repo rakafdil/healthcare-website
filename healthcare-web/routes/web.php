@@ -4,6 +4,7 @@ use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\MLController;
+use App\Http\Controllers\HospitalController;
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
@@ -54,7 +55,6 @@ Route::get('/sistem-pakar/history/{user_id}', function ($user_id) {
     ]);
 });
 
-
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
 })->name('rumah-sakit');
@@ -71,10 +71,32 @@ Route::get('/masuk', function () {
     return view('masuk');
 });
 
+// Ubah route peta agar menggunakan controller jika perlu
 Route::get('/peta', function () {
     return view('peta');
 });
 
-Route::get('/detail', function () {
-    return view('detail');
+Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('hospital.detail');
+
+// Route yang sudah ada tetap dipertahankan
+Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])->name('hospital.detail.alt');
+
+// Route fallback jika id tidak disediakan
+Route::get('/detail', function() {
+    return redirect('/peta');
+});
+
+// Tambahkan route API untuk mendukung fitur yang Anda butuhkan
+Route::prefix('api')->group(function () {
+    // Route untuk detail rumah sakit
+    Route::get('/hospital/{id}', [HospitalController::class, 'getHospitalData']);
+    
+    // Route untuk kapasitas rumah sakit
+    Route::get('/hospital/capacity/{placeId}', [HospitalController::class, 'getHospitalCapacity']);
+    
+    // Route untuk rumah sakit terdekat
+    Route::get('/nearby-hospitals', [HospitalController::class, 'getNearbyHospitals']);
+    
+    // Alias lama yang mungkin masih digunakan dalam kode Anda
+    Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']);
 });
