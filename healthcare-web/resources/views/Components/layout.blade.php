@@ -66,7 +66,7 @@
             {{ $slot }}
             
         </main>
-        {{ $scripts ?? '' }}
+       
     </div>
 
    

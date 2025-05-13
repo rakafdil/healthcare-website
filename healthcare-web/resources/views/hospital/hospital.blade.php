@@ -17,8 +17,8 @@
         
         .hero-section {
             position: relative;
-            height: 610px;
-            width: 100vw; /* Ubah menjadi viewport width */
+            height: 100vh;
+            width: 99vw; /* Ubah menjadi viewport width */
             margin: 0;
             margin-bottom: 20px;
             margin-top: -25px;

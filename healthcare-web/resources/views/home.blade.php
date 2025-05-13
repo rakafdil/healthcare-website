@@ -5,7 +5,7 @@
 
     
 
-    <div class="w-screen h-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+    <div class="w-full h-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
         <!-- Background Image -->
         <img src="{{ asset('assets/Desktop - 2.png') }}" class="absolute inset-0 w-full h-full object-cover z-0" alt="Full Width Image">
         <!-- Optional Overlay -->
@@ -41,7 +41,7 @@
                     <a href="{{ route('baca-blog') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Halaman</a>
                 </div>
                 
-                <!-- Artikel 2 -->
+                <!-- Rumah Sakit -->
                 <div class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="w-12 h-12 object-cover rounded-md mb-4">
                         <g fill="#3b82f6">
@@ -51,7 +51,7 @@
                     <a href="{{ route('baca-blog') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Halaman</a>
                 </div>
                 
-                <!-- Artikel 3 -->
+                <!-- Blog -->
                 <div class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="w-12 h-14 object-cover rounded-md mb-4">
                         <g fill="#3b82f6">
@@ -61,7 +61,7 @@
                     <a href="{{ route('baca-blog') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Halaman</a>
                 </div>
 
-                <!-- Artikel 4 -->
+                <!-- Riwayat -->
                 <div class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="w-12 h-12 object-cover rounded-md mb-4">
                         <g fill="#3b82f6" >
@@ -75,29 +75,326 @@
     </div>
 
     
-    <div>
-        <div id="fullPage" class="w-full h-screen">
-            <div class="section">
-                <h1>The First Section</h1>
-            </div>
-            <div class="section">
-                <h1>The Second Section</h1>
-            </div>
-            <div class="section">
-                <h1>The Third Section</h1>
+    <div class="my-12">
+        <div id="fullPage" class="w-full">
+            <!-- Carousel Container -->
+            <div class="carousel-container relative">
+                <div class="carousel-slides">
+                    <div class="section bg-gradient-to-r from-blue-500 to-blue-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 text-white">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Sistem Pakar</h1>
+                                <p class="text-lg mb-6">Sistem pakar adalah suatu sistem komputer yang bisa menyamai atau meniru kemampuan seorang pakar. Pakar yang dimaksud disini ialah orang yang mempunyai keahlian khusus yang dapat menyelesaikan masalah yang tidak dapat diselesaikan orang awam. Contohnya dokter, mekanik, psikolog dan lain-lain.</p>
+                                <a href="#" class="bg-white text-blue-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-blue-50 transition">Pelajari Lebih Lanjut</a>
+                            </div>
+                            <div class="md:w-1/2 flex justify-center mt-6 md:mt-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Layanan Kesehatan" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section bg-gradient-to-r from-green-500 to-green-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 text-white md:pl-8">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Diagnosa Penyakit</h1>
+                                <p class="text-lg mb-6">Sistem ini bekerja dengan mengumpulkan data tentang gejala-gejala yang dirasakan oleh pasien, melakukan analisis dan pemrosesan data, dan membandingkan data tersebut dengan basis pengetahuan tentang berbagai macam penyakit. Setelah itu, sistem akan memberikan hasil diagnosa yang sesuai dengan gejala-gejala yang dirasakan oleh pasien.</p>
+                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section bg-gradient-to-r from-green-500 to-green-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 text-white md:pl-8">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Fitur Diagnosa</h1>
+                                <p class="text-lg mb-6">Seluruh data yang dianalisis dan diproses dalam sistem kami, mulai dari gejala, penyakit, hingga pengambilan keputusan tindakan, bersumber dari jurnal-jurnal terpercaya. Sistem ini memiliki sejumlah keunggulan, seperti tingkat akurasi diagnosa yang tinggi, efisiensi waktu dan biaya, ketersediaan selama 24 jam, serta dapat menjadi panduan bagi masyarakat. Namun demikian, sistem ini juga memiliki keterbatasan, antara lain tidak dapat menggantikan peran dokter, tidak mempertimbangkan faktor emosional pasien, memiliki pengetahuan yang masih terbatas, serta menimbulkan ketergantungan terhadap teknologi.</p>
+                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section bg-gradient-to-r from-green-500 to-green-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 text-white md:pl-8">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Rumah Sakit</h1>
+                                <p class="text-lg mb-6">Fitur ini memberikan informasi mengenai ketersediaan rumah sakit dan tempat tidur untuk pasien COVID-19 maupun non-COVID di seluruh Indonesia. Namun, karena data dari pusat dapat berubah sewaktu-waktu, kemungkinan kesalahan informasi bisa terjadi. Jika menemukan ketidaksesuaian, silakan hubungi kontak kami untuk melaporkan.</p>
+                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section bg-gradient-to-r from-purple-500 to-purple-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 text-white">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Informasi Ketersediaan RS</h1>
+                                <p class="text-lg mb-6">Layanan ini menyediakan informasi mengenai rumah sakit yang tersedia di seluruh Indonesia. Pengguna dapat memilih provinsi untuk melihat daftar rumah sakit yang berada di wilayah tersebut. Informasi yang ditampilkan mencakup nama rumah sakit, lokasi, serta ketersediaan layanan rumah sakit yang dapat membantu masyarakat dalam mencari rumah sakit yang sesuai dengan kebutuhan mereka.</p>
+                                <a href="#" class="bg-white text-purple-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-purple-50 transition">Lihat Fasilitas</a>
+                            </div>
+                            <div class="md:w-1/2 flex justify-center mt-6 md:mt-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Fasilitas Modern" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section bg-gradient-to-r from-green-500 to-green-700 p-8">
+                        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <img src="{{ asset('/assets/home-3.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 text-white md:pl-8">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Blog Kesehatan</h1>
+                                <p class="text-lg mb-6">Fitur ini berisi artikel-artikel tentang kesehatan dan gaya hidup sehat yang dapat dibaca oleh pengunjung. Artikel-artikel ini ditujukan untuk membantu meningkatkan kesadaran masyarakat akan pentingnya menjaga kesehatan dan memberikan informasi serta saran yang berguna untuk menjaga kesehatan secara umum. Pengguna dapat menjelajahi berbagai topik, mulai dari tips hidup sehat, pola makan yang baik, hingga cara menjaga kesehatan mental.</p>
+                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Tombol Navigasi -->
+                <div class="carousel-button carousel-button-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </div>
+                
+                <div class="carousel-button carousel-button-right">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+                
+                <!-- Indikator Slide (Dots) -->
+                <div class="carousel-dots">
+                    <div class="carousel-dot active"></div>
+                    <div class="carousel-dot"></div>
+                    <div class="carousel-dot"></div>
+                    <div class="carousel-dot"></div>
+                    <div class="carousel-dot"></div>
+                    <div class="carousel-dot"></div>
+                </div>
             </div>
         </div>
     </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.35/fullpage.min.js" integrity="sha512-at/DNhqW5WMYWKbz16l1lnf2XUuavpQ7j4+m6QEwj+gnjAght9yptWBfCKuJFW3naxfGgZYr0jUX13zzZd0TPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-        <script>
-            new fullpage('#fullPage', {
-            autoScrolling: true
-        });
-        </script>
+        
         
 
    
     
 </x-layout>
+
+<!-- CSS untuk Carousel -->
+<style>
+    .carousel-container {
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .carousel-slides {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+    
+    .section {
+        flex: 0 0 100%;
+        min-height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .carousel-button-left {
+        left: 20px;
+    }
+    
+    .carousel-button-right {
+        right: 20px;
+    }
+    
+    .carousel-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+    }
+    
+    .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .carousel-dot.active {
+        background-color: white;
+        transform: scale(1.2);
+    }
+</style>
+
+<!-- JS untuk Carousel -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slides .section');
+        const slideCount = slides.length;
+        const carouselSlides = document.querySelector('.carousel-slides');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        // Function to go to a specific slide
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            
+            // Adjust the position of the slides
+            carouselSlides.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update the active dot
+            document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // Event listeners for the buttons
+        document.querySelector('.carousel-button-left').addEventListener('click', function() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            } else {
+                goToSlide(slideCount - 1); // Wrap around to the last slide
+            }
+        });
+        
+        document.querySelector('.carousel-button-right').addEventListener('click', function() {
+            if (currentSlide < slideCount - 1) {
+                goToSlide(currentSlide + 1);
+            } else {
+                goToSlide(0); // Wrap around to the first slide
+            }
+        });
+        
+        // Event listeners for the dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                goToSlide(index);
+            });
+        });
+        
+        // Add swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.querySelector('.carousel-container').addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        document.querySelector('.carousel-container').addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left
+                if (currentSlide < slideCount - 1) {
+                    goToSlide(currentSlide + 1);
+                } else {
+                    goToSlide(0);
+                }
+            }
+            
+            if (touchEndX > touchStartX + 50) {
+                // Swipe right
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                } else {
+                    goToSlide(slideCount - 1);
+                }
+            }
+        }
+        
+        // Auto-slide functionality (optional)
+        let autoSlideInterval = setInterval(function() {
+            if (currentSlide < slideCount - 1) {
+                goToSlide(currentSlide + 1);
+            } else {
+                goToSlide(0);
+            }
+        }, 7000); // Change slide every 7 seconds
+        
+        // Pause auto-slide when interacting with carousel
+        document.querySelector('.carousel-container').addEventListener('mouseenter', function() {
+            clearInterval(autoSlideInterval);
+        });
+        
+        document.querySelector('.carousel-container').addEventListener('mouseleave', function() {
+            autoSlideInterval = setInterval(function() {
+                if (currentSlide < slideCount - 1) {
+                    goToSlide(currentSlide + 1);
+                } else {
+                    goToSlide(0);
+                }
+            }, 7000);
+        });
+        
+        // Optional: Add keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                } else {
+                    goToSlide(slideCount - 1);
+                }
+            } else if (e.key === 'ArrowRight') {
+                if (currentSlide < slideCount - 1) {
+                    goToSlide(currentSlide + 1);
+                } else {
+                    goToSlide(0);
+                }
+            }
+        });
+    });
+</script>
