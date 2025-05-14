@@ -234,8 +234,14 @@
                 </div>
 
                 <div class="mt-8">
+                    <button type="button" id="backBtn"
+                        class="w-3/12 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
+                        Kembali
+                    </button>
+
+
                     <button type="submit" id="submit-btn" disabled
-                        class="w-full bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg cursor-not-allowed transition">
+                        class="w-3/12 bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg cursor-not-allowed transition">
                         Lanjut
                     </button>
                 </div>
@@ -253,7 +259,19 @@
                 const submitBtn = document.getElementById('submit-btn');
 
                 let selected = [...previousSymptoms]; // Initialize with previous selections if any
+                const backBtn = document.getElementById('backBtn');
 
+                backBtn.addEventListener('click', () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let step = parseInt(urlParams.get('step')) || 1;
+
+                    // Jangan biarin step kurang dari 1
+                    step = Math.max(step - 1, 1);
+
+                    // Update URL tanpa reload, lalu reload halaman dengan step baru
+                    const newUrl = `${window.location.pathname}?step=${step}`;
+                    window.location.href = newUrl;
+                });
                 // Initial rendering of any previously selected symptoms
                 window.addEventListener('DOMContentLoaded', () => {
                     renderSelected();
