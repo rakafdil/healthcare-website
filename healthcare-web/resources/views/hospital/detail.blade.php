@@ -31,15 +31,42 @@
         
         .hero-section {
             position: relative;
-            width: 100vw;
-            height: 550px;
-            overflow: hidden;
+            height: 100vh;
+            width: 99vw;
+            margin: 0;
             margin-bottom: 20px;
-            margin-top: -45px;
+            margin-top: -25px;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 0;
+            overflow: hidden;
             left: 50%;
             right: 50%;
             margin-left: -50vw;
             margin-right: -50vw;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-section img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* agar gambar tidak terdistorsi dan penuh menyesuaikan kontainer */
+            z-index: 0;
         }
         
         .hero-image {
