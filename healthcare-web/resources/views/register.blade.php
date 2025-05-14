@@ -26,8 +26,8 @@
             @csrf
 
             <div class="mb-4">
-                <label class="block text-sm font-medium">Nama Lengkap</label>
-                <input type="text" name="name" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+                <label class="block text-sm font-medium">Username</label>
+                <input type="text" name="username" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
             </div>
 
             <div class="mb-4">
