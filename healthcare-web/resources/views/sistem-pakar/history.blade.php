@@ -164,7 +164,7 @@
                                             <span class="text-sm font-medium text-green-600">25%</span>
                                         </div>
                                         <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="bg-green-500 h-2 rounded-full" style="width: 25%"></div>
+                                            <div class="c h-2 rounded-full" style="width: 25%"></div>
                                         </div>
                                     </li>
                                 </ul>
