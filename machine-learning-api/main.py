@@ -3,6 +3,16 @@ import pickle
 import numpy as np
 import pandas as pd
 import json
+import math
+
+def sanitize(data):
+    if isinstance(data, dict):
+        return {k: sanitize(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [sanitize(v) for v in data]
+    elif isinstance(data, float) and math.isnan(data):
+        return None
+    return data
 
 with open("symptom_index.json") as f:
     symptoms = json.load(f)
@@ -72,7 +82,7 @@ def predict():
             c = np.where(prec['Disease'] == disease)[0][0]
             for j in range(1, len(prec.iloc[c])):
                 precautions.append(prec.iloc[c, j])
-        
+        print(disease, probability, disp, precautions)
         # Add to response
         response.append({
             'disease': disease,
@@ -80,8 +90,8 @@ def predict():
             'description': disp,
             'precautions': precautions
         })
-
-    return jsonify(response)
+    clean_result = sanitize(response)
+    return jsonify(clean_result)
 
 
 if __name__ == '__main__':

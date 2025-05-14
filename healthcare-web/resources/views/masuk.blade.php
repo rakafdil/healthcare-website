@@ -2,106 +2,51 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Halaman Login</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .login-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            width: 100%;
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .links {
-            margin-top: 15px;
-            text-align: center;
-        }
-        .google-login {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .google-login a {
-            background-color: #db4437;
-            color: white;
-            padding: 10px;
-            display: inline-block;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-    </style>
+    <title>Masuk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="login-container">
-    <h2>Masuk</h2>
-
-    @if ($errors->any())
-        <div class="error">{{ $errors->first() }}</div>
-    @endif
-
-    <form method="POST" action="/masuk">
-        @csrf
-
-        <div class="form-group">
-            <label>Username atau Email</label>
-            <input type="text" name="login" value="{{ old('login') }}" required>
+<body class="bg-gradient-to-b from-sky-400 to-sky-600 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-semibold">Masuk</h2>
+            <p class="text-sm text-gray-600">Belum memiliki akun? <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Daftar Sekarang</a></p>
         </div>
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required>
+        <a href="{{ route('google.login') }}" class="flex items-center justify-center gap-2 bg-gray-100 border px-4 py-2 rounded hover:bg-gray-200 text-sm font-medium w-full mb-4">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google"> Lanjutkan dengan Google
+        </a>
+
+        <div class="flex items-center gap-2 mb-4">
+            <hr class="flex-grow border-gray-300">
+            <span class="text-sm text-gray-400">atau</span>
+            <hr class="flex-grow border-gray-300">
         </div>
 
-        <div class="form-group">
-            <label><input type="checkbox" name="remember"> Remember Me</label>
-        </div>
+        <form method="POST" action="{{ route('masuk') }}">
+            @csrf
 
-        <button type="submit">Masuk</button>
-    </form>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Username atau Email</label>
+                <input type="text" name="email" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+            </div>
 
-    <div class="links">
-        <a href="#">Lupa Password?</a> | 
-        <a href="#">Daftar Sekarang</a>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Password</label>
+                <input type="password" name="password" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+
+            <div class="flex justify-between items-center mb-4 text-sm">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="remember" class="rounded">
+                    Remember me
+                </label>
+                <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">Forgot Password</a>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 font-semibold">
+                Masuk
+            </button>
+        </form>
     </div>
-
-    <div class="google-login">
-        <a href="{{ url('/auth/google') }}">Masuk dengan Google</a>
-    </div>
-</div>
 </body>
 </html>

@@ -2,10 +2,12 @@
 
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SistemPakarController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
