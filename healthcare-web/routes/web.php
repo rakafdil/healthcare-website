@@ -3,7 +3,7 @@
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\MLController;
+use App\Http\Controllers\SistemPakarController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\Auth\LoginController;
 
@@ -19,19 +19,18 @@ Route::get('/baca-blog', function () {
 })->name('baca-blog');
 
 Route::get('/sistem-pakar', function () {
-    return view('sistem-pakar.index', ['steps' => SistemPakar::steps()]);
+    return view('sistem-pakar.index');
 });
 
 Route::get('/sistem-pakar/{user_id}', function ($user_id) {
     $user_history = SistemPakar::getHistory($user_id);
     return view('sistem-pakar.index', [
         'user_id' => $user_id,
-        'steps' => SistemPakar::steps(),
         'history' => $user_history,
     ]);
 });
 
-Route::post('/sistem-pakar/{user_id}/symptoms/predict', [MLController::class, 'predict'])->name('sistem-pakar.predict');
+Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::class, 'predict'])->name('sistem-pakar.predict');
 
 Route::post('/sistem-pakar/{user_id}/symptoms', function ($user_id) {
     return view('sistem-pakar.process', [
@@ -47,11 +46,13 @@ Route::get('/sistem-pakar/{user_id}/symptoms', function ($user_id) {
     ]);
 });
 
-Route::get('/sistem-pakar/history/{user_id}', function ($user_id) {
+Route::get('/sistem-pakar/{user_id}/history', function ($user_id) {
+    $history_id = request('id'); // ambil dari query string
     $user_history = SistemPakar::getHistory($user_id);
     return view('sistem-pakar.history', [
         'user_id' => $user_id,
         'history' => $user_history,
+        'selected_id' => $history_id,
     ]);
 });
 

@@ -8,13 +8,6 @@ use Illuminate\Support\Arr;
 class SistemPakar extends Model
 {
     protected $table = 'sistem_pakar';
-    public $steps = [
-        '1. Pastikan Anda telah daftar dan masuk ke sistem, jika belum Anda dapat mendaftar terlebih dahulu.',
-        '2. Jika sudah, Anda dapat menekan tombol di sebelah untuk melanjutkan pengecekan.',
-        '3. Masukkan informasi Anda yang telah diminta oleh sistem.',
-        '4. Masukkan gejala-gejala yang Anda alami.',
-        '5. Sistem lalu menampilkan kondisi-kondisi yang mungkin terjadi pada Anda.'
-    ];
 
     public static function history(): array
     {
@@ -23,15 +16,15 @@ class SistemPakar extends Model
             [
                 'user_id' => 1,
                 'history_penyakit' => [
-                    'history1' => [
+                    '1' => [
                         'tanggal' => '2023-10-01',
                         'waktu' => '10:00',
                     ],
-                    'history2' => [
+                    '2' => [
                         'tanggal' => '2023-10-02',
                         'waktu' => '11:00',
                     ],
-                    'history3' => [
+                    '3' => [
                         'tanggal' => '2023-10-03',
                         'waktu' => '12:00',
                     ],
@@ -40,15 +33,15 @@ class SistemPakar extends Model
             [
                 'user_id' => 2,
                 'history_penyakit' => [
-                    'history1' => [
+                    '1' => [
                         'tanggal' => '2023-10-04',
                         'waktu' => '13:00',
                     ],
-                    'history2' => [
+                    '2' => [
                         'tanggal' => '2023-10-05',
                         'waktu' => '14:00',
                     ],
-                    'history3' => [
+                    '3' => [
                         'tanggal' => '2023-10-06',
                         'waktu' => '15:00',
                     ],
@@ -56,11 +49,6 @@ class SistemPakar extends Model
             ]
 
         ];
-    }
-
-    public static function steps(): array
-    {
-        return (new self())->steps;
     }
 
     public static function getHistory(int $user_id): array

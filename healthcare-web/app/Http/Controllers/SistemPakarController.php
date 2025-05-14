@@ -6,7 +6,7 @@ use Error;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 
-class MLController extends Controller
+class SistemPakarController extends Controller
 {
     public function predict(Request $request)
     {
