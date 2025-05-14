@@ -10,12 +10,12 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.masuk');
+        return view('masuk');
     }
 
     public function login(Request $request)
     {
-        $login = $request->input('login');
+        $login = $request->input('masuk');
 
         $fieldType = 'username';
         if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
