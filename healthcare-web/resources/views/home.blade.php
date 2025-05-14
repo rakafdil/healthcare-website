@@ -9,7 +9,7 @@
         <!-- Background Image -->
         <img src="{{ asset('assets/Desktop - 2.png') }}" class="absolute inset-0 w-full h-full object-cover z-0" alt="Full Width Image">
         <!-- Optional Overlay -->
-        <div class="absolute inset-0 bg-white/10 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-white/5 backdrop-blur-sm z-10"></div>
         
         <!-- Container untuk semua konten -->
         <div class="relative z-20 flex flex-col h-full px-8 max-w-screen-xl mx-auto">
@@ -17,16 +17,17 @@
             <div class="flex flex-col justify-center text-right h-3/5 pt-20">
                 <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
                      SELAMAT DATANG<br />
-                <span>DI </span><span class="text-blue-500">HEALTHCARE</span>
+                <span>DI </span><span class="text-blue-500 mr-[5%]">HEALTHCARE</span>
                 </h1>
+                <div class="w-[12%] h-[3px] bg-white mt-6 ml-auto mr-[23%]"></div>
                 <a href="#tentang-kita"
-                   class="mt-6 bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-screen-xl ml-auto hover:bg-blue-100 transition">
+                   class="mt-6 mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-screen-xl ml-auto hover:bg-blue-100 transition">
                     Tentang Kita
                 </a>
             </div>
             
             
-            <div class="w-full flex justify-between space-x-4 mt-24 mb-10">
+            <div class="w-full flex justify-between space-x-4 mt-16 mb-10">
                 <!-- sistem pakar -->
                 <div class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4">
                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" class="w-12 h-12 object-cover rounded-md mb-4">
@@ -74,22 +75,23 @@
         </div>
     </div>
 
-    
-    <div class="my-0">
+    <!-- sistem pakar -->
+    <div class="mt-8">
         <div id="fullPage" class="w-full">
             <!-- Carousel Container -->
             <div class="carousel-container relative">
                 <div class="carousel-slides">
                     <div class="section bg-gradient-to-b from-white p-8" style="--tw-gradient-to: #00C8FF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            
                             <div class="md:w-1/2 text-white">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Sistem Pakar</h1>
-                                <p class="text-lg mb-6">Sistem pakar adalah suatu sistem komputer yang bisa menyamai atau meniru kemampuan seorang pakar. Pakar yang dimaksud disini ialah orang yang mempunyai keahlian khusus yang dapat menyelesaikan masalah yang tidak dapat diselesaikan orang awam. Contohnya dokter, mekanik, psikolog dan lain-lain.</p>
-                                <a href="#" class="bg-white text-blue-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-blue-50 transition">Pelajari Lebih Lanjut</a>
+                                <h1 class="text-3xl md:text-4xl font-bold text-black mb-4 ml-16">Sistem Pakar</h1>
+                                <p class="text-lg text-black mb-6 leading-relaxed text-justify ml-16">Sistem pakar adalah suatu sistem komputer yang bisa menyamai atau meniru kemampuan seorang pakar. Pakar yang dimaksud disini ialah orang yang mempunyai keahlian khusus yang dapat menyelesaikan masalah yang tidak dapat diselesaikan orang awam. Contohnya dokter, mekanik, psikolog dan lain-lain.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-blue-50 transition ml-16">Sistem Pakar</a>
                             </div>
                             <div class="md:w-1/2 flex justify-center mt-6 md:mt-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Layanan Kesehatan" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                <div class="bg-transparan">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Layanan Kesehatan" class=" rounded-lg h-96 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
                                 </div>
                             </div>
                         </div>
@@ -97,30 +99,32 @@
                     
                     <div class="section bg-gradient-to-b from-white p-8" style="--tw-gradient-to: #00C8FF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
-                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
-                                </div>
-                            </div>
+                           
                             <div class="md:w-1/2 text-white md:pl-8">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Diagnosa Penyakit</h1>
-                                <p class="text-lg mb-6">Sistem ini bekerja dengan mengumpulkan data tentang gejala-gejala yang dirasakan oleh pasien, melakukan analisis dan pemrosesan data, dan membandingkan data tersebut dengan basis pengetahuan tentang berbagai macam penyakit. Setelah itu, sistem akan memberikan hasil diagnosa yang sesuai dengan gejala-gejala yang dirasakan oleh pasien.</p>
-                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black ml-16">Diagnosa Penyakit</h1>
+                                <p class="text-lg mb-6 text-black leading-relaxed text-justify ml-16">Sistem ini bekerja dengan mengumpulkan data tentang gejala-gejala yang dirasakan oleh pasien, melakukan analisis dan pemrosesan data, dan membandingkan data tersebut dengan basis pengetahuan tentang berbagai macam penyakit. Setelah itu, sistem akan memberikan hasil diagnosa yang sesuai dengan gejala-gejala yang dirasakan oleh pasien.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Diagnosa Penyakit</a>
+                            </div>
+                             <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-transparan">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-96  w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="section bg-gradient-to-b from-white p-8" style="--tw-gradient-to: #00C8FF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
-                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
-                                </div>
-                            </div>
+                            
                             <div class="md:w-1/2 text-white md:pl-8">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Fitur Diagnosa</h1>
-                                <p class="text-lg mb-6">Seluruh data yang dianalisis dan diproses dalam sistem kami, mulai dari gejala, penyakit, hingga pengambilan keputusan tindakan, bersumber dari jurnal-jurnal terpercaya. Sistem ini memiliki sejumlah keunggulan, seperti tingkat akurasi diagnosa yang tinggi, efisiensi waktu dan biaya, ketersediaan selama 24 jam, serta dapat menjadi panduan bagi masyarakat. Namun demikian, sistem ini juga memiliki keterbatasan, antara lain tidak dapat menggantikan peran dokter, tidak mempertimbangkan faktor emosional pasien, memiliki pengetahuan yang masih terbatas, serta menimbulkan ketergantungan terhadap teknologi.</p>
-                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black ml-16">Fitur Diagnosa</h1>
+                                <p class="text-lg mb-6 text-black leading-relaxed text-justify ml-16">Seluruh data yang dianalisis dan diproses dalam sistem kami, mulai dari gejala, penyakit, hingga pengambilan keputusan tindakan, bersumber dari jurnal-jurnal terpercaya. Sistem ini memiliki sejumlah keunggulan, seperti tingkat akurasi diagnosa yang tinggi, efisiensi waktu dan biaya, ketersediaan selama 24 jam, serta dapat menjadi panduan bagi masyarakat. Namun demikian, sistem ini juga memiliki keterbatasan, antara lain tidak dapat menggantikan peran dokter, tidak mempertimbangkan faktor emosional pasien, memiliki pengetahuan yang masih terbatas, serta menimbulkan ketergantungan terhadap teknologi.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Diagnosa Penyakit</a>
+                            </div>
+                            <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                                <div class="bg-transparan">
+                                    <img src="{{ asset('/assets/home-1.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-96  w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +158,7 @@
             </div>
         </div>
     </div>
-
+    <!-- rumah sakit -->
     <div class="my-0">
         <div id="fullPage2" class="w-full">
             <!-- Carousel Container -->
@@ -165,30 +169,32 @@
                    <div class="section bg-gradient-to-b from-white to-white p-8" style="--tw-gradient-from: #04C8FF; --tw-gradient-to: #832BFF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
                             <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                <div class="bg-transparan">
+                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-96 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
                                 </div>
                             </div>
                             <div class="md:w-1/2 text-white md:pl-8">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Rumah Sakit</h1>
-                                <p class="text-lg mb-6">Fitur ini memberikan informasi mengenai ketersediaan rumah sakit dan tempat tidur untuk pasien COVID-19 maupun non-COVID di seluruh Indonesia. Namun, karena data dari pusat dapat berubah sewaktu-waktu, kemungkinan kesalahan informasi bisa terjadi. Jika menemukan ketidaksesuaian, silakan hubungi kontak kami untuk melaporkan.</p>
-                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black mr-16">Rumah Sakit</h1>
+                                <p class="text-lg mb-6 text-black leading-relaxed text-justify mr-16">Fitur ini memberikan informasi mengenai ketersediaan rumah sakit dan tempat tidur untuk pasien COVID-19 maupun non-COVID di seluruh Indonesia. Namun, karena data dari pusat dapat berubah sewaktu-waktu, kemungkinan kesalahan informasi bisa terjadi. Jika menemukan ketidaksesuaian, silakan hubungi kontak kami untuk melaporkan.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition mr-16">Cek Ketersediaan</a>
                             </div>
                         </div>
                     </div>
 
                     <div class="section bg-gradient-to-b from-white to-white p-8" style="--tw-gradient-from: #04C8FF; --tw-gradient-to: #832BFF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
-                            <div class="md:w-1/2 text-white">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Informasi Ketersediaan RS</h1>
-                                <p class="text-lg mb-6">Layanan ini menyediakan informasi mengenai rumah sakit yang tersedia di seluruh Indonesia. Pengguna dapat memilih provinsi untuk melihat daftar rumah sakit yang berada di wilayah tersebut. Informasi yang ditampilkan mencakup nama rumah sakit, lokasi, serta ketersediaan layanan rumah sakit yang dapat membantu masyarakat dalam mencari rumah sakit yang sesuai dengan kebutuhan mereka.</p>
-                                <a href="#" class="bg-white text-purple-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-purple-50 transition">Lihat Fasilitas</a>
-                            </div>
                             <div class="md:w-1/2 flex justify-center mt-6 md:mt-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Fasilitas Modern" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                <div class="bg-transparan p-4">
+                                    <img src="{{ asset('/assets/home-2.gif') }}" alt="Fasilitas Modern" class="rounded-lg h-96 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
                                 </div>
                             </div>
+
+                            <div class="md:w-1/2 text-white">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black mr-16">Informasi Ketersediaan RS</h1>
+                                <p class="text-lg mb-6 text-black leading-relaxed text-justify mr-16" >Layanan ini menyediakan informasi mengenai rumah sakit yang tersedia di seluruh Indonesia. Pengguna dapat memilih provinsi untuk melihat daftar rumah sakit yang berada di wilayah tersebut. Informasi yang ditampilkan mencakup nama rumah sakit, lokasi, serta ketersediaan layanan rumah sakit yang dapat membantu masyarakat dalam mencari rumah sakit yang sesuai dengan kebutuhan mereka.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-purple-50 transition mr-16">Cek Ketersediaan</a>
+                            </div>
+                            
                         </div>
                     </div>
                     
@@ -222,24 +228,26 @@
             </div>
         </div>
     </div>
-
-    <div class="my-0">
+    <!-- blog -->
+    <div class="mb-8">
         <div id="fullPage3" class="w-full">
             <!-- Carousel Container -->
             <div class="carousel-container relative">
                 <div class="carousel-slides">
                      <div class="section bg-gradient-to-b from-white to-white p-8" style="--tw-gradient-from: #822DFF; --tw-gradient-to: #FFFFFF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 text-white md:pl-8">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black ml-16">Blog Kesehatan</h1>
+                                <p class="text-lg mb-6 text-black leading-relaxed text-justify ml-16">Fitur ini berisi artikel-artikel tentang kesehatan dan gaya hidup sehat yang dapat dibaca oleh pengunjung. Artikel-artikel ini ditujukan untuk membantu meningkatkan kesadaran masyarakat akan pentingnya menjaga kesehatan dan memberikan informasi serta saran yang berguna untuk menjaga kesehatan secara umum. Pengguna dapat menjelajahi berbagai topik, mulai dari tips hidup sehat, pola makan yang baik, hingga cara menjaga kesehatan mental.</p>
+                                <a href="#" class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Baca Blog</a>
+                            </div>
+
                             <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <img src="{{ asset('/assets/home-3.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-64 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
+                                <div class="bg-transparan">
+                                    <img src="{{ asset('/assets/home-3.gif') }}" alt="Dokter Spesialis" class="rounded-lg h-96 w-full object-cover" onerror="this.src='/api/placeholder/400/300'; this.alt='Placeholder Image'">
                                 </div>
                             </div>
-                            <div class="md:w-1/2 text-white md:pl-8">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4">Blog Kesehatan</h1>
-                                <p class="text-lg mb-6">Fitur ini berisi artikel-artikel tentang kesehatan dan gaya hidup sehat yang dapat dibaca oleh pengunjung. Artikel-artikel ini ditujukan untuk membantu meningkatkan kesadaran masyarakat akan pentingnya menjaga kesehatan dan memberikan informasi serta saran yang berguna untuk menjaga kesehatan secara umum. Pengguna dapat menjelajahi berbagai topik, mulai dari tips hidup sehat, pola makan yang baik, hingga cara menjaga kesehatan mental.</p>
-                                <a href="#" class="bg-white text-green-600 font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition">Temui Dokter Kami</a>
-                            </div>
+                            
                         </div>
                     </div>
                     
