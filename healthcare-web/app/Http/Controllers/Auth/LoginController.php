@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,22 +18,27 @@ class LoginController extends Controller
     {
         $login = $request->input('masuk');
 
-        $fieldType = 'username';
-        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
-            $fieldType = 'email';
-        }
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         $credentials = [
             $fieldType => $login,
             'password' => $request->input('password')
         ];
 
-        $remember = false;
-        if ($request->has('remember')) {
-            $remember = true;
-        }
+        $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            // Simpan session custom
+            session(['login_time' => now()]);
+            session(['user_id' => Auth::id()]);
+
+            // Simpan cookie jika centang "Remember Me"
+            if ($request->has('remember')) {
+    Cookie::queue('remember_username', $request->masuk, 60 * 24 * 30);
+    logger('Cookie set: ' . $request->masuk);
+}
+
+
             return redirect('/dashboard');
         }
 
