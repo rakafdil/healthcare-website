@@ -69,8 +69,18 @@ Route::get('/about', function () {
 });
 
 // Route login menggunakan LoginController
-Route::get('/masuk', [LoginController::class, 'showLoginForm']);
+Route::get('/masuk', [LoginController::class, 'showLoginForm'])->name('masuk');
 Route::post('/masuk', [LoginController::class, 'login']);
+
+Route::get('/auth/google', [LoginController::class, 'redirectToGoogle'])->name('google.login');
+
+Route::get('/lupa-password', function () {
+    return view('auth.lupa-password');
+})->name('password.request');
+
+// Route register menggunakan RegisterController
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
 // Route peta
 Route::get('/peta', function () {
