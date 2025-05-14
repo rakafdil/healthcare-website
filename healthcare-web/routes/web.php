@@ -54,7 +54,7 @@ Route::get('/sistem-pakar/{user_id}/history', function ($user_id) {
         'history' => $user_history,
         'selected_id' => $history_id,
     ]);
-});
+})->name('sistem-pakar.history');
 
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');

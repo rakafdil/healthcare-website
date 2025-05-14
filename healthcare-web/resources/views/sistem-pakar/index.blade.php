@@ -43,6 +43,7 @@
                 @isset($history['history_penyakit'])
                     @foreach ($history['history_penyakit'] as $key => $item)
                         <div class="flex justify-between items-center border-b pb-2">
+
                             <div class="text-base">
                                 {{ \Carbon\Carbon::parse($item['tanggal'])->format('d F Y') }}
                             </div>
@@ -61,4 +62,5 @@
             </div>
         @endif
     </div>
+
 </x-layout>
