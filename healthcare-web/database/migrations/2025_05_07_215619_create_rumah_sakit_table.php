@@ -15,6 +15,10 @@ return new class extends Migration
             $table->integer('id_rumah_sakit', true);
             $table->string('nama', 100)->nullable();
             $table->string('alamat')->nullable();
+            $table->float('lat', 10, 6)->nullable();     // latitude
+            $table->float('lng', 10, 6)->nullable();     // longitude
+            $table->float('rating')->nullable();
+            $table->string('kapasitas', 20)->nullable();
         });
     }
 

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('dokter_rumah_sakit', function (Blueprint $table) {
             $table->integer('id_dokter');
+            $table->string('nama', 100);
+            $table->string('spesialisasi', 100);
+            $table->string('jam_praktek', 100);
             $table->integer('id_rumah_sakit')->index('id_rumah_sakit');
 
             $table->primary(['id_dokter', 'id_rumah_sakit']);
