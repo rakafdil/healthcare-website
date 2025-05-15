@@ -282,9 +282,6 @@
         });
         // Function to load hospital details
         function loadHospitalDetails(id) {
-            // In a real application, you would fetch this data from your backend
-            // For now, we'll use dummy data based on the hospital ID
-            
             // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
@@ -364,92 +361,6 @@
             });
         }
         
-        // Use dummy data for demonstration
-        function useDummyData(id) {
-            // Map of dummy hospitals
-            const hospitals = {
-                '1': {
-                    name: 'Rumah Sakit Bhakti Wira Tamtama',
-                    address: 'Jl. Dr. Sutomo No.17',
-                    capacity: '20/80',
-                    rating: '4.2',
-                    // imageUrl: '/assets/images/hospitals/hospital1.jpg',
-                    doctors: [
-                        {
-                            name: 'dr. Hendrik Cahyono, Sp.PD',
-                            specialty: 'Penyakit Dalam',
-                            schedule: '18.00 - Selesai',
-                            gender: 'male'
-                        },
-                        {
-                            name: 'dr. Tessy Mubarok, Sp.B',
-                            specialty: 'Bedah Umum',
-                            schedule: '06.30 - Selesai',
-                            gender: 'female'
-                        }
-                    ]
-                },
-                '2': {
-                    name: 'RSUD Dr. Soetomo',
-                    address: 'Jl. Mayjen Prof. Dr. Moestopo No.6-8',
-                    capacity: '15/100',
-                    rating: '4.5',
-                    // imageUrl: '/assets/images/hospitals/hospital2.jpg',
-                    doctors: [
-                        {
-                            name: 'dr. Bambang Sutrisno, Sp.JP',
-                            specialty: 'Jantung dan Pembuluh Darah',
-                            schedule: '09.00 - 14.00',
-                            gender: 'male'
-                        },
-                        {
-                            name: 'dr. Ratna Dewi, Sp.A',
-                            specialty: 'Anak',
-                            schedule: '15.00 - Selesai',
-                            gender: 'female'
-                        }
-                    ]
-                },
-                '3': {
-                    name: 'Rumah Sakit Mitra Keluarga',
-                    address: 'Jl. Raya Kemang No.39',
-                    capacity: '35/50',
-                    rating: '4.3',
-                    // imageUrl: '/assets/images/hospitals/hospital3.jpg',
-                    doctors: [
-                        {
-                            name: 'dr. Siti Aminah, Sp.OG',
-                            specialty: 'Kandungan',
-                            schedule: '10.00 - 16.00',
-                            gender: 'female'
-                        },
-                        {
-                            name: 'dr. Arief Rahman, Sp.S',
-                            specialty: 'Saraf',
-                            schedule: '17.00 - Selesai',
-                            gender: 'male'
-                        }
-                    ]
-                }
-            };
-            
-            // Get the hospital data or default to the first one
-            const hospital = hospitals[id] || hospitals['1'];
-            
-            // Update the page with hospital data
-            updateHospitalInfo(hospital);
-        }
-        
-        // Date navigation functionality
-        document.getElementById('prevDate').addEventListener('click', () => {
-            // In a real app, this would navigate to previous date
-            alert('Navigate to previous date');
-        });
-        
-        document.getElementById('nextDate').addEventListener('click', () => {
-            // In a real app, this would navigate to next date
-            alert('Navigate to next date');
-        });
         
         // Fungsi untuk mengubah tinggi gambar
         document.getElementById('applyHeight').addEventListener('click', () => {
@@ -472,7 +383,10 @@
         
         // Load hospital details when page loads
         window.onload = function() {
-            loadHospitalDetails(hospitalId);
+            updateDateDisplay();
+            if (hospitalId) {
+                loadHospitalDetails(hospitalId);
+            }
         };
     </script>
 </body>
