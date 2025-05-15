@@ -3,6 +3,9 @@
 <x-layout>
     <x-sistem-pakar-hero />
 
+    <div class="flex justify-center">
+        <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
+    </div>
     <x-symptoms-steps :user_id="$user_id" :current_step="$step" :total_steps="5" />
     <div class="px-20 py-8 text-2xl">
 
@@ -228,7 +231,7 @@
 
                 </div>
 
-                <div class="mt-8 bg-gray-50 p-4 rounded-lg">
+                <div class="mt-8 bg-gray-50 py-4 rounded-lg">
                     <h4 class="text-lg font-semibold mb-3">Gejala yang dipilih:</h4>
                     <ul id="selected-symptoms" class="list-disc pl-6"></ul>
                     <input type="hidden" name="gejala" id="gejala-hidden">
@@ -316,15 +319,33 @@
                     } else {
                         selected.forEach((symptom, index) => {
                             const li = document.createElement('li');
-                            li.classList.add('flex', 'justify-between', 'items-center', 'mb-2');
+                            li.classList.add(
+                                'list-item',
+                                'flex',
+                                'items-center',
+                                'mb-2',
+                                'border-b',
+                                'border-gray-300',
+                                'pb-2'
+                            );
+
 
                             const textSpan = document.createElement('span');
                             textSpan.textContent = symptom;
+                            textSpan.classList.add('flex-grow'); // push the trash icon to far right
 
                             const removeBtn = document.createElement('button');
-                            removeBtn.textContent = '×';
-                            removeBtn.classList.add('ml-2', 'text-red-500', 'font-bold', 'text-xl');
+                            removeBtn.classList.add('ml-4'); // Space between text and icon
                             removeBtn.type = 'button';
+
+                            const trashImg = document.createElement('img');
+                            trashImg.src = '{{ asset('assets/trash-bin.png') }}';
+                            trashImg.alt = 'Trash Icon';
+                            trashImg.classList.add('w-5', 'h-5');
+
+                            removeBtn.appendChild(trashImg);
+                            removeBtn.classList.add('shrink-0', 'ml-4'); // keep size, spacing
+
                             removeBtn.onclick = (e) => {
                                 e.preventDefault();
                                 selected = selected.filter(s => s !== symptom);
@@ -341,6 +362,7 @@
                     hiddenInput.value = selected.join(',');
                 }
 
+
                 function validateForm() {
                     if (selected.length > 0) {
                         submitBtn.disabled = false;
@@ -356,7 +378,9 @@
         @elseif($step == 3)
             <h2 class="text-center font-medium mb-5">Kondisi - Kondisi yang Memungkinkan</h2>
             @foreach ($result as $item)
-                <x-diagnosis-list :item="$item" />
+                @if ($item->probability > 0)
+                    <x-diagnosis-list :item="$item" />
+                @endif
             @endforeach
         @elseif($step == 4)
             <div class="flex">

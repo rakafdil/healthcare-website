@@ -202,4 +202,17 @@ class SistemPakarController extends Controller
             return null;
         }
     }
+
+    public function getStepsName($step)
+    {
+        $steps = [
+            1 => 'Info',
+            2 => 'Gejala',
+            3 => 'Kondisi',
+            4 => 'Detail',
+            5 => 'Perawatan',
+        ];
+
+        return $steps[$step] ?? null;
+    }
 }

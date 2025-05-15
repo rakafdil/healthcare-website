@@ -15,32 +15,30 @@
                 <h2 class="text-2xl font-semibold text-blue-600 border-b-2 border-gray-200 pb-3 mb-4">Cara Menggunakan
                     Sistem Ini</h2>
                 <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                    <li>Pastikan Anda telah daftar dan masuk ke sistem, jika belum Anda dapat mendaftar terlebih dahulu.
+                    <li class="hover:scale-105 transition-all duration-300">Pastikan Anda telah daftar dan masuk
+                        ke sistem, jika belum Anda dapat mendaftar terlebih dahulu.
                     </li>
-                    <li>Tekan tombol "Mulai Diagnosa" di sebelah untuk melanjutkan pengecekan.</li>
-                    <li>Masukkan informasi diri Anda yang telah diminta oleh sistem (usia, jenis kelamin, riwayat
+                    <li class="hover:scale-105 transition-all duration-300">Tekan tombol "Mulai Diagnosa" di sebelah
+                        untuk melanjutkan pengecekan.</li>
+                    <li class="hover:scale-105 transition-all duration-300">Masukkan informasi diri Anda yang telah
+                        diminta oleh sistem (usia, jenis kelamin, riwayat
                         kesehatan).</li>
-                    <li>Masukkan gejala-gejala yang Anda alami dengan detail untuk hasil yang lebih akurat.</li>
-                    <li>Sistem akan menampilkan kondisi-kondisi yang mungkin terjadi pada Anda beserta tingkat
+                    <li class="hover:scale-105 transition-all duration-300">Masukkan gejala-gejala yang Anda alami
+                        dengan detail untuk hasil yang lebih akurat.</li>
+                    <li class="hover:scale-105 transition-all duration-300">Sistem akan menampilkan kondisi-kondisi yang
+                        mungkin terjadi pada Anda beserta tingkat
                         kemungkinannya.</li>
-                    <li>Riwayat pengecekan Anda akan tersimpan dan dapat dilihat kembali kapan saja.</li>
+                    <li class="hover:scale-105 transition-all duration-300">Riwayat pengecekan Anda akan tersimpan dan
+                        dapat dilihat kembali kapan saja.</li>
                 </ol>
-                <div class="flex justify-around mt-6">
-                    <span class="text-2xl text-blue-500">🧬</span>
-                    <span class="text-2xl text-blue-500">💊</span>
-                    <span class="text-2xl text-blue-500">🏥</span>
-                    <span class="text-2xl text-blue-500">👨‍⚕️</span>
-                    <span class="text-2xl text-blue-500">🩺</span>
-                </div>
             </div>
 
             {{-- Kanan: Tombol Diagnosa --}}
-            <div
-                class="flex-shrink-0 flex flex-col items-center bg-blue-50 rounded-xl shadow-md p-6 hover:translate-y-[-5px] transition-all duration-300">
+            <div class="flex-shrink-0 flex flex-col items-center self-center bg-blue-50 rounded-xl shadow-md p-6">
                 @if (isset($user_id))
                     <a href="/sistem-pakar/{{ $user_id }}/symptoms/#" class="inline-block">
                         <div
-                            class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-105">
+                            class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-110">
                             <div class="text-4xl mb-2">📱</div>
                             <div>TEKAN DI SINI</div>
                             <div>UNTUK DIAGNOSA</div>
@@ -49,7 +47,7 @@
                 @else
                     <a href="/sistem-pakar/login" class="inline-block">
                         <div
-                            class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-105">
+                            class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-110">
                             <div class="text-4xl mb-2">📱</div>
                             <div>TEKAN DI SINI</div>
                             <div>UNTUK DIAGNOSA</div>
