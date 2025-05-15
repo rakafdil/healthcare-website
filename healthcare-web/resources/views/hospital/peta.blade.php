@@ -6,6 +6,7 @@
     <title>Rumah Sakit - Peta Ketersediaan</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
         * {
@@ -198,13 +199,16 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background-color: #3498db;
+            background-color: #3498db; /* Warna biru */
             color: white;
             text-align: center;
             line-height: 32px;
             font-weight: bold;
             border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            font-family: 'Font Awesome 6 Free'; /* Pastikan font ini tersedia */
+            font-weight: 900;
+            font-size: 18px;
         }
 
         /* Custom popup style */
@@ -304,6 +308,26 @@
             
             // Get nearby hospitals once the map is loaded
             getNearbyHospitals(centerLat, centerLng);
+        }
+
+        function addUserLocationMarker(lat, lng) {
+            // Membuat icon kustom untuk lokasi pengguna
+            const userIcon = L.icon({
+                className: 'hospital-marker',
+                html: '<i class="fas fa-hospital"></i>',
+                iconSize: [40, 40], // Ukuran icon (biasanya lebih besar dari marker hospital)
+                iconAnchor: [20, 20], // Titik anchor di tengah icon
+                popupAnchor: [0, -20] // Popup akan muncul di atas icon
+            });
+            
+            // Menambahkan marker lokasi pengguna ke peta
+            const userMarker = L.marker([lat, lng], {
+                icon: userIcon,
+                zIndexOffset: 1000 // Pastikan marker pengguna berada di atas marker lainnya
+            }).addTo(map);
+            
+            // Tambahkan popup untuk lokasi pengguna
+            userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
         }
         
         // Function to get nearby hospitals using the controller
@@ -468,50 +492,54 @@
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
         }
-        
-        // Implement dummy data function if needed
-        function useDummyData() {
-            // Sample dummy data
-            const dummyHospitals = [
-                {
-                    id: '1',
-                    name: 'Rumah Sakit Bhakti Wira Tamtama',
-                    distance: '1.5 KM',
-                    capacity: '20/80',
-                    lat: centerLat - 0.02,
-                    lng: centerLng + 0.03,
-                    rating: '4.2',
-                    vicinity: 'Jl. Dr. Sutomo No.17'
-                },
-                {
-                    id: '2',
-                    name: 'RSUD Dr. Soetomo',
-                    distance: '2.3 KM',
-                    capacity: '15/100',
-                    lat: centerLat + 0.01,
-                    lng: centerLng - 0.02,
-                    rating: '4.5',
-                    vicinity: 'Jl. Mayjen Prof. Dr. Moestopo No.6-8'
-                },
-                {
-                    id: '3',
-                    name: 'Rumah Sakit Mitra Keluarga',
-                    distance: '3.1 KM',
-                    capacity: '35/50',
-                    lat: centerLat - 0.01,
-                    lng: centerLng - 0.01,
-                    rating: '4.3',
-                    vicinity: 'Jl. Raya Kemang No.39'
-                }
-            ];
-            
-            // Display and add markers for dummy data
-            displayHospitals(dummyHospitals);
-            addMarkersToMap(dummyHospitals);
+
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    // Success callback
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        
+                        map.setView([userLat, userLng], 13);
+                        
+                        centerLat = userLat;
+                        centerLng = userLng;
+                        
+                        // Bersihkan marker yang ada
+                        clearMarkers();
+                        
+                        // Tambahkan marker lokasi pengguna
+                        addUserLocationMarker(userLat, userLng);
+                        
+                        // Dapatkan rumah sakit terdekat dari lokasi pengguna
+                        getNearbyHospitals(userLat, userLng);
+
+                        document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
+                    },
+                    // Error callback
+                    function(error) {
+                        console.error("Error getting user location:", error);
+                        alert("Gagal mendapatkan lokasi Anda. Pastikan Anda memberikan izin lokasi pada browser.");
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alert("Browser Anda tidak mendukung Geolocation API.");
+            }
         }
         
         // Initialize map on page load
-        document.addEventListener('DOMContentLoaded', initMap);
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            
+            // Tambahkan event listener untuk tombol lokasi
+            document.getElementById('getLocationBtn').addEventListener('click', getUserLocation);
+        });
     </script>
 </body>
 </html>
