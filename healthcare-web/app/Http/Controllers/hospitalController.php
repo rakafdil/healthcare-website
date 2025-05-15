@@ -158,6 +158,7 @@ class HospitalController extends Controller
                 'name' => 'Rumah Sakit Bhakti Wira Tamtama',
                 'vicinity' => 'Jl. Dr. Sutomo No.17',
                 'rating' => 4.2,
+                'kapasitas' => '20/80',
                 'geometry' => [
                     'location' => [
                         'lat' => $lat - 0.02,
@@ -171,6 +172,7 @@ class HospitalController extends Controller
                 'name' => 'RSUD Dr. Soetomo',
                 'vicinity' => 'Jl. Mayjen Prof. Dr. Moestopo No.6-8',
                 'rating' => 4.5,
+                'kapasitas' => '15/100',
                 'geometry' => [
                     'location' => [
                         'lat' => $lat + 0.01,
@@ -184,6 +186,7 @@ class HospitalController extends Controller
                 'name' => 'Rumah Sakit Mitra Keluarga',
                 'vicinity' => 'Jl. Raya Kemang No.39',
                 'rating' => 4.3,
+                'kapasitas' => '35/50',
                 'geometry' => [
                     'location' => [
                         'lat' => $lat - 0.01,
@@ -197,6 +200,7 @@ class HospitalController extends Controller
                 'name' => 'RSUP Dr. Sardjito',
                 'vicinity' => 'Jl. Kesehatan No.1',
                 'rating' => 4.1,
+                'kapasitas' => '10/60',
                 'geometry' => [
                     'location' => [
                         'lat' => $lat + 0.02,
@@ -210,6 +214,7 @@ class HospitalController extends Controller
                 'name' => 'Rumah Sakit Hermina',
                 'vicinity' => 'Jl. Jatinegara Barat No.126',
                 'rating' => 4.4,
+                'kapasitas' => '25/70',
                 'geometry' => [
                     'location' => [
                         'lat' => $lat + 0.03,

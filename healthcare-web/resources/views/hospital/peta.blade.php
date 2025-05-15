@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rumah Sakit - Peta Ketersediaan</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
@@ -16,24 +15,21 @@
         }
         
         body {
-            background-color: #fffff;
+            background-color: #ffffff;
         }
         
-        /* Modifikasi section hero agar menyesuaikan lebar layar */
         .hero-section {
             position: relative;
             height: 100vh;
-            width: 99vw; /* Ubah menjadi viewport width */
+            width: 99vw;
             margin: 0;
             margin-bottom: 20px;
-            margin-top: -25px;
             background-color: #555;
             display: flex;
             align-items: center;
             color: white;
             padding: 0;
             overflow: hidden;
-            /* Posisi untuk membuat gambar penuh lebar layar */
             left: 50%;
             right: 50%;
             margin-left: -50vw;
@@ -53,7 +49,7 @@
         .hero-text {
             position: relative;
             z-index: 2;
-            padding-left: 50px; /* Menambahkan padding agar teks tidak terlalu mepet ke kiri */
+            padding-left: 50px;
         }
         
         .hero-section h1 {
@@ -116,8 +112,30 @@
         .map-container {
             width: 100%;
             height: 400px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .location-controls {
+            margin-top: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .location-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .location-btn:hover {
+            background-color: #2980b9;
         }
         
         .table-container {
@@ -165,7 +183,6 @@
             font-size: 16px;
         }
         
-        /* Menambahkan media query untuk responsivitas di layar kecil */
         @media (max-width: 768px) {
             .hero-section {
                 height: 450px;
@@ -194,24 +211,22 @@
             }
         }
 
-        /* Custom marker style */
         .hospital-marker {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background-color: #3498db; /* Warna biru */
+            background-color: #3498db;
             color: white;
             text-align: center;
             line-height: 32px;
             font-weight: bold;
             border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            font-family: 'Font Awesome 6 Free'; /* Pastikan font ini tersedia */
+            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 18px;
         }
 
-        /* Custom popup style */
         .leaflet-popup-content {
             width: 300px;
             padding: 5px;
@@ -219,6 +234,9 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <!-- Navbar sudah ada di template utama, tidak perlu dibuat lagi -->
+    
     <!-- Hero section -->
     <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
@@ -235,6 +253,12 @@
         
         <div class="map-container" id="map">
             <!-- Map will be loaded here -->
+        </div>
+        
+        <div class="location-controls">
+            <button id="getLocationBtn" class="location-btn">
+                <i class="fas fa-location-dot"></i> Gunakan Lokasi Saya
+            </button>
         </div>
         
         <h3 class="recommendations-title">Rekomendasi Berdasarkan Jarak dan Ketersediaan</h3>
@@ -258,31 +282,25 @@
         </div>
     </div>
     
-    <!-- Load Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <script>
-        // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const provinsi = urlParams.get('provinsi');
         const kabupaten = urlParams.get('kabupaten');
         const kota = urlParams.get('kota');
         
-        // Check if all parameters are present
         if (!provinsi || !kabupaten || !kota) {
             alert('Parameter lokasi tidak lengkap. Silakan pilih lokasi terlebih dahulu.');
-            window.location.href = '/hospital'; // Redirect back to the form
+            window.location.href = '/hospital';
         }
         
-        // Display selected location
         document.getElementById('selectedLocation').textContent = `${kota}, ${kabupaten}, ${provinsi.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
         
-        // Global variables
         let map;
         let centerLat, centerLng;
         let markers = [];
         
-        // Map coordinates based on province (simplified for demo)
         const provinceCoordinates = {
             jawa_barat: { lat: -6.9147, lng: 107.6098 },
             jawa_tengah: { lat: -7.0051, lng: 110.4381 },
@@ -291,51 +309,40 @@
             di_yogyakarta: { lat: -7.7971, lng: 110.3688 }
         };
         
-        // Initialize the map
         function initMap() {
-            // Set center based on selected province
             const coordinates = provinceCoordinates[provinsi] || { lat: -6.200000, lng: 106.816666 };
             centerLat = coordinates.lat;
             centerLng = coordinates.lng;
             
-            // Create Leaflet map
             map = L.map('map').setView([centerLat, centerLng], 12);
             
-            // Add OpenStreetMap tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            // Get nearby hospitals once the map is loaded
             getNearbyHospitals(centerLat, centerLng);
         }
 
         function addUserLocationMarker(lat, lng) {
-            // Membuat icon kustom untuk lokasi pengguna
-            const userIcon = L.icon({
+            const userIcon = L.divIcon({
                 className: 'hospital-marker',
-                html: '<i class="fas fa-hospital"></i>',
-                iconSize: [40, 40], // Ukuran icon (biasanya lebih besar dari marker hospital)
-                iconAnchor: [20, 20], // Titik anchor di tengah icon
-                popupAnchor: [0, -20] // Popup akan muncul di atas icon
+                html: '<i class="fas fa-user-location"></i>',
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20]
             });
             
-            // Menambahkan marker lokasi pengguna ke peta
             const userMarker = L.marker([lat, lng], {
                 icon: userIcon,
-                zIndexOffset: 1000 // Pastikan marker pengguna berada di atas marker lainnya
+                zIndexOffset: 1000
             }).addTo(map);
             
-            // Tambahkan popup untuk lokasi pengguna
             userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
         }
         
-        // Function to get nearby hospitals using the controller
         function getNearbyHospitals(lat, lng) {
-            // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
-            // Make API request
             fetch(`/api/nearby-hospitals?lat=${lat}&lng=${lng}`, {
                 method: 'GET',
                 headers: {
@@ -345,7 +352,6 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Process hospital data
                 processHospitalData(data);
             })
             .catch(error => {
@@ -356,19 +362,15 @@
                     </tr>
                 `;
                 
-                // Use dummy data for demonstration if API fails
                 useDummyData();
             });
         }
         
-        // Process hospital data from API
         function processHospitalData(data) {
-            // Clear previous markers
             clearMarkers();
             
             if (data && data.results && data.results.length > 0) {
                 const hospitals = data.results.map(place => {
-                    // Calculate distance (simplified)
                     const distance = calculateDistance(
                         centerLat,
                         centerLng,
@@ -380,7 +382,7 @@
                         id: place.place_id,
                         name: place.name,
                         distance: `${distance.toFixed(1)} KM`,
-                        capacity: getRandomCapacity(), // You'd get real capacity from your database
+                        capacity: getRandomCapacity(),
                         lat: place.geometry.location.lat,
                         lng: place.geometry.location.lng,
                         rating: place.rating || 'N/A',
@@ -388,13 +390,10 @@
                     };
                 });
                 
-                // Sort hospitals by distance
                 hospitals.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
                 
-                // Display hospitals
                 displayHospitals(hospitals);
                 
-                // Add markers to map
                 addMarkersToMap(hospitals);
             } else {
                 document.getElementById('hospitalList').innerHTML = `
@@ -402,15 +401,11 @@
                         <td colspan="4" class="text-center">Tidak ada rumah sakit yang ditemukan di area ini.</td>
                     </tr>
                 `;
-                
-                // Use dummy data for demonstration (You would implement this function if needed)
-                // useDummyData();
             }
         }
         
-        // Calculate distance between two coordinates using Haversine formula
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius of the earth in km
+            const R = 6371;
             const dLat = deg2rad(lat2 - lat1);
             const dLon = deg2rad(lon2 - lon1);
             const a =
@@ -418,7 +413,7 @@
                 Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
                 Math.sin(dLon/2) * Math.sin(dLon/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const distance = R * c; // Distance in km
+            const distance = R * c;
             return distance;
         }
         
@@ -426,14 +421,12 @@
             return deg * (Math.PI/180);
         }
         
-        // Generate random capacity for demo purposes
         function getRandomCapacity() {
             const available = Math.floor(Math.random() * 40) + 10;
             const total = available + Math.floor(Math.random() * 60) + 40;
             return `${available}/${total}`;
         }
         
-        // Display hospitals in the table
         function displayHospitals(hospitals) {
             const hospitalList = document.getElementById('hospitalList');
             hospitalList.innerHTML = '';
@@ -450,10 +443,8 @@
             });
         }
         
-        // Add markers to the map using Leaflet
         function addMarkersToMap(hospitals) {
             hospitals.forEach(hospital => {
-                // Create a custom hospital icon
                 const hospitalIcon = L.divIcon({
                     className: 'hospital-marker',
                     html: '<i class="fas fa-hospital"></i>',
@@ -462,13 +453,11 @@
                     popupAnchor: [0, -16]
                 });
                 
-                // Create marker with custom icon
                 const marker = L.marker([hospital.lat, hospital.lng], {
                     title: hospital.name,
                     icon: hospitalIcon
                 }).addTo(map);
                 
-                // Add popup with hospital info
                 const popupContent = `
                     <div style="max-width: 300px;">
                         <h3 style="margin-bottom: 5px;">${hospital.name}</h3>
@@ -482,12 +471,10 @@
                 
                 marker.bindPopup(popupContent);
                 
-                // Store marker reference for later cleanup
                 markers.push(marker);
             });
         }
         
-        // Clear all markers from the map
         function clearMarkers() {
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
@@ -496,7 +483,6 @@
         function getUserLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    // Success callback
                     function(position) {
                         const userLat = position.coords.latitude;
                         const userLng = position.coords.longitude;
@@ -506,18 +492,14 @@
                         centerLat = userLat;
                         centerLng = userLng;
                         
-                        // Bersihkan marker yang ada
                         clearMarkers();
                         
-                        // Tambahkan marker lokasi pengguna
                         addUserLocationMarker(userLat, userLng);
                         
-                        // Dapatkan rumah sakit terdekat dari lokasi pengguna
                         getNearbyHospitals(userLat, userLng);
 
                         document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
                     },
-                    // Error callback
                     function(error) {
                         console.error("Error getting user location:", error);
                         alert("Gagal mendapatkan lokasi Anda. Pastikan Anda memberikan izin lokasi pada browser.");
@@ -533,11 +515,9 @@
             }
         }
         
-        // Initialize map on page load
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             
-            // Tambahkan event listener untuk tombol lokasi
             document.getElementById('getLocationBtn').addEventListener('click', getUserLocation);
         });
     </script>
