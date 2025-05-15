@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rumah Sakit - Peta Ketersediaan</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
         * {
             margin: 0;
@@ -190,10 +192,30 @@
                 padding-left: 20px;
             }
         }
+
+        /* Custom marker style */
+        .hospital-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Custom popup style */
+        .leaflet-popup-content {
+            width: 300px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- Hapus div container yang membatasi lebar hero section -->
+    <!-- Hero section -->
     <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
         <div class="hero-text">
@@ -232,6 +254,9 @@
         </div>
     </div>
     
+    <!-- Load Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
     <script>
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -269,11 +294,13 @@
             centerLat = coordinates.lat;
             centerLng = coordinates.lng;
             
-            // Create map
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: centerLat, lng: centerLng },
-                zoom: 12
-            });
+            // Create Leaflet map
+            map = L.map('map').setView([centerLat, centerLng], 12);
+            
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
             
             // Get nearby hospitals once the map is loaded
             getNearbyHospitals(centerLat, centerLng);
@@ -352,8 +379,8 @@
                     </tr>
                 `;
                 
-                // Use dummy data for demonstration
-                useDummyData();
+                // Use dummy data for demonstration (You would implement this function if needed)
+                // useDummyData();
             }
         }
         
@@ -399,17 +426,26 @@
             });
         }
         
-        // Add markers to the map
+        // Add markers to the map using Leaflet
         function addMarkersToMap(hospitals) {
             hospitals.forEach(hospital => {
-                const marker = new google.maps.Marker({
-                    position: { lat: hospital.lat, lng: hospital.lng },
-                    map: map,
-                    title: hospital.name
+                // Create a custom hospital icon
+                const hospitalIcon = L.divIcon({
+                    className: 'hospital-marker',
+                    html: '<i class="fas fa-hospital"></i>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                    popupAnchor: [0, -16]
                 });
                 
-                // Add info window
-                const infoContent = `
+                // Create marker with custom icon
+                const marker = L.marker([hospital.lat, hospital.lng], {
+                    title: hospital.name,
+                    icon: hospitalIcon
+                }).addTo(map);
+                
+                // Add popup with hospital info
+                const popupContent = `
                     <div style="max-width: 300px;">
                         <h3 style="margin-bottom: 5px;">${hospital.name}</h3>
                         <p><strong>Alamat:</strong> ${hospital.vicinity}</p>
@@ -420,26 +456,62 @@
                     </div>
                 `;
                 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: infoContent
-                });
+                marker.bindPopup(popupContent);
                 
-                marker.addListener('click', () => {
-                    infoWindow.open(map, marker);
-                });
-                
+                // Store marker reference for later cleanup
                 markers.push(marker);
             });
         }
         
         // Clear all markers from the map
         function clearMarkers() {
-            markers.forEach(marker => marker.setMap(null));
+            markers.forEach(marker => map.removeLayer(marker));
             markers = [];
         }
+        
+        // Implement dummy data function if needed
+        function useDummyData() {
+            // Sample dummy data
+            const dummyHospitals = [
+                {
+                    id: '1',
+                    name: 'Rumah Sakit Bhakti Wira Tamtama',
+                    distance: '1.5 KM',
+                    capacity: '20/80',
+                    lat: centerLat - 0.02,
+                    lng: centerLng + 0.03,
+                    rating: '4.2',
+                    vicinity: 'Jl. Dr. Sutomo No.17'
+                },
+                {
+                    id: '2',
+                    name: 'RSUD Dr. Soetomo',
+                    distance: '2.3 KM',
+                    capacity: '15/100',
+                    lat: centerLat + 0.01,
+                    lng: centerLng - 0.02,
+                    rating: '4.5',
+                    vicinity: 'Jl. Mayjen Prof. Dr. Moestopo No.6-8'
+                },
+                {
+                    id: '3',
+                    name: 'Rumah Sakit Mitra Keluarga',
+                    distance: '3.1 KM',
+                    capacity: '35/50',
+                    lat: centerLat - 0.01,
+                    lng: centerLng - 0.01,
+                    rating: '4.3',
+                    vicinity: 'Jl. Raya Kemang No.39'
+                }
+            ];
+            
+            // Display and add markers for dummy data
+            displayHospitals(dummyHospitals);
+            addMarkersToMap(dummyHospitals);
+        }
+        
+        // Initialize map on page load
+        document.addEventListener('DOMContentLoaded', initMap);
     </script>
-    
-    <!-- Load Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
 </body>
 </html>
