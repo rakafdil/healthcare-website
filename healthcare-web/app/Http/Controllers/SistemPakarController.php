@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Error;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use App\Models\History;
 
 class SistemPakarController extends Controller
 {
@@ -203,16 +204,54 @@ class SistemPakarController extends Controller
         }
     }
 
-    public function getStepsName($step)
+    public function index()
     {
-        $steps = [
-            1 => 'Info',
-            2 => 'Gejala',
-            3 => 'Kondisi',
-            4 => 'Detail',
-            5 => 'Perawatan',
-        ];
-
-        return $steps[$step] ?? null;
+        return view('sistem-pakar.index');
     }
+
+    public function start($user_id)
+    {
+        $history = History::find($user_id);
+
+        if (!$history) {
+            abort(404);
+        }
+
+        return view('sistem-pakar.index', compact('user_id', 'history'));
+    }
+
+    public function history($user_id)
+    {
+        $history = History::find($user_id);
+
+        if (!$history) {
+            abort(404);
+        }
+
+        return view('sistem-pakar.history', compact('user_id', 'history'));
+    }
+
+    public function submitStep(Request $request)
+    {
+        $user_id = $request->user_id;
+        $step = $request->input('step', 1);
+
+        // Simpan data ke session
+        if ($request->has('umur')) {
+            session(['diagnosis.umur' => $request->input('umur')]);
+        }
+
+        if ($request->has('gender')) {
+            session(['diagnosis.gender' => $request->input('gender')]);
+        }
+
+        if ($request->has('gejala')) {
+            session(['diagnosis.gejala' => $request->input('gejala')]);
+        }
+
+        return view('sistem-pakar.process', ['step' => $step, 'user_id' => $user_id]);
+    }
+
+
+
 }

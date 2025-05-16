@@ -64,7 +64,7 @@
                 <h2 class="text-2xl font-semibold text-blue-600 border-b-2 border-gray-200 pb-3 mb-4">Riwayat Pengecekan
                 </h2>
 
-                @isset($history['history_penyakit'])
+                @isset($history->history_penyakit)
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
@@ -84,7 +84,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($history['history_penyakit'] as $key => $item)
+                                @foreach ($history->history_penyakit as $key => $item)
                                     <tr class="hover:bg-blue-50 transition-colors duration-200">
                                         <td class="py-3 px-4 border-b border-gray-200">
                                             {{ \Carbon\Carbon::parse($item['tanggal'])->format('d F Y') }}

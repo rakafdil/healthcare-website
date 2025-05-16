@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\History;
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Password;
@@ -20,43 +21,22 @@ Route::get('/baca-blog', function () {
     return view('baca-blog');
 })->name('baca-blog');
 
-Route::get('/sistem-pakar', function () {
-    return view('sistem-pakar.index');
-});
+// Tampilan awal sistem pakar
+Route::get('/sistem-pakar', [SistemPakarController::class, 'index']);
 
-Route::get('/sistem-pakar/{user_id}', function ($user_id) {
-    $user_history = SistemPakar::getHistory($user_id);
-    return view('sistem-pakar.index', [
-        'user_id' => $user_id,
-        'history' => $user_history,
-    ]);
-});
+// Tampilan form dengan user_id
+Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start']);
 
+Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
+
+// Submit step-by-step
+Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
+
+// Prediksi penyakit dari gejala
 Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::class, 'predict'])->name('sistem-pakar.predict');
 
-Route::post('/sistem-pakar/{user_id}/symptoms', function ($user_id) {
-    return view('sistem-pakar.process', [
-        'user_id' => $user_id,
-        'step' => request('step', 1)
-    ]);
-});
-
-Route::get('/sistem-pakar/{user_id}/symptoms', function ($user_id) {
-    return view('sistem-pakar.process', [
-        'user_id' => $user_id,
-        'step' => request('step', 1)
-    ]);
-});
-
-Route::get('/sistem-pakar/{user_id}/history', function ($user_id) {
-    $history_id = request('id'); // ambil dari query string
-    $user_history = SistemPakar::getHistory($user_id);
-    return view('sistem-pakar.history', [
-        'user_id' => $user_id,
-        'history' => $user_history,
-        'selected_id' => $history_id,
-    ]);
-})->name('sistem-pakar.history');
+// Riwayat diagnosa
+Route::get('/sistem-pakar/{user_id}/history', [SistemPakarController::class, 'history'])->name('sistem-pakar.history');
 
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
