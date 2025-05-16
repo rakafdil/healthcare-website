@@ -38,6 +38,8 @@ Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::
 // Riwayat diagnosa
 Route::get('/sistem-pakar/{user_id}/history', [SistemPakarController::class, 'history'])->name('sistem-pakar.history');
 
+Route::post('/finish-diagnosis', [SistemPakarController::class, 'finishDiagnosis'])->name('finishDiagnosis');
+
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
 })->name('rumah-sakit');

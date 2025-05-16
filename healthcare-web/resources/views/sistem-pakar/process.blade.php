@@ -3,10 +3,11 @@
 <x-layout title="Healthcare Alomany - Melakukan Diagnosa - Sistem Pakar">
     <x-sistem-pakar-hero />
 
-    <div class="flex
-    justify-center">
+    <div class="flex justify-center">
         <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
     </div>
+    {{-- <pre>{{ print_r(session()->all(), true) }}</pre> --}}
+
     <x-symptoms-steps :user_id="$user_id" :current_step="$step" :total_steps="5" />
     <div class="px-20 py-8 text-2xl">
 
@@ -216,7 +217,7 @@
                     'kerak kuning yang keluar' => 'yellow_crust_ooze',
                 ];
                 // Get previously selected symptoms if any
-                $previousSymptoms = session('symptoms', []);
+                $previousSymptoms = session('diagnosis.gejala', []);
             @endphp
 
             <form action="{{ url("/sistem-pakar/$user_id/symptoms/predict") }}" method="POST">
@@ -389,11 +390,11 @@
                 <div class="w-1/4">
                     <h2 class="text-sm font-semibold mb-2">Kondisi–Kondisi yang Memungkinkan</h2>
                     <div id="kondisiList" class="space-y-2">
-                        @foreach ($result as $index => $item)
+                        @foreach (session('diagnosis.result') as $index => $item)
                             <button
                                 class="w-full text-left p-3 rounded-lg {{ $index === 0 ? 'bg-blue-200 font-semibold' : 'bg-blue-100' }}"
                                 onclick="selectKondisi({{ $index + 1 }})">
-                                {{ $item['disease'] }}
+                                {{ $item->disease }}
                             </button>
                         @endforeach
                     </div>

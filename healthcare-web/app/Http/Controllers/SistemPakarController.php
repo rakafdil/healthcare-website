@@ -14,7 +14,7 @@ class SistemPakarController extends Controller
 
         $symptoms = $request->all();
         $symptoms = explode(',', $symptoms['gejala']);
-
+        session(['diagnosis.gejala' => $symptoms]);
         $symptoms = array_map(function ($symptom) {
             return $this->getEngName($symptom);
         }, $symptoms);
@@ -52,6 +52,7 @@ class SistemPakarController extends Controller
         $resultObject = json_decode(json_encode($result));
         // dd($resultObject);
         // Kirim ke view
+        session(['diagnosis.result' => $resultObject]);
         return view('sistem-pakar.process', [
             'step' => 3,
             'user_id' => $request->user_id,
@@ -245,13 +246,17 @@ class SistemPakarController extends Controller
             session(['diagnosis.gender' => $request->input('gender')]);
         }
 
-        if ($request->has('gejala')) {
-            session(['diagnosis.gejala' => $request->input('gejala')]);
-        }
-
         return view('sistem-pakar.process', ['step' => $step, 'user_id' => $user_id]);
     }
 
 
+    public function finishDiagnosis(Request $request)
+    {
+        $user_id = $request->user_id;
+        // hapus session gejala biar gak numpuk
+        session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gejala', 'diagnosis.gender', 'diagnosis.result']);
+
+        return redirect()->route('home');
+    }
 
 }

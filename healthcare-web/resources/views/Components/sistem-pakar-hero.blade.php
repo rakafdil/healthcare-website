@@ -8,7 +8,13 @@
         <!-- Garis di atas tombol -->
         <div class="w-30 h-0.5 bg-white my-4 rounded-full"></div>
 
-        <a href="{{ route('home') }}"
-            class="inline-block bg-white text-blue-600 font-semibold px-10 py-2 rounded-3xl">Beranda</a>
+        <form action="{{ route('finishDiagnosis') }}" method="POST">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
+            <button type="submit" class="bg-white text-blue-600 font-semibold px-10 py-2 rounded-3xl">
+                Beranda
+            </button>
+        </form>
+
     </div>
 </div>
