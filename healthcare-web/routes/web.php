@@ -22,7 +22,7 @@ Route::get('/baca-blog', function () {
 })->name('baca-blog');
 
 // Tampilan awal sistem pakar
-Route::get('/sistem-pakar', [SistemPakarController::class, 'index']);
+Route::get('/sistem-pakar', [SistemPakarController::class, 'index'])->name('sistem-pakar.index');
 
 // Tampilan form dengan user_id
 Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start']);

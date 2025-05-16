@@ -7,7 +7,6 @@
     {{-- <title>{{ $title }}</title> --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-
 </head>
 
 <body class="flex flex-col min-h-screen">

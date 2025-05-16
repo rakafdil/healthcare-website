@@ -13,7 +13,7 @@
         <div class=" top-14 my-14 mb-4">
             <form action="{{ route('blog.search') }}" method="GET"
                 class="flex items-center w-full max-w-md space-x-0.5 z-10">
-                x <input type="text" name="query" placeholder="Cari artikel..."
+                <input type="text" name="query" placeholder="Cari artikel..."
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 <button type="submit" class="px-4 py-2 bg-[#499BE8] text-white rounded-md hover:bg-[#418ACE]">Cari
