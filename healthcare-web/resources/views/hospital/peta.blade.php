@@ -317,26 +317,50 @@
         let centerLat, centerLng;
         let markers = [];
         
-        // Menambahkan struktur data bertingkat untuk koordinat
         const locationCoordinates = {
             jawa_barat: {
                 coordinates: { lat: -6.9147, lng: 107.6098 },
                 kabupaten: {
-                    bandung: { 
-                        coordinates: { lat: -6.9147, lng: 107.6098 },
+                    Bandung: {
+                        coordinates: { lat: -6.914744, lng: 107.609810 },
                         kota: {
-                            'bandung': { lat: -6.9175, lng: 107.6191 },
-                            'cimahi': { lat: -6.8845, lng: 107.5413 }
+                            'Bandung': { lat: -6.914744, lng: 107.609810 },
+                            'Cimahi': { lat: -6.87222, lng: 107.5425 },
+                            'Lembang': { lat: -6.8117, lng: 107.6175 }
                         }
                     },
-                    bekasi: {
+                    Bekasi: {
                         coordinates: { lat: -6.2349, lng: 107.0013 },
                         kota: {
-                            'bekasi': { lat: -6.2349, lng: 107.0013 },
-                            'cikarang': { lat: -6.2609, lng: 107.1453 }
+                            'Bekasi': { lat: -6.2349, lng: 107.0013 },
+                            'Cikarang': { lat: -6.26111, lng: 107.15278 },
+                            'Tambun': { lat: -6.178763, lng: 107.065758 }
+                        }
+                    },
+                    Bogor: {
+                        coordinates: { lat: -6.595038, lng: 106.816635 },
+                        kota: {
+                            'Bogor': { lat: -6.595038, lng: 106.816635 },
+                            'Cibinong': { lat: -6.497641, lng: 106.828224 },
+                            'Cisarua': { lat: -6.679303, lng: 106.939835 }
+                        }
+                    },
+                    Cianjur: {
+                        coordinates: { lat: -6.820762, lng: 107.142960 },
+                        kota: {
+                            'Cianjur': { lat: -6.820762, lng: 107.142960 },
+                            'Cugenang': { lat: -6.808, lng: 107.094 },
+                            'Sukaluyu': { lat: -6.803080, lng: 107.237083 }
+                        }
+                    },
+                    Cirebon: {
+                        coordinates: { lat: -6.737246, lng: 108.550659 },
+                        kota: {
+                            'Cirebon': { lat: -6.737246, lng: 108.550659 },
+                            'Sumber': { lat: -6.7603, lng: 108.4831 },
+                            'Arjawinangun': { lat: -6.6468482, lng: 108.4092794 }
                         }
                     }
-                    // Tambahkan kabupaten lainnya
                 }
             },
             jawa_tengah: {
