@@ -254,10 +254,6 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <!-- Navbar sudah ada di template utama, tidak perlu dibuat lagi -->
-    
-    <!-- Hero section -->
     <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
         <div class="hero-text">
