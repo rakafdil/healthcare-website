@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Healthcare Alomany - Riwayat Sistem Pakar">
     <x-sistem-pakar-hero />
 
     <div class="px-4 md:px-8 lg:px-20 py-8">

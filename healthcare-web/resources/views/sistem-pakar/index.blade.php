@@ -1,8 +1,9 @@
-<x-layout>
+<x-layout title="Healthcare Alomany - Sistem Pakar">
 
     <x-sistem-pakar-hero />
 
-    <div class="px-4 md:px-8 lg:px-20 py-8">
+    <div class="px-4 md:px-8 lg:px-20
+    py-8">
         <header class="text-center mb-10 pb-6 border-b-2 border-blue-500">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Pengecekan Gejala Kesehatan</h1>
             <p class="text-gray-600">Dapatkan informasi awal tentang kondisi kesehatan Anda berdasarkan gejala yang

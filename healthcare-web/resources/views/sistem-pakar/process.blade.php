@@ -1,9 +1,10 @@
 {{-- resources/views/symptoms-page.blade.php --}}
 
-<x-layout>
+<x-layout title="Healthcare Alomany - Melakukan Diagnosa - Sistem Pakar">
     <x-sistem-pakar-hero />
 
-    <div class="flex justify-center">
+    <div class="flex
+    justify-center">
         <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
     </div>
     <x-symptoms-steps :user_id="$user_id" :current_step="$step" :total_steps="5" />
