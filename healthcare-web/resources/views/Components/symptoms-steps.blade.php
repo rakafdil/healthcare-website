@@ -15,6 +15,7 @@
                 $stepName = 'Perawatan';
             }
         @endphp
+
         <div class="flex flex-col items-center mx-4 px-6">
             <div class="text-2x1 font-medium text-gray-700 mb-2 w-full text-center">{{ $stepName }}</div>
             <a href="{{ url('/sistem-pakar/' . $userId . '/symptoms') }}?step={{ $i }}"

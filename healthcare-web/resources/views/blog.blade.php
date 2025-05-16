@@ -3,17 +3,7 @@
         Blog
     </x-slot>
 
-    <div class="w-full h-screen bg-cover bg-center text-white relative"
-        style="background-image: url('/assets/bg-blog.jpg');">
-        <div class="absolute" style="left: 10%; top: 30%;">
-            <h1 class="text-4xl font-bold">BLOG KESEHATAN</h1>
-            <h1 class="text-4xl font-bold">
-                <span class="border-b-2 border-white pb-1">ARTIKEL</span> GAYA HIDUP SEHAT
-            </h1>
-            <a href="{{ route('home') }}"
-                class="mt-4 inline-block bg-white text-blue-600 font-semibold px-10 py-2 rounded-3xl">Beranda</a>
-        </div>
-    </div>
+    <x-blog-hero />
 
     <div class="w-full h-screen flex flex-col items-center ">
         <div>
@@ -23,7 +13,7 @@
         <div class=" top-14 my-14 mb-4">
             <form action="{{ route('blog.search') }}" method="GET"
                 class="flex items-center w-full max-w-md space-x-0.5 z-10">
-                <input type="text" name="query" placeholder="Cari artikel..."
+                x <input type="text" name="query" placeholder="Cari artikel..."
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 <button type="submit" class="px-4 py-2 bg-[#499BE8] text-white rounded-md hover:bg-[#418ACE]">Cari

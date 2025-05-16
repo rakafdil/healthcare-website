@@ -229,11 +229,9 @@
                     class="w-full px-4 py-2 border-2 border-black rounded-lg">
                 <ul id="suggestions" class="max-h-60 overflow-y-auto bg-white shadow-md rounded-md mt-1"
                     style="display: none;"></ul>
-                <div class="mb-6">
+                <div class="mb-6"></div>
 
-                </div>
-
-                <div class="mt-8 bg-gray-50 py-4 rounded-lg">
+                <div class="mt-8 bg-gray-50 py-4 px-4 rounded-lg">
                     <h4 class="text-lg font-semibold mb-3">Gejala yang dipilih:</h4>
                     <ul id="selected-symptoms" class="list-disc pl-6"></ul>
                     <input type="hidden" name="gejala" id="gejala-hidden">
@@ -379,7 +377,32 @@
             </script>
         @elseif($step == 3)
             <h2 class="text-center font-medium mb-5">Kondisi - Kondisi yang Memungkinkan</h2>
-            @foreach ($result as $item)
+            <p class="text-lg font-semibold text-gray-800 mb-0.2">Gejala yang sudah dipilih:</p>
+
+            @foreach (session('diagnosis.gejala') as $gejala)
+                <span
+                    class="inline-block bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full">
+                    {{ $gejala }}
+                </span>
+            @endforeach
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 mt-6">
+                <div class="flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600 mt-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <p class="ml-3 text-sm text-yellow-700">
+                        <span class="font-medium">Perhatian:</span> Sistem ini hanya memberikan perkiraan awal
+                        dan tidak menggantikan diagnosis medis profesional. Selalu konsultasikan dengan tenaga
+                        medis untuk penanganan yang tepat.
+                    </p>
+                </div>
+            </div>
+
+            @foreach (session('diagnosis.result') as $item)
                 @if ($item->probability > 0)
                     <x-diagnosis-list :item="$item" />
                 @endif
@@ -423,7 +446,8 @@
                                             class="w-full h-full object-cover">
                                     </div>
                                     <div class="w-2/3 p-4">
-                                        <h3 class="font-semibold mb-1" id="articleTitle1">5 Langkah Mudah Mengatasi
+                                        <h3 class="font-semibold mb-1" id="articleTitle1">5 Langkah Mudah
+                                            Mengatasi
                                             Demam</h3>
                                         <p class="text-sm text-gray-600 mb-3" id="articleExcerpt1">
                                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
@@ -444,7 +468,8 @@
                                             class="w-full h-full object-cover">
                                     </div>
                                     <div class="w-2/3 p-4">
-                                        <h3 class="font-semibold mb-1" id="articleTitle2">5 Langkah Mudah Mengatasi
+                                        <h3 class="font-semibold mb-1" id="articleTitle2">5 Langkah Mudah
+                                            Mengatasi
                                             Demam</h3>
                                         <p class="text-sm text-gray-600 mb-3" id="articleExcerpt2">
                                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
@@ -459,7 +484,7 @@
                         </div>
 
                         <div class="text-right mt-4">
-                            <a href="#" class="text-blue-500">See More</a>
+                            <a href="/blog" class="text-blue-500">See More</a>
                         </div>
                     </div>
                 </div>
