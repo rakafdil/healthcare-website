@@ -317,20 +317,143 @@
         let centerLat, centerLng;
         let markers = [];
         
-        const provinceCoordinates = {
-            jawa_barat: { lat: -6.9147, lng: 107.6098 },
-            jawa_tengah: { lat: -7.0051, lng: 110.4381 },
-            jawa_timur: { lat: -7.2575, lng: 112.7521 },
-            dki_jakarta: { lat: -6.2088, lng: 106.8456 },
-            di_yogyakarta: { lat: -7.7971, lng: 110.3688 }
+        // Menambahkan struktur data bertingkat untuk koordinat
+        const locationCoordinates = {
+            jawa_barat: {
+                coordinates: { lat: -6.9147, lng: 107.6098 },
+                kabupaten: {
+                    bandung: { 
+                        coordinates: { lat: -6.9147, lng: 107.6098 },
+                        kota: {
+                            'bandung': { lat: -6.9175, lng: 107.6191 },
+                            'cimahi': { lat: -6.8845, lng: 107.5413 }
+                        }
+                    },
+                    bekasi: {
+                        coordinates: { lat: -6.2349, lng: 107.0013 },
+                        kota: {
+                            'bekasi': { lat: -6.2349, lng: 107.0013 },
+                            'cikarang': { lat: -6.2609, lng: 107.1453 }
+                        }
+                    }
+                    // Tambahkan kabupaten lainnya
+                }
+            },
+            jawa_tengah: {
+                coordinates: { lat: -7.0051, lng: 110.4381 },
+                kabupaten: {
+                    semarang: {
+                        coordinates: { lat: -7.0051, lng: 110.4381 },
+                        kota: {
+                            'semarang': { lat: -7.0051, lng: 110.4381 },
+                            'ungaran': { lat: -7.1372, lng: 110.4051 }
+                        }
+                    },
+                    solo: {
+                        coordinates: { lat: -7.5695, lng: 110.8290 },
+                        kota: {
+                            'surakarta': { lat: -7.5695, lng: 110.8290 },
+                            'karanganyar': { lat: -7.5986, lng: 110.9159 }
+                        }
+                    }
+                    // Tambahkan kabupaten lainnya
+                }
+            },
+            jawa_timur: {
+                coordinates: { lat: -7.2575, lng: 112.7521 },
+                kabupaten: {
+                    surabaya: {
+                        coordinates: { lat: -7.2575, lng: 112.7521 },
+                        kota: {
+                            'surabaya': { lat: -7.2575, lng: 112.7521 },
+                            'sidoarjo': { lat: -7.4726, lng: 112.6675 }
+                        }
+                    },
+                    malang: {
+                        coordinates: { lat: -7.9666, lng: 112.6326 },
+                        kota: {
+                            'malang': { lat: -7.9666, lng: 112.6326 },
+                            'batu': { lat: -7.8671, lng: 112.5239 }
+                        }
+                    }
+                    // Tambahkan kabupaten lainnya
+                }
+            },
+            dki_jakarta: {
+                coordinates: { lat: -6.2088, lng: 106.8456 },
+                kabupaten: {
+                    jakarta_selatan: {
+                        coordinates: { lat: -6.2615, lng: 106.8106 },
+                        kota: {
+                            'kebayoran baru': { lat: -6.2451, lng: 106.7972 },
+                            'tebet': { lat: -6.2262, lng: 106.8591 }
+                        }
+                    },
+                    jakarta_pusat: {
+                        coordinates: { lat: -6.1805, lng: 106.8346 },
+                        kota: {
+                            'menteng': { lat: -6.1967, lng: 106.8345 },
+                            'tanah abang': { lat: -6.1857, lng: 106.8173 }
+                        }
+                    }
+                    // Tambahkan kabupaten lainnya
+                }
+            },
+            di_yogyakarta: {
+                coordinates: { lat: -7.7971, lng: 110.3688 },
+                kabupaten: {
+                    sleman: {
+                        coordinates: { lat: -7.7321, lng: 110.4073 },
+                        kota: {
+                            'depok': { lat: -7.7754, lng: 110.3962 },
+                            'mlati': { lat: -7.7416, lng: 110.3401 }
+                        }
+                    },
+                    bantul: {
+                        coordinates: { lat: -7.8886, lng: 110.3330 },
+                        kota: {
+                            'bantul': { lat: -7.8886, lng: 110.3330 },
+                            'kasihan': { lat: -7.8224, lng: 110.3329 }
+                        }
+                    }
+                    // Tambahkan kabupaten lainnya
+                }
+            }
         };
+
+        // Fungsi helper untuk mendapatkan koordinat berdasarkan provinsi, kabupaten, dan kota
+        function getCoordinates(provinsi, kabupaten, kota) {
+            try {
+                // Coba dapatkan koordinat berdasarkan kota
+                if (locationCoordinates[provinsi]?.kabupaten[kabupaten]?.kota[kota]) {
+                    return locationCoordinates[provinsi].kabupaten[kabupaten].kota[kota];
+                }
+                
+                // Jika tidak ada kota, gunakan koordinat kabupaten
+                if (locationCoordinates[provinsi]?.kabupaten[kabupaten]?.coordinates) {
+                    return locationCoordinates[provinsi].kabupaten[kabupaten].coordinates;
+                }
+                
+                // Jika tidak ada kabupaten, gunakan koordinat provinsi
+                if (locationCoordinates[provinsi]?.coordinates) {
+                    return locationCoordinates[provinsi].coordinates;
+                }
+                
+                // Default koordinat (Jakarta)
+                return { lat: -6.200000, lng: 106.816666 };
+            } catch (error) {
+                console.error("Error saat mendapatkan koordinat:", error);
+                return { lat: -6.200000, lng: 106.816666 };
+            }
+        }
         
         function initMap() {
-            const coordinates = provinceCoordinates[provinsi] || { lat: -6.200000, lng: 106.816666 };
+            // Gunakan fungsi getCoordinates untuk mendapatkan koordinat berdasarkan hierarki
+            const coordinates = getCoordinates(provinsi, kabupaten, kota);
             centerLat = coordinates.lat;
             centerLng = coordinates.lng;
             
-            map = L.map('map').setView([centerLat, centerLng], 12);
+            map = L.map('map').setView([centerLat, centerLng], 13);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -359,7 +482,7 @@
         function getNearbyHospitals(lat, lng) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
-            fetch(`/api/nearby-hospitals?lat=${lat}&lng=${lng}`, {
+            fetch(`/api/nearby-hospitals?lat=${lat}&lng=${lng}&provinsi=${provinsi}&kabupaten=${kabupaten}&kota=${kota}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
