@@ -50,7 +50,9 @@
             <p><strong>Penanganan:</strong></p>
             <ul class="list-disc list-inside">
                 @foreach ($item->precautions as $p)
-                    <li>{{ $p }}</li>
+                    @if (!is_null($p))
+                        <li>{{ $p }}</li>
+                    @endif
                 @endforeach
             </ul>
         @endif
