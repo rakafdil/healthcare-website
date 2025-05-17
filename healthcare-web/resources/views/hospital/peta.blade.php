@@ -487,6 +487,18 @@
         }
 
         function addUserLocationMarker(lat, lng) {
+            if (!isFinite(lat) || !isFinite(lng)) {
+                console.error("addUserLocationMarker: Koordinat tidak valid", lat, lng);
+                return;
+            }
+            
+            console.log("Menambahkan marker pengguna di:", lat, lng);
+            
+            // Hapus marker pengguna lama jika ada
+            if (window.userMarker) {
+                map.removeLayer(window.userMarker);
+            }
+            
             const userIcon = L.divIcon({
                 className: 'hospital-marker',
                 html: '<i class="fas fa-user-location"></i>',
@@ -501,6 +513,14 @@
             }).addTo(map);
             
             userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
+
+            window.userAccuracyCircle = L.circle([lat, lng], {
+                radius: 100, // meter
+                color: '#3388ff',
+                fillColor: '#3388ff',
+                fillOpacity: 0.15,
+                weight: 2
+            }).addTo(map);
         }
         
         function getNearbyHospitals(lat, lng) {
@@ -655,6 +675,13 @@
                     </td>
                 </tr>
             `;
+
+            console.log("Memulai proses geolocation...");
+
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                console.warn("Geolocation mungkin memerlukan HTTPS! Protokol saat ini:", window.location.protocol);
+            }
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -662,6 +689,12 @@
                         const userLng = position.coords.longitude;
                         
                         console.log("Lokasi user ditemukan:", userLat, userLng);
+
+                        if (!isFinite(userLat) || !isFinite(userLng)) {
+                            console.error("Koordinat tidak valid:", userLat, userLng);
+                            alert("Koordinat lokasi tidak valid. Silakan coba lagi.");
+                            return;
+                        }
 
                         map.setView([userLat, userLng], 13);
                         
@@ -683,8 +716,9 @@
                             zIndexOffset: 1000
                         }).addTo(map);
 
-                        addUserLocationMarker(userLat, userLng);
                         userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
+
+                        markers.push(userMarker);
                         
                         getNearbyHospitals(userLat, userLng);
 
@@ -692,21 +726,32 @@
                     },
                     function(error) {
                         // Handler error berdasarkan kode error
+                        console.error("Geolocation error code:", error.code);
+                        console.error("Geolocation error message:", error.message);
+                        
                         let errorMessage = "";
+                        let helpMessage = "";
                         
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
-                                errorMessage = "Anda menolak permintaan untuk mengakses lokasi. Silakan izinkan akses lokasi pada browser dan coba lagi.";
+                                eerrorMessage = "Akses lokasi ditolak.";
+                                helpMessage = "Untuk mengizinkan akses lokasi:<br>" +
+                                            "1. Klik ikon kunci/info di address bar<br>" +
+                                            "2. Pilih 'Izin' atau 'Izinkan lokasi'<br>" +
+                                            "3. Muat ulang halaman dan coba lagi";
                                 break;
                             case error.POSITION_UNAVAILABLE:
-                                errorMessage = "Informasi lokasi tidak tersedia. Pastikan GPS atau layanan lokasi perangkat Anda aktif.";
+                                errorMessage = "Informasi lokasi tidak tersedia.";
+                                helpMessage = "Pastikan GPS atau layanan lokasi perangkat Anda aktif.";
                                 break;
                             case error.TIMEOUT:
-                                errorMessage = "Permintaan untuk mendapatkan lokasi terlalu lama. Silakan coba lagi.";
+                                errorMessage = "Waktu permintaan lokasi habis.";
+                                helpMessage = "Periksa koneksi internet Anda dan coba lagi.";
                                 break;
                             case error.UNKNOWN_ERROR:
                             default:
-                                errorMessage = "Terjadi kesalahan yang tidak diketahui saat mengambil lokasi Anda.";
+                                errorMessage = "Error tidak dikenal.";
+                                helpMessage = "Detail error: " + error.message;
                                 break;
                         }
                         
@@ -717,14 +762,19 @@
                         document.getElementById('hospitalList').innerHTML = `
                             <tr>
                                 <td colspan="4" class="text-center">
-                                    <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
+                                    <div style="color: #e74c3c; margin-bottom: 10px;">
+                                        <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
+                                    </div>
+                                    <div style="font-size: 14px; color: #666;">
+                                        ${helpMessage}
+                                    </div>
                                 </td>
                             </tr>
                         `;
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000, // Menaikkan timeout ke 10 detik
+                        timeout: 15000, // Menaikkan timeout ke 10 detik
                         maximumAge: 0
                     }
                 );
@@ -733,7 +783,13 @@
                 document.getElementById('hospitalList').innerHTML = `
                     <tr>
                         <td colspan="4" class="text-center">
-                            Browser Anda tidak mendukung fitur lokasi. Silakan gunakan browser modern.
+                            <div style="color: #e74c3c;">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                Browser Anda tidak mendukung fitur lokasi.
+                            </div>
+                            <div style="margin-top: 10px; font-size: 14px;">
+                                Silakan gunakan browser modern seperti Chrome, Firefox, atau Safari terbaru.
+                            </div>
                         </td>
                     </tr>
                 `;
