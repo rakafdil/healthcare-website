@@ -366,81 +366,181 @@
             jawa_tengah: {
                 coordinates: { lat: -7.0051, lng: 110.4381 },
                 kabupaten: {
-                    semarang: {
+                    Semarang: {
                         coordinates: { lat: -7.0051, lng: 110.4381 },
                         kota: {
-                            'semarang': { lat: -7.0051, lng: 110.4381 },
-                            'ungaran': { lat: -7.1372, lng: 110.4051 }
+                            'Semarang': { lat: -6.9667, lng: 110.4050 },
+                            'Ungaran': { lat: -7.1381, lng: 110.4051 },
+                            'Ambarawa': { lat: -7.2633, lng: 110.3975 }
                         }
                     },
-                    solo: {
+                    Solo: {
                         coordinates: { lat: -7.5695, lng: 110.8290 },
                         kota: {
-                            'surakarta': { lat: -7.5695, lng: 110.8290 },
-                            'karanganyar': { lat: -7.5986, lng: 110.9159 }
+                            'Surakarta': { lat: -7.5695, lng: 110.8290 },
+                            'Laweyan': { lat: -7.5583, lng: 110.8083 },
+                            'Banjarsari': { lat: -7.5561, lng: 110.8167 }
+                        }
+                    },
+                    Magelang: {
+                        coordinates: { lat: -7.4706, lng: 110.2176 },
+                        kota: {
+                            'Magelang': { lat: -7.4706, lng: 110.2176 },
+                            'Mertoyudana': { lat: -7.5025, lng: 110.2306 },
+                            'Secang': { lat: -7.5561, lng: 110.8167 }
+                        }
+                    },
+                    Pekalongan: {
+                        coordinates: { lat: -6.8896, lng: 109.6753 },
+                        kota: {
+                            'Pekalongan': { lat: -6.8896, lng: 109.6753 },
+                            'Kajen': { lat: -7.0500, lng: 109.6167 },
+                            'Wonopringgo': { lat: -7.0500, lng: 109.7000 }
+                        }
+                    },
+                    Tegal: {
+                        coordinates: { lat: -6.8694, lng: 109.1406 },
+                        kota: {
+                            'Tegal': { lat: -6.8684, lng: 109.1406 },
+                            'Slawi': { lat: -6.9828, lng: 109.1333 },
+                            'Dukuhturi': { lat: -6.9333, lng: 109.1500 }
                         }
                     }
-                    // Tambahkan kabupaten lainnya
                 }
             },
             jawa_timur: {
                 coordinates: { lat: -7.2575, lng: 112.7521 },
                 kabupaten: {
-                    surabaya: {
-                        coordinates: { lat: -7.2575, lng: 112.7521 },
+                    Surabaya: {
+                        coordinates: { lat: -7.2492, lng: 112.7508 },
                         kota: {
-                            'surabaya': { lat: -7.2575, lng: 112.7521 },
-                            'sidoarjo': { lat: -7.4726, lng: 112.6675 }
+                        'Surabaya pusat': { lat: -7.2575, lng: 112.7521 },
+                        'Surabaya timur': { lat: -7.2575, lng: 112.7521 },
+                        'Surabaya selatan': { lat: -7.2575, lng: 112.7521 }
                         }
                     },
-                    malang: {
+                    Malang: {
                         coordinates: { lat: -7.9666, lng: 112.6326 },
                         kota: {
-                            'malang': { lat: -7.9666, lng: 112.6326 },
-                            'batu': { lat: -7.8671, lng: 112.5239 }
+                        'Malang kota': { lat: -7.9666, lng: 112.6326 },
+                        'Kepanjen': { lat: -8.1303, lng: 112.5644 },
+                        'Turen': { lat: -8.1680, lng: 112.6928 }
+                        }
+                    },
+                    Sidoarjo: {
+                        coordinates: { lat: -7.4477, lng: 112.6983 },
+                        kota: {
+                        'Sidoarjo kota': { lat: -7.4477, lng: 112.6983 },
+                        'Waru': { lat: -7.3511, lng: 112.7688 },
+                        'Taman': { lat: -7.3631, lng: 112.6757 }
+                        }
+                    },
+                    Kediri: {
+                        coordinates: { lat: -7.8167, lng: 112.0170 },
+                        kota: {
+                        'Kediri kota': { lat: -7.8167, lng: 112.0170 },
+                        'Pare': { lat: -7.7689, lng: 112.1965 },
+                        'Ngasem': { lat: -7.7926, lng: 112.0465 }
+                        }
+                    },
+                    Jember: {
+                        coordinates: { lat: -8.1648, lng: 113.7036 },
+                        kota: {
+                        'Jember kota': { lat: -8.1648, lng: 113.7036 },
+                        'Patrang': { lat: -8.1343, lng: 113.7011 },
+                        'Sumbersari': { lat: -8.1700, lng: 113.7000 }
                         }
                     }
-                    // Tambahkan kabupaten lainnya
                 }
             },
             dki_jakarta: {
                 coordinates: { lat: -6.2088, lng: 106.8456 },
                 kabupaten: {
-                    jakarta_selatan: {
-                        coordinates: { lat: -6.2615, lng: 106.8106 },
+                    Jakarta_pusat: {
+                        coordinates: { lat: -6.1900, lng: 106.8450 },
                         kota: {
-                            'kebayoran baru': { lat: -6.2451, lng: 106.7972 },
-                            'tebet': { lat: -6.2262, lng: 106.8591 }
+                        'Menteng': { lat: -6.1870, lng: 106.8370 },
+                        'Tanah abang': { lat: -6.1970, lng: 106.8130 },
+                        'Kemayoran': { lat: -6.1560, lng: 106.8610 }
                         }
                     },
-                    jakarta_pusat: {
-                        coordinates: { lat: -6.1805, lng: 106.8346 },
+                    Jakarta_barat: {
+                        coordinates: { lat: -6.1767, lng: 106.7900 },
                         kota: {
-                            'menteng': { lat: -6.1967, lng: 106.8345 },
-                            'tanah abang': { lat: -6.1857, lng: 106.8173 }
+                        'Grogol': { lat: -6.1611, lng: 106.7944 },
+                        'Kalideres': { lat: -6.1300, lng: 106.7200 },
+                        'Cengkareng': { lat: -6.1415, lng: 106.7464 }
+                        }
+                    },
+                    Jakarta_timur: {
+                        coordinates: { lat: -6.2250, lng: 106.9000 },
+                        kota: {
+                        'Cakung': { lat: -6.1830, lng: 106.9500 },
+                        'Duren sawit': { lat: -6.2352, lng: 106.9159 },
+                        'Jatinegara': { lat: -6.2330, lng: 106.8830 }
+                        }
+                    },
+                    Jakarta_selatan: {
+                        coordinates: { lat: -6.2667, lng: 106.8000 },
+                        kota: {
+                        'Kebayoran baru': { lat: -6.2432, lng: 106.8008 },
+                        'Pasar minggu': { lat: -6.2936, lng: 106.8378 },
+                        'Tebet': { lat: -6.2299, lng: 106.8524 }
+                        }
+                    },
+                    Jakarta_utara: {
+                        coordinates: { lat: -6.1214, lng: 106.7741 },
+                        kota: {
+                        'Koja': { lat: -6.1173, lng: 106.9020 },
+                        'Kelapa gading': { lat: -6.1500, lng: 106.9000 },
+                        'Pademangan': { lat: -6.1364, lng: 106.8463 }
                         }
                     }
-                    // Tambahkan kabupaten lainnya
                 }
             },
             di_yogyakarta: {
                 coordinates: { lat: -7.7971, lng: 110.3688 },
                 kabupaten: {
                     sleman: {
-                        coordinates: { lat: -7.7321, lng: 110.4073 },
+                        coordinates: { lat: -7.7325, lng: 110.4024 },
                         kota: {
-                            'depok': { lat: -7.7754, lng: 110.3962 },
-                            'mlati': { lat: -7.7416, lng: 110.3401 }
+                        'depok': { lat: -7.7844, lng: 110.4103 },
+                        'ngaglik': { lat: -7.6902, lng: 110.3420 },
+                        'mlati': { lat: -7.7360, lng: 110.3299 }
                         }
                     },
                     bantul: {
-                        coordinates: { lat: -7.8886, lng: 110.3330 },
+                        coordinates: { lat: -7.8881, lng: 110.3289 },
                         kota: {
-                            'bantul': { lat: -7.8886, lng: 110.3330 },
-                            'kasihan': { lat: -7.8224, lng: 110.3329 }
+                        'bantul kota': { lat: -7.8881, lng: 110.3289 },
+                        'pundong': { lat: -7.9522, lng: 110.3289 },
+                        'srandakan': { lat: -7.9599, lng: 110.2407 }
+                        }
+                    },
+                    gunung_kidul: {
+                        coordinates: { lat: -7.9656, lng: 110.6169 },
+                        kota: {
+                        'wonosari': { lat: -7.9804, lng: 110.5952 },
+                        'playen': { lat: -7.9397, lng: 110.5357 },
+                        'semanu': { lat: -8.0373, lng: 110.6472 }
+                        }
+                    },
+                    kulon_progo: {
+                        coordinates: { lat: -7.8123, lng: 110.1480 },
+                        kota: {
+                        'wates': { lat: -7.8859, lng: 110.1408 },
+                        'sentolo': { lat: -7.8369, lng: 110.2184 },
+                        'pengasih': { lat: -7.6450, lng: 110.0269 }
+                        }
+                    },
+                    yogyakarta_kota: {
+                        coordinates: { lat: -7.8014, lng: 110.3649 },
+                        kota: {
+                        'gondokusuman': { lat: -7.7868, lng: 110.3812 },
+                        'jetis': { lat: -7.6800, lng: 110.2200 },
+                        'danurejan': { lat: -7.7928, lng: 110.3718 }
                         }
                     }
-                    // Tambahkan kabupaten lainnya
                 }
             }
         };
