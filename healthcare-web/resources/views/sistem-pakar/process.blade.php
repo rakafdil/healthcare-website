@@ -13,7 +13,7 @@
 
         @if ($step == 1)
             <div class="justify-self-center text-center">
-                <form action="{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}" method="POST">
+                <form id="diagnosisForm" method="POST">
                     @csrf
 
                     <label class="block mb-2 pb-3" for="umur">Umur</label>
@@ -89,7 +89,7 @@
                 $previousSymptoms = session('diagnosis.gejala', []);
             @endphp
 
-            <form action="{{ url("/sistem-pakar/$user_id/symptoms/predict") }}" method="POST">
+            <form id="diagnosisForm" method="POST">
 
                 @csrf
 
@@ -290,24 +290,53 @@
                 $diagnosis = session('diagnosis.result');
                 dd($diagnosis[0]);
             @endphp --}}
-            </x-diagnosis-last>
+            <x-diagnosis-last step="4" />
         @elseif($step == 5)
+            <x-diagnosis-last step="5" />
         @endif
 
         @if ($step == 3 || $step == 4 || $step == 5)
             <div class="mt-8 flex justify-between">
                 <button type="button"
-                    onclick="window.location.href='{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step - 1)) }}'"
+                    onclick="saveScrollAndGo('{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step - 1)) }}')"
                     class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                     Kembali
                 </button>
-                <button type="button"
-                    onclick="window.location.href='{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}'"
-                    class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
-                    Lanjut
-                </button>
+                @if ($step != 5)
+                    <button type="button"
+                        onclick="saveScrollAndGo('{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}')"
+                        class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
+                        Lanjut
+                    </button>
+                @else
+                    <button type="button" onclick=""
+                        class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
+                        Selesai
+                    </button>
+                @endif
             </div>
         @endif
+
     </div>
 
+    <script>
+        function saveScrollAndGo(url) {
+            localStorage.setItem('scrollPos', window.scrollY);
+            window.location.href = url;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollPos = localStorage.getItem('scrollPos');
+            if (scrollPos !== null) {
+                window.scrollTo(0, parseInt(scrollPos));
+                localStorage.removeItem('scrollPos');
+            }
+        });
+
+        document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            localStorage.setItem('scrollPos', window.scrollY);
+            window.location.href = '{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}';
+        });
+    </script>
 </x-layout>

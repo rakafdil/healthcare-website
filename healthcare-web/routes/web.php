@@ -27,10 +27,10 @@ Route::get('/sistem-pakar', [SistemPakarController::class, 'index'])->name('sist
 // Tampilan form dengan user_id
 Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start']);
 
-Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep', 'backStep'])->name('sistem-pakar.step');
+Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
 
 // Submit step-by-step
-Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep', 'backStep'])->name('sistem-pakar.step');
+Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
 
 // Prediksi penyakit dari gejala
 Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::class, 'predict'])->name('sistem-pakar.predict');

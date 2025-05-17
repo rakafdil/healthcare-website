@@ -4,11 +4,11 @@
         <h2 class="text-sm font-semibold mb-4">Kondisi-Kondisi yang Memungkinkan</h2>
         <div id="kondisiList" class="space-y-3">
             @foreach (session('diagnosis.result') as $index => $item)
-                {{-- @dd($index) --}}
                 <button
-                    class="w-full text-left py-4 px-6 rounded-xl transition-all duration-300 {{ $index === 0 ? 'bg-blue-200 font-semibold' : 'bg-blue-100' }}"
-                    onclick="selectKondisi({{ $index + 1 }})">
-                    {{ $item->disease }} ({{ $item->probability * 100 }}%)
+                    class="w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-100 {{ $step == 4 && $index === 0 ? 'bg-blue-200 font-semibold' : '' }}"
+                    @if ($step == 4) onclick="selectKondisi({{ $index + 1 }})" @endif
+                    style="{{ $step == 5 ? 'cursor: default;' : '' }}">
+                    {{ $item->disease }} ({{ number_format($item->probability * 100, 1) }}%)
                 </button>
             @endforeach
         </div>
@@ -17,18 +17,20 @@
     <!-- Detail Kondisi (Right Panel) -->
     <div class="w-full md:w-3/4 pl-0 md:pl-6">
         <!-- Title at the top -->
-        <h1 class="text-2x4 font-semibold mb-6 text-center" id="kondisiTitle">
-            {{ session('diagnosis.result')[0]->disease }}</h1>
+        @if ($step == 4)
+            <h1 class="text-2xl font-semibold mb-6 text-center" id="kondisiTitle">
+                {{ session('diagnosis.result')[0]->disease }}</h1>
+        @endif
 
         <!-- Centered tabs -->
-        <div class="flex justify-center mb-6 border-b ">
+        <div class="flex justify-center mb-6 border-b">
             <div class="flex gap-8">
                 <a href="#"
-                    class="px-4 py-2 border-b-2 border-transparent text-gray-500 transition-colors duration-200"
-                    id="blogTab" onclick="switchTab('blog')">Blog</a>
+                    class="px-4 py-2 border-b-2 {{ $step == 4 ? 'border-blue-500 text-blue-500' : 'border-transparent text-gray-500' }} transition-colors duration-200"
+                    id="blogTab" onclick="switchTab('blog'); return false;">Blog</a>
                 <a href="#"
-                    class="px-4 py-2 border-b-2 border-blue-500 text-blue-500 transition-colors duration-200"
-                    id="rumahSakitTab" onclick="switchTab('rumahSakit')">Rumah Sakit</a>
+                    class="px-4 py-2 border-b-2 {{ $step == 5 ? 'border-blue-500 text-blue-500' : 'border-transparent text-gray-500' }} transition-colors duration-200"
+                    id="rumahSakitTab" onclick="switchTab('hospital'); return false;">Rumah Sakit</a>
             </div>
         </div>
 
@@ -90,6 +92,9 @@
 
 <script>
     // Sample data for each condition (in a real app, this would come from the backend)
+    let currentKondisi = 1;
+    let currentTab = 'blog';
+
     const kondisiData = {
         1: {
             articles: [{
@@ -197,10 +202,6 @@
         }
     };
 
-    // Current tab state
-    let currentTab = 'blog';
-    let currentKondisi = 1;
-
     // Function to select a condition
     function selectKondisi(kondisiNumber) {
         currentKondisi = kondisiNumber;
@@ -232,8 +233,11 @@
     // Function to switch between tabs
     function switchTab(tab) {
         currentTab = tab;
-
-        // Update tab styles
+        const url = new URL(window.location);
+        url.searchParams.set('step', tab === 'blog' ? 4 : 5);
+        localStorage.setItem('scrollPos', window.scrollY);
+        window.location = url;
+        // Update step styles
         if (tab === 'blog') {
             document.getElementById('blogTab').classList.add('border-blue-500', 'text-blue-500');
             document.getElementById('blogTab').classList.remove('border-transparent', 'text-gray-500');
@@ -315,6 +319,11 @@
     // Initialize with default content
     document.addEventListener('DOMContentLoaded', function() {
         updateContent();
+        // Restore scroll position if available
+        const scrollPos = localStorage.getItem('scrollPos');
+        if (scrollPos !== null) {
+            window.scrollTo(0, parseInt(scrollPos));
+            localStorage.removeItem('scrollPos');
+        }
     });
-    switchTab(currentTab); // Set the default tab to 'blog'
 </script>
