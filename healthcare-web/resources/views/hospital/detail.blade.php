@@ -215,7 +215,7 @@
             <div class="hero-text">
                 <h1>RUMAH SAKIT</h1>
                 <h2>KETERSEDIAAN KAMAR</h2>
-                <a href="/peta?provinsi={{ request('provinsi', 'jawa_barat') }}&kabupaten={{ request('kabupaten', 'Bandung') }}&kota={{ request('kota', 'Bandung') }}" class="btn">Kembali ke Peta</a>
+                <a href="/peta?provinsi={{ request('provinsi') ?? 'jawa_barat' }}&kabupaten={{ request('kabupaten') ?? 'Bandung' }}&kota={{ request('kota') ?? 'Bandung' }}" class="btn">Kembali ke Peta</a>
             </div>
         </div>
         

@@ -600,7 +600,11 @@
                     <td>${hospital.name}</td>
                     <td>${hospital.distance}</td>
                     <td>${hospital.capacity}</td>
-                    <td><a href="/hospital/${hospital.id}" class="see-more">See More</a></td>
+                    <td>
+                        <a href="/hospital/${hospital.id}?provinsi=${provinsi}&kabupaten=${kabupaten}&kota=${kota}">
+                            Lihat Detail
+                        </a>
+                    </td>
                 `;
                 hospitalList.appendChild(row);
             });
