@@ -834,7 +834,7 @@
                         
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
-                                eerrorMessage = "Akses lokasi ditolak.";
+                                errorMessage = "Akses lokasi ditolak.";
                                 helpMessage = "Untuk mengizinkan akses lokasi:<br>" +
                                             "1. Klik ikon kunci/info di address bar<br>" +
                                             "2. Pilih 'Izin' atau 'Izinkan lokasi'<br>" +
