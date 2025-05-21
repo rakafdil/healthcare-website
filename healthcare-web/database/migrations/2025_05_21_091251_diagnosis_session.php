@@ -10,10 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('gejala', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_gejala')->primary();
-            $table->string('nama_gejala_ind', 150);
-            $table->string('nama_gejala_eng', 150);
+        Schema::create('diagnosis_session', function (Blueprint $table) {
+            $table->id('id_session');
+            $table->unsignedBigInteger('user_id');
+            $table->timestamp('created_at')->useCurrent();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
 
     }
@@ -23,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('gejala');
+        Schema::dropIfExists('diagnosis_session');
     }
 };

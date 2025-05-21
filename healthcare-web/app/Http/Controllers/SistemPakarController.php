@@ -58,7 +58,6 @@ class SistemPakarController extends Controller
         //     }
         // }
 
-        // dd($resultObject);
         // Kirim ke view
         session(['diagnosis.result' => $resultObject]);
         return view('sistem-pakar.process', [
@@ -256,7 +255,6 @@ class SistemPakarController extends Controller
         if ($request->has('gender')) {
             session(['diagnosis.gender' => $request->input('gender')]);
         }
-
         return view('sistem-pakar.process', [
             'step' => $step,
             'user_id' => $user_id,
@@ -266,11 +264,20 @@ class SistemPakarController extends Controller
 
     public function finishDiagnosis(Request $request)
     {
-        $user_id = $request->user_id;
+        $result = session('diagnosis');
+
+        // Tambahkan tanggal dan waktu saat fungsi dipanggil
+        $calledAt = now(); // Carbon instance, default timezone sesuai config/app.php
+        $dateTime = explode(' ', $calledAt->toDateTimeString());
+        $date = $dateTime[0];
+        $time = $dateTime[1];
+
+        dd($date, $time);
+
         // hapus session gejala biar gak numpuk
         session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gejala', 'diagnosis.gender', 'diagnosis.result']);
 
-        return redirect()->route('home');
+        return redirect()->route('sistem-pakar.start');
     }
 
 }

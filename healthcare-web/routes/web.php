@@ -25,20 +25,20 @@ Route::get('/baca-blog', function () {
 Route::get('/sistem-pakar', [SistemPakarController::class, 'index'])->name('sistem-pakar.index');
 
 // Tampilan form dengan user_id
-Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start']);
+Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start'])->name('sistem-pakar.start');
 
-Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
+Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.process');
 
 // Submit step-by-step
-Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.step');
+Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.process');
 
 // Prediksi penyakit dari gejala
 Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::class, 'predict'])->name('sistem-pakar.predict');
 
+Route::post('/sistem-pakar/{user}/symptoms/finish', [SistemPakarController::class, 'finishDiagnosis'])->name('sistem-pakar.finish');
+
 // Riwayat diagnosa
 Route::get('/sistem-pakar/{user_id}/history', [SistemPakarController::class, 'history'])->name('sistem-pakar.history');
-
-Route::post('/finish-diagnosis', [SistemPakarController::class, 'finishDiagnosis'])->name('finishDiagnosis');
 
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');

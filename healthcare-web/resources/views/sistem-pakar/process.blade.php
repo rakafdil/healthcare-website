@@ -13,7 +13,8 @@
 
         @if ($step == 1)
             <div class="justify-self-center text-center">
-                <form id="diagnosisForm" method="POST">
+                <form id="diagnosisForm" method="POST"
+                    action="{{ url('/sistem-pakar/' . $user_id . '/symptoms?step=' . ($step + 1)) }}">
                     @csrf
 
                     <label class="block mb-2 pb-3" for="umur">Umur</label>
@@ -89,8 +90,8 @@
                 $previousSymptoms = session('diagnosis.gejala', []);
             @endphp
 
-            <form id="diagnosisForm" method="POST">
-
+            <form id="diagnosisForm" method="POST"
+                action="{{ url('/sistem-pakar/' . $user_id . '/symptoms/predict') }}">
                 @csrf
 
                 <label for="gejala" class="block text-xl font-semibold mb-3">Apa yang Anda alami?</label>
@@ -302,16 +303,20 @@
                     class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                     Kembali
                 </button>
-                @if ($step != 5)
+                @if ($step == 5)
+                    <form id="finishForm" method="POST"
+                        action="{{ url('/sistem-pakar/' . $user_id . '/symptoms/finish') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
+                            Selesai
+                        </button>
+                    </form>
+                @else
                     <button type="button"
                         onclick="saveScrollAndGo('{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}')"
                         class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                         Lanjut
-                    </button>
-                @else
-                    <button type="button" onclick=""
-                        class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
-                        Selesai
                     </button>
                 @endif
             </div>
@@ -334,9 +339,8 @@
         });
 
         document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
             localStorage.setItem('scrollPos', window.scrollY);
-            window.location.href = '{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}';
+            // Jangan pakai e.preventDefault() supaya form tetap submit POST ke server
         });
     </script>
 </x-layout>
