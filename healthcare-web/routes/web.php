@@ -87,4 +87,5 @@ Route::prefix('api')->group(function () {
     Route::get('/hospital/capacity/{placeId}', [HospitalController::class, 'getHospitalCapacity']);
     Route::get('/nearby-hospitals', [HospitalController::class, 'getNearbyHospitals']);
     Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']); // Alias lama
+    Route::get('/hospitals', [HospitalController::class, 'getAllHospitals']);
 });

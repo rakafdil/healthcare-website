@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\RumahSakit;
+use App\Models\Dokter; // Model Dokter yang perlu dibuat
 
 class HospitalController extends Controller
 {
@@ -20,210 +23,215 @@ class HospitalController extends Controller
     // Method untuk mendapatkan data rumah sakit berdasarkan ID
     public function getHospitalData($id)
     {
-        // Dalam aplikasi sebenarnya, data akan diambil dari database
-        // Untuk sementara, gunakan data dummy
-        $hospitals = [
-            '1' => [
-                'name' => 'Rumah Sakit Bhakti Wira Tamtama',
-                'address' => 'Jl. Dr. Sutomo No.17',
-                'capacity' => '20/80',
-                'rating' => '4.2',
-                'doctors' => [
-                    [
-                        'name' => 'dr. Hendrik Cahyono, Sp.PD',
-                        'specialty' => 'Penyakit Dalam',
-                        'schedule' => '18.00 - Selesai',
-                        'gender' => 'male'
-                    ],
-                    [
-                        'name' => 'dr. Tessy Mubarok, Sp.B',
-                        'specialty' => 'Bedah Umum',
-                        'schedule' => '06.30 - Selesai',
-                        'gender' => 'female'
-                    ]
-                ]
-            ],
-            '2' => [
-                'name' => 'RSUD Dr. Soetomo',
-                'address' => 'Jl. Mayjen Prof. Dr. Moestopo No.6-8',
-                'capacity' => '15/100',
-                'rating' => '4.5',
-                'doctors' => [
-                    [
-                        'name' => 'dr. Bambang Sutrisno, Sp.JP',
-                        'specialty' => 'Jantung dan Pembuluh Darah',
-                        'schedule' => '09.00 - 14.00',
-                        'gender' => 'male'
-                    ],
-                    [
-                        'name' => 'dr. Ratna Dewi, Sp.A',
-                        'specialty' => 'Anak',
-                        'schedule' => '15.00 - Selesai',
-                        'gender' => 'female'
-                    ]
-                ]
-            ],
-            '3' => [
-                'name' => 'Rumah Sakit Mitra Keluarga',
-                'address' => 'Jl. Raya Kemang No.39',
-                'capacity' => '35/50',
-                'rating' => '4.3',
-                'doctors' => [
-                    [
-                        'name' => 'dr. Siti Aminah, Sp.OG',
-                        'specialty' => 'Kandungan',
-                        'schedule' => '10.00 - 16.00',
-                        'gender' => 'female'
-                    ],
-                    [
-                        'name' => 'dr. Arief Rahman, Sp.S',
-                        'specialty' => 'Saraf',
-                        'schedule' => '17.00 - Selesai',
-                        'gender' => 'male'
-                    ]
-                ]
-            ],
-            '4' => [
-                'name' => 'RSUP Dr. Sardjito',
-                'address' => 'Jl. Kesehatan No.1',
-                'capacity' => '10/60',
-                'rating' => '4.1',
-                'doctors' => [
-                    [
-                        'name' => 'dr. Yudi Setiawan, Sp.THT',
-                        'specialty' => 'Telinga Hidung Tenggorokan',
-                        'schedule' => '08.00 - 12.00',
-                        'gender' => 'male'
-                    ],
-                    [
-                        'name' => 'dr. Lestari, Sp.KJ',
-                        'specialty' => 'Kedokteran Jiwa',
-                        'schedule' => '13.00 - 17.00',
-                        'gender' => 'female'
-                    ]
-                ]
-            ],
-            '5' => [
-                'name' => 'Rumah Sakit Hermina',
-                'address' => 'Jl. Jatinegara Barat No.126',
-                'capacity' => '25/70',
-                'rating' => '4.4',
-                'doctors' => [
-                    [
-                        'name' => 'dr. Budi Santoso, Sp.PD',
-                        'specialty' => 'Penyakit Dalam',
-                        'schedule' => '08.00 - 14.00',
-                        'gender' => 'male'
-                    ],
-                    [
-                        'name' => 'dr. Maya Sari, Sp.KK',
-                        'specialty' => 'Kulit dan Kelamin',
-                        'schedule' => '15.00 - 19.00',
-                        'gender' => 'female'
-                    ]
-                ]
-            ]
+        // Ambil data rumah sakit dari database menggunakan model
+        $hospital = RumahSakit::find($id);
+        
+        if (!$hospital) {
+            return response()->json(['error' => 'Rumah sakit tidak ditemukan'], 404);
+        }
+        
+        // Ambil semua dokter yang bekerja di rumah sakit tersebut
+        // Asumsi ada tabel dokter dengan kolom rumah_sakit_id
+        $doctors = DB::table('dokter')
+                    ->where('rumah_sakit_id', $id)
+                    ->get();
+        
+        // Format dokter untuk ditampilkan
+        $formattedDoctors = [];
+        foreach ($doctors as $doctor) {
+            $formattedDoctors[] = [
+                'name' => $doctor->nama,
+                'specialty' => $doctor->spesialisasi,
+                'schedule' => $doctor->jadwal,
+                'gender' => $doctor->jenis_kelamin
+            ];
+        }
+        
+        // Jika tidak ada dokter di database, beri array kosong
+        if (empty($formattedDoctors)) {
+            $formattedDoctors = [];
+        }
+        
+        // Format data sesuai dengan struktur yang diharapkan oleh aplikasi
+        $result = [
+            'name' => $hospital->nama,
+            'address' => $hospital->alamat,
+            'capacity' => $hospital->kapasitas,
+            'rating' => $hospital->rating,
+            'doctors' => $formattedDoctors,
+            // Tambahan informasi lengkap rumah sakit
+            'phone' => $hospital->telepon ?? '',
+            'email' => $hospital->email ?? '',
+            'website' => $hospital->website ?? '',
+            'facilities' => $hospital->fasilitas ?? '',
+            'description' => $hospital->deskripsi ?? '',
+            'services' => $hospital->layanan ?? '',
+            'insurance' => $hospital->asuransi ?? '',
+            'operational_hours' => $hospital->jam_operasional ?? ''
         ];
         
-        // Jika ID tidak ditemukan, kembalikan data pertama
-        return response()->json($hospitals[$id] ?? $hospitals['1']);
+        return response()->json($result);
     }
 
     // Method untuk mendapatkan data kapasitas rumah sakit
-    public function getHospitalCapacity($placeId)
+    public function getHospitalCapacity($id)
     {
-        // Dalam aplikasi nyata, ambil dari database
-        // Untuk sementara, kembalikan data acak
-        $available = rand(10, 40);
-        $total = $available + rand(40, 60);
+        // Ambil data kapasitas dari database menggunakan model
+        $hospital = RumahSakit::find($id);
+                    
+        if (!$hospital) {
+            return response()->json(['error' => 'Rumah sakit tidak ditemukan'], 404);
+        }
         
+        // Jika format kapasitas adalah "available/total" seperti "20/80"
+        if (strpos($hospital->kapasitas, '/') !== false) {
+            list($available, $total) = explode('/', $hospital->kapasitas);
+            return response()->json([
+                'available' => (int)$available,
+                'total' => (int)$total,
+                'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
+            ]);
+        }
+        
+        // Jika kapasitas hanya berupa angka tunggal, anggap sebagai total
+        if (is_numeric($hospital->kapasitas)) {
+            $total = (int)$hospital->kapasitas;
+            $available = DB::table('tempat_tidur')
+                        ->where('rumah_sakit_id', $id)
+                        ->where('status', 'tersedia')
+                        ->count();
+            
+            return response()->json([
+                'available' => $available,
+                'total' => $total,
+                'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
+            ]);
+        }
+        
+        // Jika format kapasitas tidak sesuai
         return response()->json([
-            'available' => $available,
-            'total' => $total
-        ]);
+            'error' => 'Format kapasitas tidak valid',
+            'raw_capacity' => $hospital->kapasitas
+        ], 400);
     }
 
-    // Method untuk mendapatkan rumah sakit terdekat
+    // Method untuk mendapatkan rumah sakit terdekat tanpa batasan jumlah
     public function getNearbyHospitals(Request $request)
     {
         $lat = $request->input('lat', -6.9147); // Default ke Bandung jika tidak ada
         $lng = $request->input('lng', 107.6098);
+        $radius = $request->input('radius', 5); // Radius pencarian dalam kilometer
+        $limit = $request->input('limit', 0); // 0 berarti tanpa batas
         
-        // Dalam aplikasi nyata, ambil dari database berdasarkan koordinat
-        // Untuk sementara, kembalikan data dummy
-        $dummyHospitals = [
-            [
-                'id' => 1,
-                'place_id' => '1',
-                'name' => 'Rumah Sakit Bhakti Wira Tamtama',
-                'vicinity' => 'Jl. Dr. Sutomo No.17',
-                'rating' => 4.2,
-                'kapasitas' => '20/80',
+        // Query dasar untuk menghitung jarak dengan rumus Haversine
+        $query = DB::table('rumah_sakit')
+            ->select(
+                'id_rumah_sakit as id',
+                'id_rumah_sakit as place_id',
+                'nama as name',
+                'alamat as vicinity',
+                'rating',
+                'kapasitas',
+                'lat',
+                'lng',
+                DB::raw("(6371 * acos(cos(radians($lat)) * cos(radians(lat)) * cos(radians(lng) - radians($lng)) + sin(radians($lat)) * sin(radians(lat)))) AS distance")
+            )
+            ->having('distance', '<', $radius)
+            ->orderBy('distance');
+        
+        // Terapkan limit jika diberikan
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
+        
+        $hospitals = $query->get();
+        
+        // Format hasil untuk kompatibilitas dengan kode frontend yang sudah ada
+        $results = [];
+        foreach ($hospitals as $hospital) {
+            // Parse kapasitas untuk mendapatkan ketersediaan
+            $availability = null;
+            if (strpos($hospital->kapasitas, '/') !== false) {
+                list($available, $total) = explode('/', $hospital->kapasitas);
+                $availability = [
+                    'available' => (int)$available,
+                    'total' => (int)$total,
+                    'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
+                ];
+            }
+            
+            $results[] = [
+                'id' => $hospital->id,
+                'place_id' => $hospital->place_id,
+                'name' => $hospital->name,
+                'vicinity' => $hospital->vicinity,
+                'rating' => $hospital->rating,
+                'kapasitas' => $hospital->kapasitas,
+                'availability' => $availability,
+                'distance' => round($hospital->distance, 2),
                 'geometry' => [
                     'location' => [
-                        'lat' => $lat - 0.02,
-                        'lng' => $lng + 0.03
+                        'lat' => (float)$hospital->lat,
+                        'lng' => (float)$hospital->lng
                     ]
                 ]
-            ],
-            [
-                'id' => 2,
-                'place_id' => '2',
-                'name' => 'RSUD Dr. Soetomo',
-                'vicinity' => 'Jl. Mayjen Prof. Dr. Moestopo No.6-8',
-                'rating' => 4.5,
-                'kapasitas' => '15/100',
-                'geometry' => [
-                    'location' => [
-                        'lat' => $lat + 0.01,
-                        'lng' => $lng - 0.02
-                    ]
-                ]
-            ],
-            [
-                'id' => 3,
-                'place_id' => '3',
-                'name' => 'Rumah Sakit Mitra Keluarga',
-                'vicinity' => 'Jl. Raya Kemang No.39',
-                'rating' => 4.3,
-                'kapasitas' => '35/50',
-                'geometry' => [
-                    'location' => [
-                        'lat' => $lat - 0.01,
-                        'lng' => $lng - 0.01
-                    ]
-                ]
-            ],
-            [
-                'id' => 4,
-                'place_id' => '4',
-                'name' => 'RSUP Dr. Sardjito',
-                'vicinity' => 'Jl. Kesehatan No.1',
-                'rating' => 4.1,
-                'kapasitas' => '10/60',
-                'geometry' => [
-                    'location' => [
-                        'lat' => $lat + 0.02,
-                        'lng' => $lng + 0.02
-                    ]
-                ]
-            ],
-            [
-                'id' => 5,
-                'place_id' => '5',
-                'name' => 'Rumah Sakit Hermina',
-                'vicinity' => 'Jl. Jatinegara Barat No.126',
-                'rating' => 4.4,
-                'kapasitas' => '25/70',
-                'geometry' => [
-                    'location' => [
-                        'lat' => $lat + 0.03,
-                        'lng' => $lng - 0.03
-                    ]
-                ]
+            ];
+        }
+        
+        return response()->json([
+            'results' => $results,
+            'total' => count($results),
+            'radius' => $radius,
+            'center' => [
+                'lat' => (float)$lat,
+                'lng' => (float)$lng
             ]
-        ];
+        ]);
+    }
+    
+    // Method baru untuk mendapatkan semua rumah sakit tanpa filter lokasi
+    public function getAllHospitals(Request $request)
+    {
+        $search = $request->input('search', '');
+        $sort = $request->input('sort', 'nama');
+        $order = $request->input('order', 'asc');
         
-        return response()->json(['results' => $dummyHospitals]);
+        $query = RumahSakit::query();
+        
+        // Filter pencarian jika ada
+        if (!empty($search)) {
+            $query->where('nama', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%");
+        }
+        
+        // Urutan data
+        $query->orderBy($sort, $order);
+        
+        // Ambil semua data
+        $hospitals = $query->get();
+        
+        // Format hasil
+        $results = [];
+        foreach ($hospitals as $hospital) {
+            $results[] = [
+                'id' => $hospital->id_rumah_sakit,
+                'place_id' => $hospital->id_rumah_sakit,
+                'name' => $hospital->nama,
+                'vicinity' => $hospital->alamat,
+                'rating' => $hospital->rating,
+                'kapasitas' => $hospital->kapasitas,
+                'geometry' => [
+                    'location' => [
+                        'lat' => (float)$hospital->lat,
+                        'lng' => (float)$hospital->lng
+                    ]
+                ]
+            ];
+        }
+        
+        return response()->json([
+            'results' => $results,
+            'total' => count($results)
+        ]);
     }
 }
