@@ -27,7 +27,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium">Username atau Email</label>
-                <input type="text" name="email" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+                <input type="text" name="masuk" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
             </div>
 
             <div class="mb-4">
