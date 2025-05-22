@@ -32,6 +32,10 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
+        // Tambahan: set session dan cookie
+        session(['user_name' => $user->username]);
+        cookie()->queue(cookie('user_name', $user->username, 60 * 24)); // cookie berlaku 1 hari
+
         return redirect()->route('masuk')->with('success', 'Registrasi berhasil. Silakan masuk.');
     }
 }

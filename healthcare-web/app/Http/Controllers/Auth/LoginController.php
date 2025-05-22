@@ -28,18 +28,20 @@ class LoginController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
-            // Simpan session custom
+            // Simpan session
             session(['login_time' => now()]);
             session(['user_id' => Auth::id()]);
+            session(['user_name' => Auth::user()->username]); // Tambahan
 
-            // Simpan cookie jika centang "Remember Me"
-            if ($request->has('remember')) {
-    Cookie::queue('remember_username', $request->masuk, 60 * 24 * 30);
-    logger('Cookie set: ' . $request->masuk);
-}
+            // Simpan cookie
+            cookie()->queue(cookie('user_name', Auth::user()->username, 60 * 24)); // Tambahan
 
+            if ($remember) {
+                Cookie::queue('remember_username', $request->masuk, 60 * 24 * 30);
+                logger('Cookie set: ' . $request->masuk);
+            }
 
-            return redirect('/dashboard');
+            return redirect('/home');
         }
 
         return back()->withErrors([

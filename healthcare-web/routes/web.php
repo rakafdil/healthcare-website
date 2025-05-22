@@ -89,3 +89,21 @@ Route::prefix('api')->group(function () {
     Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']); // Alias lama
     Route::get('/hospitals', [HospitalController::class, 'getAllHospitals']);
 });
+
+// ------------------------------
+// Home & Logout Session
+// ------------------------------
+Route::get('/home', function () {
+    if (!session('user_name')) {
+        return redirect('/masuk'); // kalau belum login
+    }
+
+    return view('home');
+});
+
+Route::get('/logout', function () {
+    session()->forget('user_name');
+    Cookie::queue(Cookie::forget('user_name'));
+
+    return redirect('/masuk');
+});
