@@ -9,6 +9,7 @@ use App\Http\Controllers\SistemPakarController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
@@ -56,7 +57,12 @@ Route::get('/about', function () {
 Route::get('/masuk', [LoginController::class, 'showLoginForm'])->name('masuk');
 Route::post('/masuk', [LoginController::class, 'login']);
 
-Route::get('/auth/google', [LoginController::class, 'redirectToGoogle'])->name('google.login');
+
+// Route login menggunakan GoogleController
+// web.php
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
 
 Route::get('/lupa-password', function () {
     return view('auth.lupa-password');

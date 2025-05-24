@@ -12,7 +12,7 @@
             <p class="text-sm text-gray-600">Sudah memiliki akun? <a href="{{ route('masuk') }}" class="text-blue-500 hover:underline">Masuk Sekarang</a></p>
         </div>
 
-        <a href="{{ route('google.login') }}" class="flex items-center justify-center gap-2 bg-gray-100 border px-4 py-2 rounded hover:bg-gray-200 text-sm font-medium w-full mb-4">
+        <a href="{{ route('google') }}" class="flex items-center justify-center gap-2 bg-gray-100 border px-4 py-2 rounded hover:bg-gray-200 text-sm font-medium w-full mb-4">
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google"> Daftar dengan Google
         </a>
 
