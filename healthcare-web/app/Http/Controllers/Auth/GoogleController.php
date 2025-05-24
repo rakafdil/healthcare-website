@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
@@ -19,20 +20,22 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            $user = User::where('email', $googleUser->getEmail())->first();
-
-            if (!$user) {
-                $user = User::create([
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
-                    'password' => bcrypt('password_default'), // bisa diganti atau kosong
+            // Cek user berdasarkan email
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'username' => $googleUser->getName(),
                     'email_verified_at' => now(),
-                ]);
-            }
+                    'provider' => 'google',
+                    'provider_id' => $googleUser->getId(),
+                    'password' => bcrypt(Str::random(16)), // password acak
+                ]
+            );
 
+            // Login user
             Auth::login($user);
 
-            return redirect('/dashboard'); // ganti sesuai tujuan kamu
+            return redirect()->intended('/home');
         } catch (\Exception $e) {
             return redirect('/masuk')->withErrors(['login' => 'Login Google gagal.']);
         }
