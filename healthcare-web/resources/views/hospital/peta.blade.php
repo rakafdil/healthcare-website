@@ -545,6 +545,46 @@
             }
         };
 
+        function checkGeolocationSupport() {
+            return 'geolocation' in navigator;
+        }
+
+        // Fungsi untuk mengecek apakah sedang menggunakan HTTPS atau localhost
+        function isSecureContext() {
+            return window.location.protocol === 'https:' ||
+                    window.location.hostname === 'localhost' ||
+                    window.location.hostname === '127.0.0.1' ||
+                    window.location.hostname === '::1';
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('locationStatus');
+            let className = '';
+            
+            switch(type) {
+                case 'error':
+                    className = 'error-message';
+                    break;
+                case 'success':
+                    className = 'success-message';
+                    break;
+                case 'loading':
+                    className = 'loading';
+                    break;
+                default:
+                    className = 'help-message';
+            }
+            
+            statusDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            
+            // Auto hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
         // Fungsi helper untuk mendapatkan koordinat berdasarkan provinsi, kabupaten, dan kota
         function getCoordinates(provinsi, kabupaten, kota) {
             try {
@@ -612,14 +652,21 @@
                 zIndexOffset: 1000
             }).addTo(map);
             
-            userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
+            uuserMarker.bindPopup(`
+                <div style="text-align: center;">
+                    <strong>📍 Lokasi Anda</strong><br>
+                    <small>Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}</small><br>
+                    <small>Akurasi: ±${accuracy.toFixed(0)}m</small>
+                </div>
+            `).openPopup();
 
-            window.userAccuracyCircle = L.circle([lat, lng], {
-                radius: 100, // meter
-                color: '#3388ff',
-                fillColor: '#3388ff',
-                fillOpacity: 0.15,
-                weight: 2
+            userAccuracyCircle = L.circle([lat, lng], {
+                radius: accuracy,
+                color: '#e74c3c',
+                fillColor: '#e74c3c',
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: '5, 5'
             }).addTo(map);
         }
         
@@ -645,7 +692,8 @@
                     </tr>
                 `;
                 
-                useDummyData();
+                const dummyHospitals = generateDummyHospitals(lat, lng);
+                processHospitalData({ results: dummyHospitals });
             });
         }
         
