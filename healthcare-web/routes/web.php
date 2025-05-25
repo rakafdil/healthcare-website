@@ -117,3 +117,7 @@ Route::post('/logout', function () {
 
     return redirect('/')->with('success', 'Berhasil logout');
 })->name('logout');
+
+Route::get('/lupa-password', function () {
+    return view('auth.lupa-password'); // pastikan penamaannya sesuai dengan folder dan file
+});
