@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- <title>{{ $title }}</title> --}}
+    <title>{{ $title }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
@@ -35,7 +35,17 @@
                         <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')"> Sistem Pakar </x-nav-link>
                         <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')"> Rumah Sakit </x-nav-link>
                         <x-nav-link href="/blog" :active="request()->is('blog') || request()->is('blog/*')"> Blog </x-nav-link>
-                        <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')"> Masuk </x-nav-link>
+                        @auth
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit"
+                                    class="text-black hover:bg-gray-700 hover:text-white self-center rounded-md px-3 py-2 text-sm font-medium">
+                                    Keluar
+                                </button>
+                            </form>
+                        @else
+                            <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')"> Masuk </x-nav-link>
+                        @endauth
                     </div>
                 </div>
             </div>
