@@ -36,8 +36,9 @@
 
             {{-- Kanan: Tombol Diagnosa --}}
             <div class="flex-shrink-0 flex flex-col items-center self-center bg-blue-50 rounded-xl shadow-md p-6">
-                @if (isset($user_id))
-                    <a href="/sistem-pakar/{{ $user_id }}/symptoms/#" class="inline-block">
+                {{-- @dd(session()->all) --}}
+                @auth
+                    <a href="/sistem-pakar/symptoms/#" class="inline-block">
                         <div
                             class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-110">
                             <div class="text-4xl mb-2">📱</div>
@@ -46,7 +47,7 @@
                         </div>
                     </a>
                 @else
-                    <a href="/sistem-pakar/login" class="inline-block">
+                    <a href="/masuk" class="inline-block">
                         <div
                             class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-110">
                             <div class="text-4xl mb-2">📱</div>
@@ -54,13 +55,13 @@
                             <div>UNTUK DIAGNOSA</div>
                         </div>
                     </a>
-                @endif
+                @endauth
                 <p class="mt-4 text-center text-gray-600">Pengecekan ini hanya membutuhkan waktu sekitar 3-5 menit</p>
             </div>
         </div>
 
         {{-- Riwayat --}}
-        @if (isset($user_id))
+        @auth
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-2xl font-semibold text-blue-600 border-b-2 border-gray-200 pb-3 mb-4">Riwayat Pengecekan
                 </h2>
@@ -74,12 +75,6 @@
                                         Tanggal</th>
                                     <th class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200">
                                         Waktu</th>
-                                    <th
-                                        class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200 hidden md:table-cell">
-                                        Gejala Utama</th>
-                                    <th
-                                        class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200 hidden lg:table-cell">
-                                        Hasil Diagnosa</th>
                                     <th class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200">
                                         Detail</th>
                                 </tr>
@@ -93,14 +88,8 @@
                                         <td class="py-3 px-4 border-b border-gray-200">
                                             {{ $item['waktu'] }}
                                         </td>
-                                        <td class="py-3 px-4 border-b border-gray-200 hidden md:table-cell">
-                                            {{ $item['gejala_utama'] ?? 'Beragam gejala' }}
-                                        </td>
-                                        <td class="py-3 px-4 border-b border-gray-200 hidden lg:table-cell">
-                                            {{ $item['hasil_diagnosa'] ?? 'Lihat detail' }}
-                                        </td>
                                         <td class="py-3 px-4 border-b border-gray-200">
-                                            <a href="{{ route('sistem-pakar.history', ['user_id' => $user_id, 'history_id' => $key]) }}"
+                                            <a href="{{ route('sistem-pakar.history', ['history_id' => $key]) }}"
                                                 class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm transition-colors duration-200">
                                                 Lihat Detail
                                             </a>
@@ -114,7 +103,7 @@
                     <p class="text-gray-500 text-center py-6">Belum ada riwayat pemeriksaan.</p>
                 @endisset
             </div>
-        @endif
+        @endauth
     </div>
 
 </x-layout>

@@ -62,7 +62,6 @@ class SistemPakarController extends Controller
         session(['diagnosis.result' => $resultObject]);
         return view('sistem-pakar.process', [
             'step' => 3,
-            'user_id' => $request->user_id,
             'result' => $resultObject,
         ]);
 
@@ -219,45 +218,44 @@ class SistemPakarController extends Controller
     }
     public function index()
     {
-        return view('sistem-pakar.index');
-    }
-
-    public function start($user_id)
-    {
-        $history = History::find($user_id);
-
-        if (!$history) {
-            abort(404);
+        $user = auth()->user();
+        if ($user !== null) {
+            $history = History::find($user->id);
+            return view('sistem-pakar.index', compact('history'));
+        } else {
+            return view('sistem-pakar.index');
         }
-
-        return view('sistem-pakar.index', compact('user_id', 'history'));
     }
 
-    public function history($user_id)
+    public function start()
     {
-        $history = History::find($user_id);
+        $user = auth()->user();
+        $history = History::where('user_id', $user->id)->get();
 
-        if (!$history) {
-            abort(404);
-        }
-
-        return view('sistem-pakar.history', compact('user_id', 'history'));
+        return view('sistem-pakar.index', compact('history'));
     }
 
-    public function submitStep(Request $request, $user_id)
+    public function history()
     {
-        $step = (int) $request->query('step', 1); // default ke 1 jika tidak ada step
+        $user = auth()->user();
+        $history = History::find($user->id);
+        return view('sistem-pakar.history', compact('history'));
+    }
 
-        // Simpan data ke session jika ada POST
+    public function submitStep(Request $request)
+    {
+        $step = (int) $request->query('step', 1);
+
+        // Simpan data ke session
         if ($request->has('umur')) {
             session(['diagnosis.umur' => $request->input('umur')]);
         }
         if ($request->has('gender')) {
             session(['diagnosis.gender' => $request->input('gender')]);
         }
+
         return view('sistem-pakar.process', [
             'step' => $step,
-            'user_id' => $user_id,
             'allSymptoms' => $this->getAllSymptoms(),
         ]);
     }
@@ -272,12 +270,12 @@ class SistemPakarController extends Controller
         $date = $dateTime[0];
         $time = $dateTime[1];
 
-        dd($date, $time);
+        // dd($date, $time);
 
         // hapus session gejala biar gak numpuk
         session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gejala', 'diagnosis.gender', 'diagnosis.result']);
 
-        return redirect()->route('sistem-pakar.start');
+        return redirect()->route('sistem-pakar.index');
     }
 
 }
