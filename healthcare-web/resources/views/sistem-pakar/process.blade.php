@@ -8,13 +8,12 @@
     </div>
     {{-- <pre>{{ print_r(session()->all(), true) }}</pre> --}}
 
-    <x-symptoms-steps :user_id="$user_id" :current_step="$step" :total_steps="5" />
+    <x-symptoms-steps :current_step="$step" :total_steps="5" />
     <div class="px-20 py-8 text-2xl">
 
         @if ($step == 1)
             <div class="justify-self-center text-center">
-                <form id="diagnosisForm" method="POST"
-                    action="{{ url('/sistem-pakar/' . $user_id . '/symptoms?step=' . ($step + 1)) }}">
+                <form id="diagnosisForm" method="POST" action="{{ url('/sistem-pakar/symptoms?step=' . ($step + 1)) }}">
                     @csrf
 
                     <label class="block mb-2 pb-3" for="umur">Umur</label>
@@ -90,8 +89,7 @@
                 $previousSymptoms = session('diagnosis.gejala', []);
             @endphp
 
-            <form id="diagnosisForm" method="POST"
-                action="{{ url('/sistem-pakar/' . $user_id . '/symptoms/predict') }}">
+            <form id="diagnosisForm" method="POST" action="{{ url('/sistem-pakar/symptoms/predict') }}">
                 @csrf
 
                 <label for="gejala" class="block text-xl font-semibold mb-3">Apa yang Anda alami?</label>
@@ -299,13 +297,12 @@
         @if ($step == 3 || $step == 4 || $step == 5)
             <div class="mt-8 flex justify-between">
                 <button type="button"
-                    onclick="saveScrollAndGo('{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step - 1)) }}')"
+                    onclick="saveScrollAndGo('{{ url('/sistem-pakar/symptoms?step=' . ($step - 1)) }}')"
                     class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                     Kembali
                 </button>
                 @if ($step == 5)
-                    <form id="finishForm" method="POST"
-                        action="{{ url('/sistem-pakar/' . $user_id . '/symptoms/finish') }}">
+                    <form id="finishForm" method="POST" action="{{ url('/sistem-pakar/symptoms/finish') }}">
                         @csrf
                         <button type="submit"
                             class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
@@ -314,7 +311,7 @@
                     </form>
                 @else
                     <button type="button"
-                        onclick="saveScrollAndGo('{{ url("/sistem-pakar/$user_id/symptoms?step=" . ($step + 1)) }}')"
+                        onclick="saveScrollAndGo('{{ url('/sistem-pakar/symptoms?step=' . ($step + 1)) }}')"
                         class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                         Lanjut
                     </button>
@@ -340,7 +337,6 @@
 
         document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
             localStorage.setItem('scrollPos', window.scrollY);
-            // Jangan pakai e.preventDefault() supaya form tetap submit POST ke server
         });
     </script>
 </x-layout>

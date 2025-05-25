@@ -25,21 +25,24 @@ Route::get('/baca-blog', function () {
 // Tampilan awal sistem pakar
 Route::get('/sistem-pakar', [SistemPakarController::class, 'index'])->name('sistem-pakar.index');
 
-// Tampilan form dengan user_id
-Route::get('/sistem-pakar/{user_id}', [SistemPakarController::class, 'start'])->name('sistem-pakar.start');
+// Sistem Pakar routes dengan middleware auth
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.process');
+    Route::get('/sistem-pakar/symptoms', [SistemPakarController::class, 'submitStep'])
+        ->name('sistem-pakar.process');
 
-// Submit step-by-step
-Route::post('/sistem-pakar/{user_id}/symptoms', [SistemPakarController::class, 'submitStep'])->name('sistem-pakar.process');
+    Route::post('/sistem-pakar/symptoms', [SistemPakarController::class, 'submitStep'])
+        ->name('sistem-pakar.process');
 
-// Prediksi penyakit dari gejala
-Route::post('/sistem-pakar/{user_id}/symptoms/predict', [SistemPakarController::class, 'predict'])->name('sistem-pakar.predict');
+    Route::post('/sistem-pakar/symptoms/predict', [SistemPakarController::class, 'predict'])
+        ->name('sistem-pakar.predict');
 
-Route::post('/sistem-pakar/{user}/symptoms/finish', [SistemPakarController::class, 'finishDiagnosis'])->name('sistem-pakar.finish');
+    Route::post('/sistem-pakar/symptoms/finish', [SistemPakarController::class, 'finishDiagnosis'])
+        ->name('sistem-pakar.finish');
 
-// Riwayat diagnosa
-Route::get('/sistem-pakar/{user_id}/history', [SistemPakarController::class, 'history'])->name('sistem-pakar.history');
+    Route::get('/sistem-pakar/history', [SistemPakarController::class, 'history'])
+        ->name('sistem-pakar.history');
+});
 
 Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
@@ -107,9 +110,10 @@ Route::get('/home', function () {
     return view('home');
 });
 
-Route::get('/logout', function () {
-    session()->forget('user_name');
-    Cookie::queue(Cookie::forget('user_name'));
+Route::post('/logout', function () {
+    Auth::logout(); // Logout auth Laravel
+    session()->invalidate(); // Invalidate semua session
+    session()->regenerateToken(); // Regenerate CSRF token
 
-    return redirect('/masuk');
-});
+    return redirect('/')->with('success', 'Berhasil logout');
+})->name('logout');
