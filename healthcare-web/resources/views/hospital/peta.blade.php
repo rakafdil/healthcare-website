@@ -170,16 +170,6 @@
             font-weight: bold;
         }
 
-        .see-more {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .see-more:hover {
-            text-decoration: underline;
-        }
-
         .loading {
             text-align: center;
             padding: 20px;
@@ -868,46 +858,6 @@
             }
         };
 
-        function checkGeolocationSupport() {
-            return 'geolocation' in navigator;
-        }
-
-        // Fungsi untuk mengecek apakah sedang menggunakan HTTPS atau localhost
-        function isSecureContext() {
-            return window.location.protocol === 'https:' ||
-                window.location.hostname === 'localhost' ||
-                window.location.hostname === '127.0.0.1' ||
-                window.location.hostname === '::1';
-        }
-
-        function showStatus(message, type = 'info') {
-            const statusDiv = document.getElementById('locationStatus');
-            let className = '';
-
-            switch (type) {
-                case 'error':
-                    className = 'error-message';
-                    break;
-                case 'success':
-                    className = 'success-message';
-                    break;
-                case 'loading':
-                    className = 'loading';
-                    break;
-                default:
-                    className = 'help-message';
-            }
-
-            statusDiv.innerHTML = `<div class="${className}">${message}</div>`;
-
-            // Auto hide after 5 seconds for success messages
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.innerHTML = '';
-                }, 5000);
-            }
-        }
-
         // Fungsi helper untuk mendapatkan koordinat berdasarkan provinsi, kabupaten, dan kota
         function getCoordinates(provinsi, kabupaten, kota) {
             try {
@@ -981,14 +931,14 @@
                 zIndexOffset: 1000
             }).addTo(map);
 
-            uuserMarker.bindPopup(`
+            userMarker.bindPopup(`
                 <div style="text-align: center;">
                     <strong>📍 Lokasi Anda</strong><br>
                     <small>Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}</small><br>
-                    <small>Akurasi: ±${accuracy.toFixed(0)}m</small>
                 </div>
             `).openPopup();
-
+            
+            let userAccuracyCircle;
             userAccuracyCircle = L.circle([lat, lng], {
                 radius: accuracy,
                 color: '#e74c3c',
