@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('gejala', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_gejala')->primary();
+            $table->bigIncrements('id_gejala');  // This will auto-increment
             $table->string('nama_gejala_ind', 150);
             $table->string('nama_gejala_eng', 150);
         });

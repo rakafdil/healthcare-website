@@ -120,8 +120,8 @@
             </form>
 
             <script>
-                const symptoms = @json(array_keys($allSymptoms));
-                const symptomsMap = @json($allSymptoms);
+                const symptoms = @json($allSymptoms->pluck('nama_gejala_ind')->toArray());
+                const symptomsMap = @json($allSymptoms->pluck('nama_gejala_eng', 'nama_gejala_ind')->toArray());
                 const previousSymptoms = @json($previousSymptoms);
 
                 const input = document.getElementById('gejala-input');
