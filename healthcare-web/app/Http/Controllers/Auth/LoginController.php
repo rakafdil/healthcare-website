@@ -41,6 +41,10 @@ class LoginController extends Controller
                 logger('Cookie set: ' . $request->masuk);
             }
 
+            if (session()->get('redirect_to') === 'sistem-pakar') {
+                return redirect()->route('sistem-pakar.index');
+            }
+
             return redirect('/home');
         }
 

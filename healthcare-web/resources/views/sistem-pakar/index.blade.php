@@ -47,7 +47,7 @@
                         </div>
                     </a>
                 @else
-                    <a href="/masuk" class="inline-block">
+                    <a href="{{ route('masuk', ['redirect_to' => 'sistem-pakar']) }}" class="inline-block">
                         <div
                             class="w-44 h-44 md:w-48 md:h-48 bg-blue-500 rounded-full flex flex-col items-center justify-center text-white font-bold transition-all duration-300 shadow-lg hover:bg-blue-600 hover:scale-110">
                             <div class="text-4xl mb-2">📱</div>
