@@ -134,10 +134,16 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
+            margin: 5px;
         }
 
         .location-btn:hover {
             background-color: #2980b9;
+        }
+
+        .location-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
         }
 
         .table-container {
@@ -174,6 +180,54 @@
             text-align: center;
             padding: 20px;
             font-size: 16px;
+        }
+
+        .availability-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .availability-high { background-color: #27ae60; }
+        .availability-medium { background-color: #f39c12; }
+        .availability-low { background-color: #e74c3c; }
+        .availability-full { background-color: #95a5a6; }
+        .availability-unknown { background-color: #bdc3c7; }
+
+        .stats-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
@@ -246,6 +300,24 @@
         .leaflet-marker-pane .user-marker {
             z-index: 1000 !important;
         }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #f44336;
+        }
+        
+        .success-message {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #4caf50;
+        }
     </style>
 </head>
 
@@ -271,6 +343,16 @@
             <button id="getLocationBtn" class="location-btn">
                 <i class="fas fa-location-dot"></i> Gunakan Lokasi Saya
             </button>
+            <button id="refreshDataBtn" class="location-btn" style="display: none;">
+                <i class="fas fa-refresh"></i> Refresh Data
+            </button>
+        </div>
+
+        <div id="statsContainer" class="stats-container" style="display: none;">
+            <h4>Statistik Area</h4>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats akan ditampilkan di sini -->
+            </div>
         </div>
 
         <h3 class="recommendations-title">Rekomendasi Berdasarkan Jarak dan Ketersediaan</h3>
@@ -282,12 +364,13 @@
                         <th>Nama Rumah Sakit</th>
                         <th>Jarak dari Anda</th>
                         <th>Kapasitas</th>
+                        <th>Rating</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody id="hospitalList">
                     <tr>
-                        <td colspan="4" class="loading">Memuat data rumah sakit...</td>
+                        <td colspan="5" class="loading">Memuat data rumah sakit...</td>
                     </tr>
                 </tbody>
             </table>
@@ -298,769 +381,243 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const provinsi = urlParams.get('provinsi');
-        const kabupaten = urlParams.get('kabupaten');
-        const kota = urlParams.get('kota');
-
-        if (!provinsi || !kabupaten || !kota) {
-            alert('Parameter lokasi tidak lengkap. Silakan pilih lokasi terlebih dahulu.');
-            window.location.href = '/hospital';
-        }
-
-        document.getElementById('selectedLocation').textContent =
-            `${kota}, ${kabupaten}, ${provinsi.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
-
+        // Global variables
         let map;
-        let centerLat, centerLng;
+        let centerLat = -6.2088;
+        let centerLng = 106.8456;
         let markers = [];
+        let userMarker = null;
+        let userAccuracyCircle = null;
+        let currentRadius = 10; // Default radius 10 km
 
-        const locationCoordinates = {
-            jawa_barat: {
-                coordinates: {
-                    lat: -6.9147,
-                    lng: 107.6098
-                },
-                kabupaten: {
-                    Bandung: {
-                        coordinates: {
-                            lat: -6.914744,
-                            lng: 107.609810
-                        },
-                        kota: {
-                            'Bandung': {
-                                lat: -6.914744,
-                                lng: 107.609810
-                            },
-                            'Cimahi': {
-                                lat: -6.87222,
-                                lng: 107.5425
-                            },
-                            'Lembang': {
-                                lat: -6.8117,
-                                lng: 107.6175
-                            }
-                        }
-                    },
-                    Bekasi: {
-                        coordinates: {
-                            lat: -6.2349,
-                            lng: 107.0013
-                        },
-                        kota: {
-                            'Bekasi': {
-                                lat: -6.2349,
-                                lng: 107.0013
-                            },
-                            'Cikarang': {
-                                lat: -6.26111,
-                                lng: 107.15278
-                            },
-                            'Tambun': {
-                                lat: -6.178763,
-                                lng: 107.065758
-                            }
-                        }
-                    },
-                    Bogor: {
-                        coordinates: {
-                            lat: -6.595038,
-                            lng: 106.816635
-                        },
-                        kota: {
-                            'Bogor': {
-                                lat: -6.595038,
-                                lng: 106.816635
-                            },
-                            'Cibinong': {
-                                lat: -6.497641,
-                                lng: 106.828224
-                            },
-                            'Cisarua': {
-                                lat: -6.679303,
-                                lng: 106.939835
-                            }
-                        }
-                    },
-                    Cianjur: {
-                        coordinates: {
-                            lat: -6.820762,
-                            lng: 107.142960
-                        },
-                        kota: {
-                            'Cianjur': {
-                                lat: -6.820762,
-                                lng: 107.142960
-                            },
-                            'Cugenang': {
-                                lat: -6.808,
-                                lng: 107.094
-                            },
-                            'Sukaluyu': {
-                                lat: -6.803080,
-                                lng: 107.237083
-                            }
-                        }
-                    },
-                    Cirebon: {
-                        coordinates: {
-                            lat: -6.737246,
-                            lng: 108.550659
-                        },
-                        kota: {
-                            'Cirebon': {
-                                lat: -6.737246,
-                                lng: 108.550659
-                            },
-                            'Sumber': {
-                                lat: -6.7603,
-                                lng: 108.4831
-                            },
-                            'Arjawinangun': {
-                                lat: -6.6468482,
-                                lng: 108.4092794
-                            }
-                        }
-                    }
-                }
-            },
-            jawa_tengah: {
-                coordinates: {
-                    lat: -7.0051,
-                    lng: 110.4381
-                },
-                kabupaten: {
-                    Semarang: {
-                        coordinates: {
-                            lat: -7.0051,
-                            lng: 110.4381
-                        },
-                        kota: {
-                            'Semarang': {
-                                lat: -6.9667,
-                                lng: 110.4050
-                            },
-                            'Ungaran': {
-                                lat: -7.1381,
-                                lng: 110.4051
-                            },
-                            'Ambarawa': {
-                                lat: -7.2633,
-                                lng: 110.3975
-                            }
-                        }
-                    },
-                    Solo: {
-                        coordinates: {
-                            lat: -7.5695,
-                            lng: 110.8290
-                        },
-                        kota: {
-                            'Surakarta': {
-                                lat: -7.5695,
-                                lng: 110.8290
-                            },
-                            'Laweyan': {
-                                lat: -7.5583,
-                                lng: 110.8083
-                            },
-                            'Banjarsari': {
-                                lat: -7.5561,
-                                lng: 110.8167
-                            }
-                        }
-                    },
-                    Magelang: {
-                        coordinates: {
-                            lat: -7.4706,
-                            lng: 110.2176
-                        },
-                        kota: {
-                            'Magelang': {
-                                lat: -7.4706,
-                                lng: 110.2176
-                            },
-                            'Mertoyudana': {
-                                lat: -7.5025,
-                                lng: 110.2306
-                            },
-                            'Secang': {
-                                lat: -7.5561,
-                                lng: 110.8167
-                            }
-                        }
-                    },
-                    Pekalongan: {
-                        coordinates: {
-                            lat: -6.8896,
-                            lng: 109.6753
-                        },
-                        kota: {
-                            'Pekalongan': {
-                                lat: -6.8896,
-                                lng: 109.6753
-                            },
-                            'Kajen': {
-                                lat: -7.0500,
-                                lng: 109.6167
-                            },
-                            'Wonopringgo': {
-                                lat: -7.0500,
-                                lng: 109.7000
-                            }
-                        }
-                    },
-                    Tegal: {
-                        coordinates: {
-                            lat: -6.8694,
-                            lng: 109.1406
-                        },
-                        kota: {
-                            'Tegal': {
-                                lat: -6.8684,
-                                lng: 109.1406
-                            },
-                            'Slawi': {
-                                lat: -6.9828,
-                                lng: 109.1333
-                            },
-                            'Dukuhturi': {
-                                lat: -6.9333,
-                                lng: 109.1500
-                            }
-                        }
-                    }
-                }
-            },
-            jawa_timur: {
-                coordinates: {
-                    lat: -7.2575,
-                    lng: 112.7521
-                },
-                kabupaten: {
-                    Surabaya: {
-                        coordinates: {
-                            lat: -7.2492,
-                            lng: 112.7508
-                        },
-                        kota: {
-                            'Surabaya pusat': {
-                                lat: -7.2575,
-                                lng: 112.7521
-                            },
-                            'Surabaya timur': {
-                                lat: -7.2575,
-                                lng: 112.7521
-                            },
-                            'Surabaya selatan': {
-                                lat: -7.2575,
-                                lng: 112.7521
-                            }
-                        }
-                    },
-                    Malang: {
-                        coordinates: {
-                            lat: -7.9666,
-                            lng: 112.6326
-                        },
-                        kota: {
-                            'Malang kota': {
-                                lat: -7.9666,
-                                lng: 112.6326
-                            },
-                            'Kepanjen': {
-                                lat: -8.1303,
-                                lng: 112.5644
-                            },
-                            'Turen': {
-                                lat: -8.1680,
-                                lng: 112.6928
-                            }
-                        }
-                    },
-                    Sidoarjo: {
-                        coordinates: {
-                            lat: -7.4477,
-                            lng: 112.6983
-                        },
-                        kota: {
-                            'Sidoarjo kota': {
-                                lat: -7.4477,
-                                lng: 112.6983
-                            },
-                            'Waru': {
-                                lat: -7.3511,
-                                lng: 112.7688
-                            },
-                            'Taman': {
-                                lat: -7.3631,
-                                lng: 112.6757
-                            }
-                        }
-                    },
-                    Kediri: {
-                        coordinates: {
-                            lat: -7.8167,
-                            lng: 112.0170
-                        },
-                        kota: {
-                            'Kediri kota': {
-                                lat: -7.8167,
-                                lng: 112.0170
-                            },
-                            'Pare': {
-                                lat: -7.7689,
-                                lng: 112.1965
-                            },
-                            'Ngasem': {
-                                lat: -7.7926,
-                                lng: 112.0465
-                            }
-                        }
-                    },
-                    Jember: {
-                        coordinates: {
-                            lat: -8.1648,
-                            lng: 113.7036
-                        },
-                        kota: {
-                            'Jember kota': {
-                                lat: -8.1648,
-                                lng: 113.7036
-                            },
-                            'Patrang': {
-                                lat: -8.1343,
-                                lng: 113.7011
-                            },
-                            'Sumbersari': {
-                                lat: -8.1700,
-                                lng: 113.7000
-                            }
-                        }
-                    }
-                }
-            },
-            dki_jakarta: {
-                coordinates: {
-                    lat: -6.2088,
-                    lng: 106.8456
-                },
-                kabupaten: {
-                    Jakarta_pusat: {
-                        coordinates: {
-                            lat: -6.1900,
-                            lng: 106.8450
-                        },
-                        kota: {
-                            'Menteng': {
-                                lat: -6.1870,
-                                lng: 106.8370
-                            },
-                            'Tanah abang': {
-                                lat: -6.1970,
-                                lng: 106.8130
-                            },
-                            'Kemayoran': {
-                                lat: -6.1560,
-                                lng: 106.8610
-                            }
-                        }
-                    },
-                    Jakarta_barat: {
-                        coordinates: {
-                            lat: -6.1767,
-                            lng: 106.7900
-                        },
-                        kota: {
-                            'Grogol': {
-                                lat: -6.1611,
-                                lng: 106.7944
-                            },
-                            'Kalideres': {
-                                lat: -6.1300,
-                                lng: 106.7200
-                            },
-                            'Cengkareng': {
-                                lat: -6.1415,
-                                lng: 106.7464
-                            }
-                        }
-                    },
-                    Jakarta_timur: {
-                        coordinates: {
-                            lat: -6.2250,
-                            lng: 106.9000
-                        },
-                        kota: {
-                            'Cakung': {
-                                lat: -6.1830,
-                                lng: 106.9500
-                            },
-                            'Duren sawit': {
-                                lat: -6.2352,
-                                lng: 106.9159
-                            },
-                            'Jatinegara': {
-                                lat: -6.2330,
-                                lng: 106.8830
-                            }
-                        }
-                    },
-                    Jakarta_selatan: {
-                        coordinates: {
-                            lat: -6.2667,
-                            lng: 106.8000
-                        },
-                        kota: {
-                            'Kebayoran baru': {
-                                lat: -6.2432,
-                                lng: 106.8008
-                            },
-                            'Pasar minggu': {
-                                lat: -6.2936,
-                                lng: 106.8378
-                            },
-                            'Tebet': {
-                                lat: -6.2299,
-                                lng: 106.8524
-                            }
-                        }
-                    },
-                    Jakarta_utara: {
-                        coordinates: {
-                            lat: -6.1214,
-                            lng: 106.7741
-                        },
-                        kota: {
-                            'Koja': {
-                                lat: -6.1173,
-                                lng: 106.9020
-                            },
-                            'Kelapa gading': {
-                                lat: -6.1500,
-                                lng: 106.9000
-                            },
-                            'Pademangan': {
-                                lat: -6.1364,
-                                lng: 106.8463
-                            }
-                        }
-                    }
-                }
-            },
-            di_yogyakarta: {
-                coordinates: {
-                    lat: -7.7971,
-                    lng: 110.3688
-                },
-                kabupaten: {
-                    sleman: {
-                        coordinates: {
-                            lat: -7.7325,
-                            lng: 110.4024
-                        },
-                        kota: {
-                            'depok': {
-                                lat: -7.7844,
-                                lng: 110.4103
-                            },
-                            'ngaglik': {
-                                lat: -7.6902,
-                                lng: 110.3420
-                            },
-                            'mlati': {
-                                lat: -7.7360,
-                                lng: 110.3299
-                            }
-                        }
-                    },
-                    bantul: {
-                        coordinates: {
-                            lat: -7.8881,
-                            lng: 110.3289
-                        },
-                        kota: {
-                            'bantul kota': {
-                                lat: -7.8881,
-                                lng: 110.3289
-                            },
-                            'pundong': {
-                                lat: -7.9522,
-                                lng: 110.3289
-                            },
-                            'srandakan': {
-                                lat: -7.9599,
-                                lng: 110.2407
-                            }
-                        }
-                    },
-                    gunung_kidul: {
-                        coordinates: {
-                            lat: -7.9656,
-                            lng: 110.6169
-                        },
-                        kota: {
-                            'wonosari': {
-                                lat: -7.9804,
-                                lng: 110.5952
-                            },
-                            'playen': {
-                                lat: -7.9397,
-                                lng: 110.5357
-                            },
-                            'semanu': {
-                                lat: -8.0373,
-                                lng: 110.6472
-                            }
-                        }
-                    },
-                    kulon_progo: {
-                        coordinates: {
-                            lat: -7.8123,
-                            lng: 110.1480
-                        },
-                        kota: {
-                            'wates': {
-                                lat: -7.8859,
-                                lng: 110.1408
-                            },
-                            'sentolo': {
-                                lat: -7.8369,
-                                lng: 110.2184
-                            },
-                            'pengasih': {
-                                lat: -7.6450,
-                                lng: 110.0269
-                            }
-                        }
-                    },
-                    yogyakarta_kota: {
-                        coordinates: {
-                            lat: -7.8014,
-                            lng: 110.3649
-                        },
-                        kota: {
-                            'gondokusuman': {
-                                lat: -7.7868,
-                                lng: 110.3812
-                            },
-                            'jetis': {
-                                lat: -7.6800,
-                                lng: 110.2200
-                            },
-                            'danurejan': {
-                                lat: -7.7928,
-                                lng: 110.3718
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        // Fungsi helper untuk mendapatkan koordinat berdasarkan provinsi, kabupaten, dan kota
-        function getCoordinates(provinsi, kabupaten, kota) {
-            try {
-                // Coba dapatkan koordinat berdasarkan kota
-                if (locationCoordinates[provinsi]?.kabupaten[kabupaten]?.kota[kota]) {
-                    return locationCoordinates[provinsi].kabupaten[kabupaten].kota[kota];
-                }
-
-                // Jika tidak ada kota, gunakan koordinat kabupaten
-                if (locationCoordinates[provinsi]?.kabupaten[kabupaten]?.coordinates) {
-                    return locationCoordinates[provinsi].kabupaten[kabupaten].coordinates;
-                }
-
-                // Jika tidak ada kabupaten, gunakan koordinat provinsi
-                if (locationCoordinates[provinsi]?.coordinates) {
-                    return locationCoordinates[provinsi].coordinates;
-                }
-
-                // Default koordinat (Jakarta)
-                return {
-                    lat: -6.200000,
-                    lng: 106.816666
-                };
-            } catch (error) {
-                console.error("Error saat mendapatkan koordinat:", error);
-                return {
-                    lat: -6.200000,
-                    lng: 106.816666
-                };
-            }
-        }
-
+        // Inisialisasi peta
         function initMap() {
-            // Gunakan fungsi getCoordinates untuk mendapatkan koordinat berdasarkan hierarki
-            const coordinates = getCoordinates(provinsi, kabupaten, kota);
-            centerLat = coordinates.lat;
-            centerLng = coordinates.lng;
-
+            // Default ke Jakarta jika tidak ada parameter lokasi
             map = L.map('map').setView([centerLat, centerLng], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            getNearbyHospitals(centerLat, centerLng);
+            // Load hospital data dari default location
+            loadInitialHospitals();
         }
 
-        function addUserLocationMarker(lat, lng) {
-            if (!isFinite(lat) || !isFinite(lng)) {
-                console.error("addUserLocationMarker: Koordinat tidak valid", lat, lng);
-                return;
-            }
-
-            console.log("Menambahkan marker pengguna di:", lat, lng);
-
-            // Hapus marker pengguna lama jika ada
-            if (window.userMarker) {
-                map.removeLayer(window.userMarker);
-            }
-
-            const userIcon = L.divIcon({
-                className: 'hospital-marker',
-                html: '<i class="fas fa-user-location"></i>',
-                iconSize: [40, 40],
-                iconAnchor: [20, 20],
-                popupAnchor: [0, -20]
-            });
-
-            const userMarker = L.marker([lat, lng], {
-                icon: userIcon,
-                zIndexOffset: 1000
-            }).addTo(map);
-
-            userMarker.bindPopup(`
-                <div style="text-align: center;">
-                    <strong>📍 Lokasi Anda</strong><br>
-                    <small>Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}</small><br>
-                </div>
-            `).openPopup();
-            
-            let userAccuracyCircle;
-            userAccuracyCircle = L.circle([lat, lng], {
-                radius: accuracy,
-                color: '#e74c3c',
-                fillColor: '#e74c3c',
-                fillOpacity: 0.1,
-                weight: 2,
-                dashArray: '5, 5'
-            }).addTo(map);
+        // Memuat data rumah sakit awal
+        function loadInitialHospitals() {
+            document.getElementById('selectedLocation').textContent = "Jakarta (Default)";
+            getNearbyHospitalsFromDB(centerLat, centerLng, currentRadius);
         }
 
-        function getNearbyHospitals(lat, lng) {
+        // Fungsi untuk mendapatkan rumah sakit terdekat dari database
+        function getNearbyHospitalsFromDB(lat, lng, radius = 10) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch(`/api/nearby-hospitals?lat=${lat}&lng=${lng}&provinsi=${provinsi}&kabupaten=${kabupaten}&kota=${kota}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
+            
+            // Tampilkan loading
+            showLoading();
+            
+            // Konstruksi URL dengan parameter
+            const url = `/api/nearby-hospitals?lat=${lat}&lng=${lng}&radius=${radius}&limit=20`;
+            
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Hospital data received:', data);
+                
+                if (data.success && data.results) {
                     processHospitalData(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching hospital data:', error);
-                    document.getElementById('hospitalList').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center">Error: Tidak dapat memuat data rumah sakit.</td>
-                    </tr>
-                `;
-
-                    const dummyHospitals = generateDummyHospitals(lat, lng);
-                    processHospitalData({
-                        results: dummyHospitals
-                    });
-                });
+                    // Load stats
+                    loadHospitalStats(lat, lng, radius);
+                } else {
+                    throw new Error(data.message || 'Gagal memuat data rumah sakit');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching hospital data:', error);
+                showError(`Gagal memuat data rumah sakit: ${error.message}`);
+            });
         }
 
+        function showError(message) {
+            document.getElementById('hospitalList').innerHTML = `
+                <tr>
+                    <td colspan="5" class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i> ${message}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function showLoading() {
+            document.getElementById('hospitalList').innerHTML = `
+                <tr>
+                    <td colspan="5" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Memuat data rumah sakit...
+                    </td>
+                </tr>
+            `;
+        }
+
+        function showSuccess(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'success-message';
+            alertDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Fungsi untuk memproses data rumah sakit dari database
         function processHospitalData(data) {
             clearMarkers();
+            
+            if (data.success && data.results && data.results.length > 0) {
+                const hospitals = data.results.map(hospital => ({
+                    id: hospital.id,
+                    place_id: hospital.place_id,
+                    name: hospital.name,
+                    address: hospital.vicinity,
+                    distance: hospital.distance,
+                    rating: hospital.rating,
+                    capacity: hospital.kapasitas,
+                    availability: hospital.availability,
+                    lat: hospital.geometry.location.lat,
+                    lng: hospital.geometry.location.lng
+                }));
 
-            if (data && data.results && data.results.length > 0) {
-                const hospitals = data.results.map(place => {
-                    const distance = calculateDistance(
-                        centerLat,
-                        centerLng,
-                        place.geometry.location.lat,
-                        place.geometry.location.lng
-                    );
-
-                    return {
-                        id: place.place_id,
-                        name: place.name,
-                        distance: `${distance.toFixed(1)} KM`,
-                        capacity: getRandomCapacity(),
-                        lat: place.geometry.location.lat,
-                        lng: place.geometry.location.lng,
-                        rating: place.rating || 'N/A',
-                        vicinity: place.vicinity
-                    };
-                });
-
-                hospitals.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
-
-                displayHospitals(hospitals);
-
-                addMarkersToMap(hospitals);
+                // Urutkan berdasarkan jarak terdekat
+                hospitals.sort((a, b) => a.distance - b.distance);
+                
+                displayHospitalsInTable(hospitals);
+                addHospitalMarkersToMap(hospitals);
+                showSuccess(`Ditemukan ${hospitals.length} rumah sakit dalam radius ${currentRadius} km`);
             } else {
                 document.getElementById('hospitalList').innerHTML = `
                     <tr>
-                        <td colspan="4" class="text-center">Tidak ada rumah sakit yang ditemukan di area ini.</td>
+                        <td colspan="5" class="text-center" style="padding: 40px;">
+                            <i class="fas fa-hospital" style="font-size: 48px; color: #bdc3c7; margin-bottom: 15px;"></i><br>
+                            <strong>Tidak ada rumah sakit ditemukan</strong><br>
+                            <span style="color: #7f8c8d;">Coba perluas radius pencarian atau ubah lokasi</span>
+                        </td>
                     </tr>
                 `;
             }
         }
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = deg2rad(lat2 - lat1);
-            const dLon = deg2rad(lon2 - lon1);
-            const a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const distance = R * c;
-            return distance;
-        }
-
-        function deg2rad(deg) {
-            return deg * (Math.PI / 180);
-        }
-
-        function getRandomCapacity() {
-            const available = Math.floor(Math.random() * 40) + 10;
-            const total = available + Math.floor(Math.random() * 60) + 40;
-            return `${available}/${total}`;
-        }
-
-        function displayHospitals(hospitals) {
+        // Fungsi untuk menampilkan rumah sakit dalam tabel
+        function displayHospitalsInTable(hospitals) {
             const hospitalList = document.getElementById('hospitalList');
             hospitalList.innerHTML = '';
 
-            hospitals.forEach(hospital => {
+            hospitals.forEach((hospital, index) => {
+                const availabilityInfo = getAvailabilityInfo(hospital.availability);
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${hospital.name}</td>
-                    <td>${hospital.distance}</td>
-                    <td>${hospital.capacity}</td>
                     <td>
-                        <a href="/hospital/${hospital.id}?provinsi=${provinsi}&kabupaten=${kabupaten}&kota=${kota}">
-                            Lihat Detail
-                        </a>
+                        <div style="display: flex; align-items: center;">
+                            <span class="availability-indicator ${availabilityInfo.class}"></span>
+                            <div>
+                                <strong>${hospital.name}</strong><br>
+                                <small style="color: #7f8c8d;">${hospital.address}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-weight: bold; color: #2c3e50;">${hospital.distance} km</span>
+                    </td>
+                    <td>
+                        <div>
+                            ${hospital.capacity}<br>
+                            <small style="color: ${availabilityInfo.color};">
+                                ${availabilityInfo.text}
+                            </small>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-star" style="color: #f39c12; margin-right: 3px;"></i>
+                            ${hospital.rating}
+                        </div>
+                    </td>
+                    <td>
+                        <button onclick="showHospitalDetail('${hospital.id}')" class="btn" style="font-size: 12px; padding: 6px 12px;">
+                            <i class="fas fa-info-circle"></i> Detail
+                        </button>
                     </td>
                 `;
                 hospitalList.appendChild(row);
             });
         }
 
-        function addMarkersToMap(hospitals) {
+        // Fungsi untuk mendapatkan informasi ketersediaan
+        function getAvailabilityInfo(availability) {
+            if (!availability) {
+                return {
+                    class: 'availability-unknown',
+                    color: '#95a5a6',
+                    text: 'Tidak diketahui'
+                };
+            }
+
+            const status = availability.status;
+            const percentage = availability.percentage;
+
+            switch (status) {
+                case 'high':
+                    return {
+                        class: 'availability-high',
+                        color: '#27ae60',
+                        text: `Tersedia (${percentage}%)`
+                    };
+                case 'medium':
+                    return {
+                        class: 'availability-medium',
+                        color: '#f39c12',
+                        text: `Terbatas (${percentage}%)`
+                    };
+                case 'low':
+                    return {
+                        class: 'availability-low',
+                        color: '#e67e22',
+                        text: `Sedikit (${percentage}%)`
+                    };
+                case 'full':
+                    return {
+                        class: 'availability-full',
+                        color: '#e74c3c',
+                        text: 'Penuh (0%)'
+                    };
+                default:
+                    return {
+                        class: 'availability-unknown',
+                        color: '#95a5a6',
+                        text: 'Tidak diketahui'
+                    };
+            }
+        }
+
+        // Fungsi untuk menambahkan marker rumah sakit ke peta
+        function addHospitalMarkersToMap(hospitals) {
             hospitals.forEach(hospital => {
+                const availabilityInfo = getAvailabilityInfo(hospital.availability);
+                
                 const hospitalIcon = L.divIcon({
                     className: 'hospital-marker',
                     html: '<i class="fas fa-hospital"></i>',
@@ -1075,313 +632,267 @@
                 }).addTo(map);
 
                 const popupContent = `
-                    <div style="max-width: 300px;">
-                        <h3 style="margin-bottom: 5px;">${hospital.name}</h3>
-                        <p><strong>Alamat:</strong> ${hospital.vicinity}</p>
-                        <p><strong>Jarak:</strong> ${hospital.distance}</p>
-                        <p><strong>Kapasitas:</strong> ${hospital.capacity}</p>
-                        <p><strong>Rating:</strong> ${hospital.rating}</p>
-                        <a href="/hospital/${hospital.id}" style="color: #3498db; text-decoration: none;">Lihat Detail</a>
+                    <div style="max-width: 280px; font-size: 14px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                            <span class="availability-indicator ${availabilityInfo.class}" style="margin-right: 8px;"></span>
+                            <h3 style="margin: 0; font-size: 16px;">${hospital.name}</h3>
+                        </div>
+                        <p style="margin: 5px 0;"><strong>📍 Alamat:</strong> ${hospital.address}</p>
+                        <p style="margin: 5px 0;"><strong>📏 Jarak:</strong> ${hospital.distance} km</p>
+                        <p style="margin: 5px 0;"><strong>🏥 Kapasitas:</strong> ${hospital.capacity}</p>
+                        <p style="margin: 5px 0;"><strong>⭐ Rating:</strong> ${hospital.rating}</p>
+                        <p style="margin: 5px 0; color: ${availabilityInfo.color};">
+                            <strong>🛏 Ketersediaan:</strong> ${availabilityInfo.text}
+                        </p>
+                        <div style="text-align: center; margin-top: 10px;">
+                            <button onclick="showHospitalDetail('${hospital.id}')" 
+                                    style="background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-info-circle"></i> Lihat Detail
+                            </button>
+                        </div>
                     </div>
                 `;
 
                 marker.bindPopup(popupContent);
-
                 markers.push(marker);
             });
         }
 
+        // Fungsi untuk membersihkan marker
         function clearMarkers() {
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
         }
 
+        // Fungsi untuk mendapatkan lokasi pengguna yang sudah diperbaiki
         function getUserLocation() {
-            document.getElementById('hospitalList').innerHTML = `
-                <tr>
-                    <td colspan="4" class="text-center">
-                        <i class="fas fa-spinner fa-spin"></i> Mengambil lokasi Anda...
-                    </td>
-                </tr>
-            `;
+            const getLocationBtn = document.getElementById('getLocationBtn');
+            const refreshDataBtn = document.getElementById('refreshDataBtn');
+            
+            // Disable button dan ubah teks
+            getLocationBtn.disabled = true;
+            getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengambil Lokasi...';
+            
+            showLoading();
 
-            console.log("Memulai proses geolocation...");
-
-            // Cek apakah browser mendukung geolocation
             if (!navigator.geolocation) {
-                console.error("Browser tidak mendukung Geolocation API");
-                document.getElementById('hospitalList').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center">
-                            <div style="color: #e74c3c;">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Browser Anda tidak mendukung fitur lokasi.
-                            </div>
-                            <div style="margin-top: 10px; font-size: 14px;">
-                                Silakan gunakan browser modern seperti Chrome, Firefox, atau Safari terbaru.
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                showError('Browser Anda tidak mendukung fitur geolokasi');
+                getLocationBtn.disabled = false;
+                getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya';
                 return;
             }
 
-            // Opsi untuk geolocation
             const options = {
-                enableHighAccuracy: true,    // Gunakan GPS jika tersedia
-                timeout: 30000,              // Timeout 30 detik
-                maximumAge: 60000           // Cache lokasi maksimal 1 menit
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 60000
             };
 
-            // Fungsi success callback
-            function onSuccess(position) {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                const accuracy = position.coords.accuracy;
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
 
-                console.log("Lokasi user ditemukan:", {
-                    lat: userLat,
-                    lng: userLng,
-                    accuracy: accuracy
-                });
+                    console.log('User location obtained:', { userLat, userLng, accuracy });
 
-                // Validasi koordinat
-                if (!isFinite(userLat) || !isFinite(userLng) || 
-                    Math.abs(userLat) > 90 || Math.abs(userLng) > 180) {
-                    console.error("Koordinat tidak valid:", userLat, userLng);
-                    document.getElementById('hospitalList').innerHTML = `
-                        <tr>
-                            <td colspan="4" class="text-center">
-                                <div style="color: #e74c3c;">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    Koordinat lokasi tidak valid. Silakan coba lagi.
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
+                    // Validasi koordinat
+                    if (!isFinite(userLat) || !isFinite(userLng)) {
+                        showError('Koordinat lokasi tidak valid');
+                        getLocationBtn.disabled = false;
+                        getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya';
+                        return;
+                    }
 
-                // Update peta ke lokasi user
-                map.setView([userLat, userLng], 15);
-                
-                // Update variabel global
-                centerLat = userLat;
-                centerLng = userLng;
+                    // Update pusat peta ke lokasi pengguna
+                    centerLat = userLat;
+                    centerLng = userLng;
+                    map.setView([userLat, userLng], 14);
 
-                // Hapus semua marker lama
-                clearMarkers();
-                
-                // Hapus marker user lama jika ada
-                if (window.userMarker) {
-                    map.removeLayer(window.userMarker);
-                }
-                if (window.userAccuracyCircle) {
-                    map.removeLayer(window.userAccuracyCircle);
-                }
+                    // Hapus marker pengguna yang lama
+                    if (userMarker) {
+                        map.removeLayer(userMarker);
+                    }
+                    if (userAccuracyCircle) {
+                        map.removeLayer(userAccuracyCircle);
+                    }
 
-                // Buat icon untuk user
-                const userIcon = L.divIcon({
-                    className: 'user-marker',
-                    html: '<i class="fas fa-user"></i>',
-                    iconSize: [40, 40],
-                    iconAnchor: [20, 20],
-                    popupAnchor: [0, -20]
-                });
+                    // Tambahkan marker lokasi pengguna
+                    addUserLocationMarker(userLat, userLng, accuracy);
 
-                // Tambahkan marker untuk lokasi user
-                window.userMarker = L.marker([userLat, userLng], {
-                    icon: userIcon,
-                    zIndexOffset: 1000
+                    // Update informasi lokasi
+                    document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
+
+                    // Ambil data rumah sakit terdekat dari database
+                    getNearbyHospitalsFromDB(userLat, userLng, currentRadius);
+
+                    // Update button states
+                    getLocationBtn.innerHTML = '<i class="fas fa-check"></i> Lokasi Ditemukan';
+                    getLocationBtn.style.backgroundColor = '#27ae60';
+                    
+                    refreshDataBtn.style.display = 'inline-block';
+                    
+                    setTimeout(() => {
+                        getLocationBtn.disabled = false;
+                        getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya';
+                        getLocationBtn.style.backgroundColor = '#3498db';
+                    }, 3000);
+                },
+                error => {
+                    console.error('Geolocation error:', error);
+                    
+                    let errorMessage = 'Gagal mendapatkan lokasi Anda';
+                    
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Akses lokasi ditolak. Silakan izinkan akses lokasi pada browser.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Informasi lokasi tidak tersedia.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Waktu habis dalam mendapatkan lokasi.';
+                            break;
+                    }
+                    
+                    showError(errorMessage);
+                    
+                    getLocationBtn.disabled = false;
+                    getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Coba Lagi';
+                },
+                options
+            );
+        }
+
+        // Fungsi untuk menambahkan marker lokasi pengguna
+        function addUserLocationMarker(lat, lng, accuracy = 100) {
+            const userIcon = L.divIcon({
+                className: 'user-marker',
+                html: '<i class="fas fa-user"></i>',
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20]
+            });
+
+            userMarker = L.marker([lat, lng], {
+                icon: userIcon,
+                zIndexOffset: 1000
+            }).addTo(map);
+
+            userMarker.bindPopup(`
+                <div style="text-align: center; font-size: 14px;">
+                    <strong>📍 Lokasi Anda</strong><br>
+                    <small>Lat: ${lat.toFixed(6)}</small><br>
+                    <small>Lng: ${lng.toFixed(6)}</small><br>
+                    <small>Akurasi: ~${Math.round(accuracy)}m</small>
+                </div>
+            `).openPopup();
+
+            // Tambahkan circle akurasi jika akurasi > 50m
+            if (accuracy > 50) {
+                userAccuracyCircle = L.circle([lat, lng], {
+                    radius: accuracy,
+                    color: '#e74c3c',
+                    fillColor: '#e74c3c',
+                    fillOpacity: 0.1,
+                    weight: 2,
+                    dashArray: '5, 5'
                 }).addTo(map);
-
-                // Popup untuk marker user
-                const popupContent = `
-                    <div style="text-align: center;">
-                        <strong>📍 Lokasi Anda</strong><br>
-                        <small>Lat: ${userLat.toFixed(6)}</small><br>
-                        <small>Lng: ${userLng.toFixed(6)}</small><br>
-                        <small>Akurasi: ±${Math.round(accuracy)} meter</small>
-                    </div>
-                `;
-                
-                window.userMarker.bindPopup(popupContent).openPopup();
-
-                // Tambahkan lingkaran akurasi jika akurasi > 100 meter
-                if (accuracy > 100) {
-                    window.userAccuracyCircle = L.circle([userLat, userLng], {
-                        radius: accuracy,
-                        color: '#e74c3c',
-                        fillColor: '#e74c3c',
-                        fillOpacity: 0.1,
-                        weight: 2,
-                        dashArray: '5, 5'
-                    }).addTo(map);
-                }
-
-                // Update teks lokasi
-                document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
-
-                // Cari rumah sakit terdekat
-                getNearbyHospitals(userLat, userLng);
-            }
-
-            // Fungsi error callback
-            function onError(error) {
-                console.error("Geolocation error:", {
-                    code: error.code,
-                    message: error.message
-                });
-
-                let errorMessage = "";
-                let helpMessage = "";
-                let troubleshootSteps = "";
-
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage = "Akses lokasi ditolak";
-                        helpMessage = "Anda perlu mengizinkan akses lokasi untuk menggunakan fitur ini.";
-                        troubleshootSteps = `
-                            <div style="text-align: left; margin-top: 10px;">
-                                <strong>Cara mengizinkan akses lokasi:</strong><br>
-                                1. Klik ikon <i class="fas fa-lock"></i> atau <i class="fas fa-info-circle"></i> di address bar<br>
-                                2. Pilih "Izinkan" untuk Lokasi<br>
-                                3. Refresh halaman dan coba lagi<br><br>
-                                <strong>Atau:</strong><br>
-                                • Periksa pengaturan privasi browser Anda<br>
-                                • Pastikan lokasi tidak diblokir untuk situs ini
-                            </div>
-                        `;
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage = "Lokasi tidak dapat ditemukan";
-                        helpMessage = "Sistem tidak dapat menentukan lokasi Anda.";
-                        troubleshootSteps = `
-                            <div style="text-align: left; margin-top: 10px;">
-                                <strong>Solusi yang bisa dicoba:</strong><br>
-                                • Aktifkan GPS/Location Services di perangkat<br>
-                                • Periksa koneksi internet Anda<br>
-                                • Coba di tempat terbuka (tidak di dalam gedung)<br>
-                                • Restart browser dan coba lagi
-                            </div>
-                        `;
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage = "Waktu pencarian lokasi habis";
-                        helpMessage = "Proses pencarian lokasi memakan waktu terlalu lama.";
-                        troubleshootSteps = `
-                            <div style="text-align: left; margin-top: 10px;">
-                                <strong>Solusi yang bisa dicoba:</strong><br>
-                                • Periksa koneksi internet Anda<br>
-                                • Pindah ke area dengan sinyal yang lebih baik<br>
-                                • Coba lagi dalam beberapa saat<br>
-                                • Pastikan GPS perangkat aktif
-                            </div>
-                        `;
-                        break;
-                    default:
-                        errorMessage = "Terjadi kesalahan tidak dikenal";
-                        helpMessage = `Detail error: ${error.message}`;
-                        troubleshootSteps = `
-                            <div style="text-align: left; margin-top: 10px;">
-                                <strong>Solusi umum:</strong><br>
-                                • Refresh halaman dan coba lagi<br>
-                                • Periksa pengaturan lokasi perangkat<br>
-                                • Gunakan browser terbaru<br>
-                                • Hubungi support jika masalah berlanjut
-                            </div>
-                        `;
-                        break;
-                }
-
-                // Update tabel dengan informasi error yang detail
-                document.getElementById('hospitalList').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center">
-                            <div style="color: #e74c3c; margin-bottom: 10px; font-size: 16px;">
-                                <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
-                            </div>
-                            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
-                                ${helpMessage}
-                            </div>
-                            ${troubleshootSteps}
-                            <div style="margin-top: 15px;">
-                                <button onclick="getUserLocation()" class="location-btn">
-                                    <i class="fas fa-redo"></i> Coba Lagi
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
-
-            // Panggil geolocation API
-            navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
-        }
-
-        function checkHTTPS() {
-            if (window.location.protocol !== 'https:' && 
-                window.location.hostname !== 'localhost' && 
-                window.location.hostname !== '127.0.0.1') {
-                console.warn("⚠️ Geolocation bekerja optimal di HTTPS!");
-                console.warn("Protokol saat ini:", window.location.protocol);
-                
-                // Tampilkan peringatan jika perlu
-                const warning = document.createElement('div');
-                warning.style.cssText = `
-                    background: #fff3cd;
-                    color: #856404;
-                    padding: 10px;
-                    margin: 10px 0;
-                    border: 1px solid #ffeaa7;
-                    border-radius: 4px;
-                    text-align: center;
-                    font-size: 14px;
-                `;
-                warning.innerHTML = `
-                    <i class="fas fa-info-circle"></i> 
-                    Untuk hasil yang optimal, gunakan HTTPS atau buka di localhost
-                `;
-                
-                document.querySelector('.container').insertBefore(warning, document.querySelector('.map-container'));
             }
         }
 
-        function detectDeviceCapabilities() {
-            const capabilities = {
-                geolocation: !!navigator.geolocation,
-                https: window.location.protocol === 'https:',
-                serviceWorker: 'serviceWorker' in navigator,
-                localStorage: typeof(Storage) !== "undefined"
-            };
+        // Fungsi untuk refresh data
+        function refreshHospitalData() {
+            if (centerLat && centerLng) {
+                getNearbyHospitalsFromDB(centerLat, centerLng, currentRadius);
+            } else {
+                loadInitialHospitals();
+            }
+        }
+
+        // Fungsi untuk load statistik rumah sakit
+        function loadHospitalStats(lat, lng, radius) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
-            console.log("Device capabilities:", capabilities);
-            return capabilities;
+            fetch(`/api/hospital-stats?lat=${lat}&lng=${lng}&radius=${radius}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.stats) {
+                    displayHospitalStats(data.stats);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading hospital stats:', error);
+            });
         }
 
-        // Inisialisasi saat DOM ready
+        // Fungsi untuk menampilkan statistik
+        function displayHospitalStats(stats) {
+            const statsContainer = document.getElementById('statsContainer');
+            const statsGrid = document.getElementById('statsGrid');
+            
+            statsGrid.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-value">${stats.total_hospitals}</div>
+                    <div class="stat-label">Total Rumah Sakit</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.average_rating}</div>
+                    <div class="stat-label">Rating Rata-rata</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.total_available_beds}</div>
+                    <div class="stat-label">Tempat Tidur Tersedia</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.occupancy_rate}%</div>
+                    <div class="stat-label">Tingkat Okupansi</div>
+                </div>
+            `;
+            
+            statsContainer.style.display = 'block';
+        }
+
+        // Fungsi untuk menampilkan detail rumah sakit
+        function showHospitalDetail(hospitalId) {
+            // Buka halaman detail rumah sakit
+            window.location.href = `/hospital/${hospitalId}`;
+        }
+
+        // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Cek kemampuan perangkat
-            detectDeviceCapabilities();
-            
-            // Cek HTTPS
-            checkHTTPS();
-            
-            // Inisialisasi peta
             initMap();
-
+            
             // Event listener untuk tombol lokasi
-            document.getElementById('getLocationBtn').addEventListener('click', function() {
-                console.log("Tombol lokasi diklik");
-                getUserLocation();
+            document.getElementById('getLocationBtn').addEventListener('click', getUserLocation);
+            
+            // Event listener untuk tombol refresh
+            document.getElementById('refreshDataBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+                this.disabled = true;
+                
+                refreshHospitalData();
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-refresh"></i> Refresh Data';
+                    this.disabled = false;
+                }, 2000);
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            initMap();
-
-            document.getElementById('getLocationBtn').addEventListener('click', getUserLocation);
-        });
+        // Fungsi utilitas untuk debugging
+        function debugLocation() {
+            console.log('Current center:', { centerLat, centerLng });
+            console.log('Current radius:', currentRadius);
+            console.log('Total markers:', markers.length);
+        }
     </script>
 </body>
 

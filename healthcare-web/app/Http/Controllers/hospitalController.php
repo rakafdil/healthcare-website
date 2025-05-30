@@ -5,164 +5,56 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\RumahSakit;
-use App\Models\Dokter; // Model Dokter yang perlu dibuat
 
 class HospitalController extends Controller
 {
-    // Method untuk menampilkan detail rumah sakit
-    public function showHospitalDetail($id = null)
+    // Method untuk menampilkan view peta
+    public function showMap()
     {
-        if (!$id) {
-            return redirect('/peta');
-        }
-        
-        // Untuk detail rumah sakit, gunakan view 'detail' yang sudah ada
-        return view('detail', ['hospital_id' => $id]);
-    }
-    
-    // Method untuk mendapatkan data rumah sakit berdasarkan ID
-    public function getHospitalData($id)
-    {
-        // Ambil data rumah sakit dari database menggunakan model
-        $hospital = RumahSakit::find($id);
-        
-        if (!$hospital) {
-            return response()->json(['error' => 'Rumah sakit tidak ditemukan'], 404);
-        }
-        
-        // Ambil semua dokter yang bekerja di rumah sakit tersebut
-        // Asumsi ada tabel dokter dengan kolom rumah_sakit_id
-        $doctors = DB::table('dokter')
-                    ->where('rumah_sakit_id', $id)
-                    ->get();
-        
-        // Format dokter untuk ditampilkan
-        $formattedDoctors = [];
-        foreach ($doctors as $doctor) {
-            $formattedDoctors[] = [
-                'name' => $doctor->nama,
-                'specialty' => $doctor->spesialisasi,
-                'schedule' => $doctor->jadwal,
-                'gender' => $doctor->jenis_kelamin
-            ];
-        }
-        
-        // Jika tidak ada dokter di database, beri array kosong
-        if (empty($formattedDoctors)) {
-            $formattedDoctors = [];
-        }
-        
-        // Format data sesuai dengan struktur yang diharapkan oleh aplikasi
-        $result = [
-            'name' => $hospital->nama,
-            'address' => $hospital->alamat,
-            'capacity' => $hospital->kapasitas,
-            'rating' => $hospital->rating,
-            'doctors' => $formattedDoctors,
-            // Tambahan informasi lengkap rumah sakit
-            'phone' => $hospital->telepon ?? '',
-            'email' => $hospital->email ?? '',
-            'website' => $hospital->website ?? '',
-            'facilities' => $hospital->fasilitas ?? '',
-            'description' => $hospital->deskripsi ?? '',
-            'services' => $hospital->layanan ?? '',
-            'insurance' => $hospital->asuransi ?? '',
-            'operational_hours' => $hospital->jam_operasional ?? ''
-        ];
-        
-        return response()->json($result);
+        return view('peta');
     }
 
-    // Method untuk mendapatkan data kapasitas rumah sakit
-    public function getHospitalCapacity($id)
-    {
-        // Ambil data kapasitas dari database menggunakan model
-        $hospital = RumahSakit::find($id);
-                    
-        if (!$hospital) {
-            return response()->json(['error' => 'Rumah sakit tidak ditemukan'], 404);
-        }
-        
-        // Jika format kapasitas adalah "available/total" seperti "20/80"
-        if (strpos($hospital->kapasitas, '/') !== false) {
-            list($available, $total) = explode('/', $hospital->kapasitas);
-            return response()->json([
-                'available' => (int)$available,
-                'total' => (int)$total,
-                'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
-            ]);
-        }
-        
-        // Jika kapasitas hanya berupa angka tunggal, anggap sebagai total
-        if (is_numeric($hospital->kapasitas)) {
-            $total = (int)$hospital->kapasitas;
-            $available = DB::table('tempat_tidur')
-                        ->where('rumah_sakit_id', $id)
-                        ->where('status', 'tersedia')
-                        ->count();
-            
-            return response()->json([
-                'available' => $available,
-                'total' => $total,
-                'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
-            ]);
-        }
-        
-        // Jika format kapasitas tidak sesuai
-        return response()->json([
-            'error' => 'Format kapasitas tidak valid',
-            'raw_capacity' => $hospital->kapasitas
-        ], 400);
-    }
-
-    // Method untuk mendapatkan rumah sakit terdekat tanpa batasan jumlah
+    // Method untuk mendapatkan rumah sakit terdekat (API)
     public function getNearbyHospitals(Request $request)
     {
-        $lat = $request->input('lat', -6.9147); // Default ke Bandung jika tidak ada
-        $lng = $request->input('lng', 107.6098);
-        $radius = $request->input('radius', 5); // Radius pencarian dalam kilometer
-        $limit = $request->input('limit', 0); // 0 berarti tanpa batas
-        
-        // Query dasar untuk menghitung jarak dengan rumus Haversine
-        $query = DB::table('rumah_sakit')
+        $lat = $request->input('lat', -6.2088); // Default ke Jakarta
+        $lng = $request->input('lng', 106.8456);
+        $radius = $request->input('radius', 10); // Radius default 10 km
+        $limit = $request->input('limit', 20); // Limit default 20 rumah sakit
+
+        // Validasi input
+        if (!is_numeric($lat) || !is_numeric($lng) || !is_numeric($radius)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parameter lokasi tidak valid'
+            ], 400);
+        }
+
+        // Query untuk mencari rumah sakit dalam radius tertentu
+        $hospitals = DB::table('rumah_sakit')
             ->select(
                 'id_rumah_sakit as id',
-                'id_rumah_sakit as place_id',
                 'nama as name',
                 'alamat as vicinity',
-                'rating',
                 'kapasitas',
+                'rating',
                 'lat',
                 'lng',
                 DB::raw("(6371 * acos(cos(radians($lat)) * cos(radians(lat)) * cos(radians(lng) - radians($lng)) + sin(radians($lat)) * sin(radians(lat)))) AS distance")
             )
-            ->having('distance', '<', $radius)
-            ->orderBy('distance');
-        
-        // Terapkan limit jika diberikan
-        if ($limit > 0) {
-            $query->limit($limit);
-        }
-        
-        $hospitals = $query->get();
-        
-        // Format hasil untuk kompatibilitas dengan kode frontend yang sudah ada
-        $results = [];
+            ->having('distance', '<=', $radius)
+            ->orderBy('distance')
+            ->limit($limit)
+            ->get();
+
+        // Format data untuk response
+        $formattedHospitals = [];
         foreach ($hospitals as $hospital) {
-            // Parse kapasitas untuk mendapatkan ketersediaan
-            $availability = null;
-            if (strpos($hospital->kapasitas, '/') !== false) {
-                list($available, $total) = explode('/', $hospital->kapasitas);
-                $availability = [
-                    'available' => (int)$available,
-                    'total' => (int)$total,
-                    'percentage' => ($total > 0) ? round(($available / $total) * 100, 2) : 0
-                ];
-            }
+            $availability = $this->parseCapacity($hospital->kapasitas);
             
-            $results[] = [
+            $formattedHospitals[] = [
                 'id' => $hospital->id,
-                'place_id' => $hospital->place_id,
+                'place_id' => $hospital->id, // Menggunakan ID yang sama untuk place_id
                 'name' => $hospital->name,
                 'vicinity' => $hospital->vicinity,
                 'rating' => $hospital->rating,
@@ -177,61 +69,189 @@ class HospitalController extends Controller
                 ]
             ];
         }
-        
+
         return response()->json([
-            'results' => $results,
-            'total' => count($results),
-            'radius' => $radius,
-            'center' => [
-                'lat' => (float)$lat,
-                'lng' => (float)$lng
+            'success' => true,
+            'results' => $formattedHospitals
+        ]);
+    }
+
+    // Method untuk mendapatkan statistik rumah sakit (API)
+    public function getHospitalStats(Request $request)
+    {
+        $lat = $request->input('lat', -6.2088);
+        $lng = $request->input('lng', 106.8456);
+        $radius = $request->input('radius', 10);
+
+        // Hitung total rumah sakit dalam radius
+        $totalHospitals = DB::table('rumah_sakit')
+            ->select(DB::raw("COUNT(*) as total"))
+            ->whereRaw("(6371 * acos(cos(radians($lat)) * cos(radians(lat)) * cos(radians(lng) - radians($lng)) + sin(radians($lat)) * sin(radians(lat)))) <= $radius")
+            ->first()
+            ->total;
+
+        // Hitung rating rata-rata
+        $averageRating = DB::table('rumah_sakit')
+            ->select(DB::raw("AVG(rating) as average"))
+            ->whereRaw("(6371 * acos(cos(radians($lat)) * cos(radians(lat)) * cos(radians(lng) - radians($lng)) + sin(radians($lat)) * sin(radians(lat)))) <= $radius")
+            ->first()
+            ->average;
+
+        // Hitung total tempat tidur tersedia (contoh sederhana)
+        $totalBeds = 0;
+        $occupiedBeds = 0;
+        
+        $hospitals = DB::table('rumah_sakit')
+            ->select('kapasitas')
+            ->whereRaw("(6371 * acos(cos(radians($lat)) * cos(radians(lat)) * cos(radians(lng) - radians($lng)) + sin(radians($lat)) * sin(radians(lat)))) <= $radius")
+            ->get();
+
+        foreach ($hospitals as $hospital) {
+            $capacity = $this->parseCapacity($hospital->kapasitas);
+            if ($capacity) {
+                $totalBeds += $capacity['total'];
+                $occupiedBeds += ($capacity['total'] - $capacity['available']);
+            }
+        }
+
+        $occupancyRate = ($totalBeds > 0) ? round(($occupiedBeds / $totalBeds) * 100, 2) : 0;
+
+        return response()->json([
+            'success' => true,
+            'stats' => [
+                'total_hospitals' => $totalHospitals,
+                'average_rating' => round($averageRating, 1),
+                'total_available_beds' => $totalBeds - $occupiedBeds,
+                'occupancy_rate' => $occupancyRate
             ]
         ]);
     }
-    
-    // Method baru untuk mendapatkan semua rumah sakit tanpa filter lokasi
-    public function getAllHospitals(Request $request)
+
+    // Method untuk menampilkan detail rumah sakit
+    public function showHospitalDetail($id)
     {
-        $search = $request->input('search', '');
-        $sort = $request->input('sort', 'nama');
-        $order = $request->input('order', 'asc');
+        $hospital = DB::table('rumah_sakit')
+            ->where('id_rumah_sakit', $id)
+            ->first();
         
-        $query = RumahSakit::query();
-        
-        // Filter pencarian jika ada
-        if (!empty($search)) {
-            $query->where('nama', 'like', "%{$search}%")
-                  ->orWhere('alamat', 'like', "%{$search}%");
+        if (!$hospital) {
+            abort(404);
         }
         
-        // Urutan data
-        $query->orderBy($sort, $order);
+        return view('hospital-detail', [
+            'hospital' => $hospital,
+            'hospital_id' => $id
+        ]);
+    }
+
+    // Method untuk mendapatkan data rumah sakit (API)
+    public function getHospitalData($id)
+    {
+        $hospital = DB::table('rumah_sakit')
+            ->where('id_rumah_sakit', $id)
+            ->first();
         
-        // Ambil semua data
-        $hospitals = $query->get();
+        if (!$hospital) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Rumah sakit tidak ditemukan'
+            ], 404);
+        }
+
+        $availability = $this->parseCapacity($hospital->kapasitas);
         
-        // Format hasil
-        $results = [];
-        foreach ($hospitals as $hospital) {
-            $results[] = [
-                'id' => $hospital->id_rumah_sakit,
-                'place_id' => $hospital->id_rumah_sakit,
-                'name' => $hospital->nama,
-                'vicinity' => $hospital->alamat,
-                'rating' => $hospital->rating,
-                'kapasitas' => $hospital->kapasitas,
-                'geometry' => [
-                    'location' => [
-                        'lat' => (float)$hospital->lat,
-                        'lng' => (float)$hospital->lng
-                    ]
+        return response()->json([
+            'success' => true,
+            'name' => $hospital->nama,
+            'address' => $hospital->alamat,
+            'capacity' => $hospital->kapasitas,
+            'rating' => $hospital->rating,
+            'availability' => $availability,
+            'geometry' => [
+                'location' => [
+                    'lat' => (float)$hospital->lat,
+                    'lng' => (float)$hospital->lng
                 ]
+            ]
+        ]);
+    }
+
+    // Tambahkan setelah method getHospitalData()
+    public function getHospitalDoctors($id)
+    {
+        $doctors = DB::table('dokter_rumah_sakit')
+            ->where('id_rumah_sakit', $id)
+            ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
+            ->get();
+        
+        // Format data dokter
+        $formattedDoctors = [];
+        foreach ($doctors as $doctor) {
+            $formattedDoctors[] = [
+                'id' => $doctor->id_dokter,
+                'name' => $doctor->nama,
+                'specialty' => $doctor->spesialisasi,
+                'schedule' => $doctor->jam_praktek
             ];
         }
         
         return response()->json([
-            'results' => $results,
-            'total' => count($results)
+            'success' => true,
+            'doctors' => $formattedDoctors
         ]);
+    }
+
+    // Tambahkan juga method untuk mengambil kapasitas rumah sakit
+    public function getHospitalCapacity($id)
+    {
+        $hospital = DB::table('rumah_sakit')
+            ->where('id_rumah_sakit', $id)
+            ->select('kapasitas')
+            ->first();
+        
+        if (!$hospital) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Rumah sakit tidak ditemukan'
+            ], 404);
+        }
+        
+        $capacity = $this->parseCapacity($hospital->kapasitas);
+        
+        return response()->json([
+            'success' => true,
+            'current' => $capacity ? $capacity['available'] : 0,
+            'total' => $capacity ? $capacity['total'] : 0
+        ]);
+    }
+
+    // Helper function untuk parsing data kapasitas
+    private function parseCapacity($capacity)
+    {
+        if (preg_match('/(\d+)\s*\/\s*(\d+)/', $capacity, $matches)) {
+            $available = (int)$matches[1];
+            $total = (int)$matches[2];
+            $percentage = ($total > 0) ? round(($available / $total) * 100, 2) : 0;
+            
+            // Tentukan status ketersediaan
+            if ($percentage >= 50) {
+                $status = 'high';
+            } elseif ($percentage >= 20) {
+                $status = 'medium';
+            } elseif ($percentage > 0) {
+                $status = 'low';
+            } else {
+                $status = 'full';
+            }
+            
+            return [
+                'available' => $available,
+                'total' => $total,
+                'percentage' => $percentage,
+                'status' => $status
+            ];
+        }
+        
+        return null;
     }
 }

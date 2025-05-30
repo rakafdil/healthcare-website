@@ -276,7 +276,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Ambil hospital_id dari halaman
-            const hospitalId = {{ $hospital_id ?? 'null' }};
+            const hospitalId = {!! json_encode($hospital_id ?? null) !!};
 
             if (hospitalId) {
                 loadHospitalDetails(hospitalId);
@@ -287,22 +287,22 @@
         });
         // Function to load hospital details
         function loadHospitalDetails(id) {
-            // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // You would normally fetch from an API
+            // Fetch hospital basic info
             fetch(`/api/hospital/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Update hospital information with fetched data
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     updateHospitalInfo(data);
-                    //Ambil data kapasitas dari endpoint baru
+                    
+                    // Fetch hospital capacity
                     return fetch(`/api/hospital/capacity/${id}`, {
                         method: 'GET',
                         headers: {
@@ -310,17 +310,36 @@
                             'X-CSRF-TOKEN': csrfToken
                         }
                     });
-                })
-                .then(response => response.json())
-                .then(capacityData => {
+                } else {
+                    throw new Error(data.message || 'Gagal memuat data rumah sakit');
+                }
+            })
+            .then(response => response.json())
+            .then(capacityData => {
+                if (capacityData.success) {
                     const capacity = `${capacityData.current}/${capacityData.total}`;
                     document.getElementById('hospitalCapacity').textContent = `Kapasitas: ${capacity}`;
-                })
-                .catch(error => {
-                    console.error('Error fetching hospital data:', error);
-                    // Use dummy data if API fails
-                    useDummyData(id);
+                }
+                
+                // Fetch doctors data
+                return fetch(`/api/hospital/doctors/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
                 });
+            })
+            .then(response => response.json())
+            .then(doctorsData => {
+                if (doctorsData.success) {
+                    updateDoctorsList(doctorsData.doctors);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching hospital data:', error);
+                useDummyData(id);
+            });
         }
 
         // Update hospital information on the page
