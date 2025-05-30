@@ -1,9 +1,13 @@
+@props(['probability', 'disease', 'description', 'precautions'])
+
 @php
     static $index = 0;
     $index++;
+
+    if (is_string($precautions)) {
+        $precautions = json_decode($precautions, true);
+    }
 @endphp
-
-
 
 <div x-data="{ open: false }" class="mb-3 border rounded shadow-sm">
     <button @click="open = !open"
@@ -11,24 +15,24 @@
 
 
         @php
-            $percentage = number_format($item->probability * 100, 2);
+            $percentage = number_format($probability * 100, 2);
             $barColor = 'green-500';
             $textColor = 'green-600';
 
-            if ($item->probability >= 0.75) {
+            if ($probability >= 0.75) {
                 $barColor = 'red-500';
                 $textColor = 'red-600';
-            } elseif ($item->probability >= 0.5) {
+            } elseif ($probability >= 0.5) {
                 $barColor = 'yellow-500';
                 $textColor = 'yellow-600';
-            } elseif ($item->probability >= 0.25) {
+            } elseif ($probability >= 0.25) {
                 $barColor = 'blue-500';
                 $textColor = 'blue-600';
             }
         @endphp
 
         <div class="flex flex-col w-full">
-            <span class="truncate whitespace-nowrap overflow-hidden flex-1">{{ $item->disease }}</span>
+            <span class="truncate whitespace-nowrap overflow-hidden flex-1">{{ $disease }}</span>
             <span class="self-end text-2x1 font-medium text-{{ $textColor }}">{{ $percentage }}%</span>
             <div class="w-full bg-white rounded-full h-2 mt-1">
                 <div class="bg-{{ $barColor }} h-2 rounded-full" style="width: {{ $percentage }}%"></div>
@@ -43,13 +47,13 @@
 
 
     <div x-show="open" x-transition class="px-4 py-2 bg-white border-t">
-        <p><strong>Kemungkinan:</strong> {{ number_format($item->probability * 100, 2) }}%</p>
-        <p><strong>Deskripsi:</strong> {{ $item->description }}</p>
+        <p><strong>Kemungkinan:</strong> {{ number_format($probability * 100, 2) }}%</p>
+        <p><strong>Deskripsi:</strong> {{ $description }}</p>
 
-        @if (!empty($item->precautions))
+        @if (!empty($precautions))
             <p><strong>Penanganan:</strong></p>
             <ul class="list-disc list-inside">
-                @foreach ($item->precautions as $p)
+                @foreach ($precautions as $p)
                     @if (!is_null($p))
                         <li>{{ $p }}</li>
                     @endif

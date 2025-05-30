@@ -35,13 +35,13 @@
                 <div class="flex flex-col md:flex-row md:items-center justify-between">
                     <div class="mb-3 md:mb-0">
                         <span class="text-sm text-gray-500">Tanggal & Waktu Pemeriksaan</span>
-                        <p class="text-lg font-medium text-gray-800">20 Agustus 2025 | 02:45 a.m</p>
+                        <p class="text-lg font-medium text-gray-800">{{ $tanggal }} | {{ $waktu }}</p>
                     </div>
                     <div>
                         <span
                             class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                             <span class="mr-1 h-2 w-2 rounded-full bg-blue-500"></span>
-                            Riwayat Pemeriksaan #12345
+                            Riwayat Pemeriksaan #{{ $id_session }}
                         </span>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                                 Gejala yang dialami
                             </h2>
                             <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                                @foreach ($session->gejalas as $gejala)
+                                @foreach ($gejala as $g)
                                     <ul class="space-y-3">
                                         <li class="flex items-start">
                                             <span
@@ -75,7 +75,7 @@
                                                         clip-rule="evenodd" />
                                                 </svg>
                                             </span>
-                                            <span class="ml-3 text-gray-700">Sakit gigi</span>
+                                            <span class="ml-3 text-gray-700">{{ $g->nama_gejala_ind }}</span>
                                         </li>
                                     </ul>
                                 @endforeach
@@ -97,42 +97,16 @@
                             </h2>
                             <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
                                 <ul class="space-y-4">
-                                    <li>
-                                        <div class="flex items-center justify-between mb-1">
-                                            <span class="text-gray-700 font-medium">Sakit hati</span>
-                                            <span class="text-sm font-medium text-red-600">85%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="bg-red-500 h-2 rounded-full" style="width: 85%"></div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center justify-between mb-1">
-                                            <span class="text-gray-700 font-medium">Depresi</span>
-                                            <span class="text-sm font-medium text-yellow-600">65%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 65%"></div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center justify-between mb-1">
-                                            <span class="text-gray-700 font-medium">Radang gigi</span>
-                                            <span class="text-sm font-medium text-blue-600">45%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 45%"></div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center justify-between mb-1">
-                                            <span class="text-gray-700 font-medium">Karang gigi</span>
-                                            <span class="text-sm font-medium text-green-600">25%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="c h-2 rounded-full" style="width: 25%"></div>
-                                        </div>
-                                    </li>
+                                    @foreach ($results as $result)
+                                        <li>
+                                            <div class="flex items-center justify-between mb-1">
+                                                <span
+                                                    class="text-gray-700 font-medium">{{ $result->nama_penyakit }}</span>
+                                                <span
+                                                    class="text-sm font-medium text-black">{{ $result->probabilitas * 100 }}%</span>
+                                            </div>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -148,43 +122,14 @@
                                 d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                 clip-rule="evenodd" />
                         </svg>
-                        Rekomendasi
+                        Detail Penyakit
                     </h2>
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-5">
-                        <p class="text-gray-700 mb-4">Berdasarkan gejala yang Anda alami, berikut adalah rekomendasi
-                            untuk pemeriksaan lebih lanjut:</p>
-                        <div class="space-y-3">
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mt-1"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <p class="ml-3 text-gray-700">Konsultasikan dengan dokter gigi untuk mengatasi masalah
-                                    gigi Anda</p>
-                            </div>
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mt-1"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <p class="ml-3 text-gray-700">Lakukan pemeriksaan kesehatan mental dengan psikolog atau
-                                    psikiater</p>
-                            </div>
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mt-1"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <p class="ml-3 text-gray-700">Istirahat yang cukup dan minum air putih yang banyak</p>
-                            </div>
-                        </div>
-                    </div>
+                    @foreach ($results as $result)
+                        {{-- @dd($result) --}}
+                        @if ($result->probabilitas > 0)
+                            <x-diagnosis-list :probability="$result->probabilitas" :disease="$result->nama_penyakit" :description="$result->deskripsi" :precautions="$result->precautions" />
+                        @endif
+                    @endforeach
                 </div>
 
                 <!-- Disclaimer and actions -->
@@ -206,7 +151,7 @@
                     </div>
 
                     <div class="flex flex-col md:flex-row md:justify-between items-center">
-                        <a href="#"
+                        <a href="/sistem-pakar/symptoms/#"
                             class="mb-4 md:mb-0 text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -216,10 +161,12 @@
                             </svg>
                             Buat Pengecekan Baru
                         </a>
-                        <button
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors duration-200">
-                            Jadwalkan Konsultasi
-                        </button>
+                        <a href="/rumah-sakit">
+                            <button
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors duration-200">
+                                Cek Rumah Sakit Terdekat
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>

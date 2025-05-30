@@ -281,7 +281,7 @@
 
             @foreach (session('diagnosis.result') as $item)
                 @if ($item->probability > 0)
-                    <x-diagnosis-list :item="$item" />
+                    <x-diagnosis-list :probability="$item->probability" :disease="$item->disease" :description="$item->description" :precautions="$item->precautions" />
                 @endif
             @endforeach
         @elseif($step == 4)

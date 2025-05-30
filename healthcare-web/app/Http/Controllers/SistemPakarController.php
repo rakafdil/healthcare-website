@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\History;
 use \App\Models\DiagnosisSession;
+use Carbon\Carbon;
 
 class SistemPakarController extends Controller
 {
@@ -101,26 +102,36 @@ class SistemPakarController extends Controller
         }
     }
 
-    public function start()
-    {
-        $user = auth()->user();
-        $history = History::where('user_id', $user->id)->get();
+    // public function start()
+    // {
+    //     $user = auth()->user();
+    //     $history = History::where('user_id', $user->id)->get();
 
-        return view('sistem-pakar.index', compact('history'));
-    }
+    //     return view('sistem-pakar.index', compact('history'));
+    // }
 
     public function history(Request $request)
     {
-        $session_id = $request->input('session_id');
         $user = auth()->user();
+        $id_session = $request->input('history_id');
 
-        // Ambil semua session diagnosis milik user, urutkan terbaru
-        $sessions = DiagnosisSession::where('user_id', $user->id)
-            ->orderByDesc('created_at')
+        // Ambil satu session diagnosis beserta relasinya
+        $session = DiagnosisSession::where('id_session', $id_session)
             ->with(['gejalas', 'results'])
-            ->get();
-        @dd($sessions);
-        return view('sistem-pakar.history', compact('sessions'));
+            ->first();
+
+        if (!$session) {
+            abort(404, 'Data tidak ditemukan');
+        }
+
+        $gejala = $session->gejalas;
+        $results = $session->results;
+
+        $date_time = Carbon::parse($session->created_at);
+        $tanggal = $date_time->format('d-m-Y');
+        $waktu = $date_time->format('H:i:s');
+
+        return view('sistem-pakar.history', compact('gejala', 'results', 'tanggal', 'waktu', 'id_session'));
     }
 
     public function submitStep(Request $request)
