@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('diagnosis_session', function (Blueprint $table) {
-            $table->id('id_session');
+            $table->bigIncrements('id_session');
             $table->unsignedBigInteger('user_id');
             $table->timestamp('created_at')->useCurrent();
 

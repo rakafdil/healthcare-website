@@ -22,5 +22,11 @@ Jalankan perintah berikut untuk menginstall semua library yang dibutuhkan:
 pip install -r requirements.txt
 ```
 
-### 3. Jalankan Notebook
+### 3. Jalankan Notebook Atau Script
 Buka dan jalankan file main.ipynb menggunakan Jupyter Notebook, VS Code, atau Google Colab. Pastikan kernel yang digunakan sesuai dengan Python 3.10.
+
+Jika ingin menggunakan file python, bisa jalankan ini di terminal
+
+```bash
+py -3.10 machine-learning-api/main.py
+```

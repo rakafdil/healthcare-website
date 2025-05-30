@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DiagnosisResult extends Model
 {
     protected $table = 'diagnosis_result';
-    protected $primaryKey = 'id_result';
+    public $incrementing = false;
     protected $fillable = ['id_session', 'nama_penyakit', 'probabilitas', 'deskripsi', 'precautions'];
     public $timestamps = false;
 

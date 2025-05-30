@@ -80,16 +80,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($history->history_penyakit as $key => $item)
+                                @foreach ($sessions as $session)
                                     <tr class="hover:bg-blue-50 transition-colors duration-200">
                                         <td class="py-3 px-4 border-b border-gray-200">
-                                            {{ \Carbon\Carbon::parse($item['tanggal'])->format('d F Y') }}
+                                            {{ \Carbon\Carbon::parse($session->created_at)->format('d-m-Y') }}
                                         </td>
                                         <td class="py-3 px-4 border-b border-gray-200">
-                                            {{ $item['waktu'] }}
+                                            {{ \Carbon\Carbon::parse($session->created_at)->format('H:i:s') }}
                                         </td>
                                         <td class="py-3 px-4 border-b border-gray-200">
-                                            <a href="{{ route('sistem-pakar.history', ['history_id' => $key]) }}"
+                                            <a href="{{ route('sistem-pakar.history', ['history_id' => $session->id_session]) }}"
                                                 class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm transition-colors duration-200">
                                                 Lihat Detail
                                             </a>

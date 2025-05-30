@@ -28,6 +28,7 @@
         </div>
 
         <form method="POST" action="{{ route('masuk') }}">
+            <input type="hidden" name="redirect_to" value="{{ request('redirect_to') }}">
             @csrf
 
             <div class="mb-4">

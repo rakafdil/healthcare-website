@@ -7,6 +7,7 @@ use Error;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\History;
+use \App\Models\DiagnosisSession;
 
 class SistemPakarController extends Controller
 {
@@ -16,10 +17,11 @@ class SistemPakarController extends Controller
         $symptoms = $request->all();
         $symptoms = explode(',', $symptoms['gejala']);
         session(['diagnosis.gejala' => $symptoms]);
+
         $symptoms = array_map(function ($symptom) {
             return $this->getEngName($symptom);
         }, $symptoms);
-
+        // dd($symptoms);
         // Remove null values from the array
         $symptoms = array_filter($symptoms, function ($value) {
             return !is_null($value);
@@ -71,9 +73,8 @@ class SistemPakarController extends Controller
     private function getEngName($indName)
     {
         $engName = self::getAllSymptoms()->where('nama_gejala_ind', $indName)->first();
-
         if ($engName) {
-            return $engName->nama_inggris;
+            return $engName->nama_gejala_eng;
         } else {
             return null;
         }
@@ -88,11 +89,15 @@ class SistemPakarController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $sessions = [];
         if ($user !== null) {
             $history = History::find($user->id);
-            return view('sistem-pakar.index', compact('history'));
+            $sessions = DiagnosisSession::where('user_id', $user->id)
+                ->orderByDesc('created_at')
+                ->get();
+            return view('sistem-pakar.index', compact('history', 'sessions'));
         } else {
-            return view('sistem-pakar.index');
+            return view('sistem-pakar.index', compact('sessions'));
         }
     }
 
@@ -104,11 +109,18 @@ class SistemPakarController extends Controller
         return view('sistem-pakar.index', compact('history'));
     }
 
-    public function history()
+    public function history(Request $request)
     {
+        $session_id = $request->input('session_id');
         $user = auth()->user();
-        $history = History::find($user->id);
-        return view('sistem-pakar.history', compact('history'));
+
+        // Ambil semua session diagnosis milik user, urutkan terbaru
+        $sessions = DiagnosisSession::where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->with(['gejalas', 'results'])
+            ->get();
+        @dd($sessions);
+        return view('sistem-pakar.history', compact('sessions'));
     }
 
     public function submitStep(Request $request)
@@ -133,20 +145,45 @@ class SistemPakarController extends Controller
 
     public function finishDiagnosis(Request $request)
     {
-        $result = session('diagnosis');
+        $user = auth()->user();
+        $diagnosis = session('diagnosis');
+        if (!$user || !$diagnosis) {
+            return redirect()->route('sistem-pakar.index')->with('error', 'Session tidak valid.');
+        }
 
-        // Tambahkan tanggal dan waktu saat fungsi dipanggil
-        $calledAt = now(); // Carbon instance, default timezone sesuai config/app.php
-        $dateTime = explode(' ', $calledAt->toDateTimeString());
-        $date = $dateTime[0];
-        $time = $dateTime[1];
+        // 1. Simpan session diagnosis
+        $session = DiagnosisSession::create([
+            'user_id' => $user->id,
+            'created_at' => now(),
+        ]);
 
-        // dd($date, $time);
+        // 2. Simpan gejala ke tabel pivot session_gejala
+        if (!empty($diagnosis['gejala'])) {
+            foreach ($diagnosis['gejala'] as $gejalaInd) {
+                $gejala = Gejala::where('nama_gejala_ind', $gejalaInd)->first();
+                if ($gejala) {
+                    $session->gejalas()->attach($gejala->id_gejala);
+                }
+            }
+        }
 
-        // hapus session gejala biar gak numpuk
-        session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gejala', 'diagnosis.gender', 'diagnosis.result']);
+        // 3. Simpan hasil diagnosis ke diagnosis_result
+        if (!empty($diagnosis['result'])) {
+            foreach ($diagnosis['result'] as $result) {
+                \App\Models\DiagnosisResult::create([
+                    'id_session' => $session->id_session,
+                    'nama_penyakit' => $result->disease ?? '',
+                    'probabilitas' => $result->probability ?? 0,
+                    'deskripsi' => $result->description ?? '',
+                    'precautions' => isset($result->precautions) ? json_encode($result->precautions) : null,
+                ]);
+            }
+        }
 
-        return redirect()->route('sistem-pakar.index');
+        // Hapus session diagnosis
+        session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gender', 'diagnosis.result']);
+
+        return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
     }
 
 }
