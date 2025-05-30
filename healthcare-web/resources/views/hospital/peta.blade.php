@@ -1107,107 +1107,9 @@
 
             console.log("Memulai proses geolocation...");
 
-            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-                console.warn("Geolocation mungkin memerlukan HTTPS! Protokol saat ini:", window.location.protocol);
-            }
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const userLat = position.coords.latitude;
-                        const userLng = position.coords.longitude;
-
-                        console.log("Lokasi user ditemukan:", userLat, userLng);
-
-                        if (!isFinite(userLat) || !isFinite(userLng)) {
-                            console.error("Koordinat tidak valid:", userLat, userLng);
-                            alert("Koordinat lokasi tidak valid. Silakan coba lagi.");
-                            return;
-                        }
-
-                        map.setView([userLat, userLng], 13);
-
-                        centerLat = userLat;
-                        centerLng = userLng;
-
-                        clearMarkers();
-
-                        const userIcon = L.divIcon({
-                            className: 'user-marker',
-                            html: '<i class="fas fa-user"></i>',
-                            iconSize: [40, 40],
-                            iconAnchor: [20, 20],
-                            popupAnchor: [0, -20]
-                        });
-
-                        const userMarker = L.marker([userLat, userLng], {
-                            icon: userIcon,
-                            zIndexOffset: 1000
-                        }).addTo(map);
-
-                        userMarker.bindPopup('<strong>Lokasi Anda</strong>').openPopup();
-
-                        markers.push(userMarker);
-
-                        getNearbyHospitals(userLat, userLng);
-
-                        document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
-                    },
-                    function(error) {
-                        // Handler error berdasarkan kode error
-                        console.error("Geolocation error code:", error.code);
-                        console.error("Geolocation error message:", error.message);
-
-                        let errorMessage = "";
-                        let helpMessage = "";
-
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                errorMessage = "Akses lokasi ditolak.";
-                                helpMessage = "Untuk mengizinkan akses lokasi:<br>" +
-                                    "1. Klik ikon kunci/info di address bar<br>" +
-                                    "2. Pilih 'Izin' atau 'Izinkan lokasi'<br>" +
-                                    "3. Muat ulang halaman dan coba lagi";
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                errorMessage = "Informasi lokasi tidak tersedia.";
-                                helpMessage = "Pastikan GPS atau layanan lokasi perangkat Anda aktif.";
-                                break;
-                            case error.TIMEOUT:
-                                errorMessage = "Waktu permintaan lokasi habis.";
-                                helpMessage = "Periksa koneksi internet Anda dan coba lagi.";
-                                break;
-                            case error.UNKNOWN_ERROR:
-                            default:
-                                errorMessage = "Error tidak dikenal.";
-                                helpMessage = "Detail error: " + error.message;
-                                break;
-                        }
-
-                        console.error("Geolocation error:", error.code, error.message);
-                        alert(errorMessage);
-
-                        // Update tabel dengan informasi error
-                        document.getElementById('hospitalList').innerHTML = `
-                            <tr>
-                                <td colspan="4" class="text-center">
-                                    <div style="color: #e74c3c; margin-bottom: 10px;">
-                                        <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
-                                    </div>
-                                    <div style="font-size: 14px; color: #666;">
-                                        ${helpMessage}
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    }, {
-                        enableHighAccuracy: true,
-                        timeout: 15000, // Menaikkan timeout ke 10 detik
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                alert("Browser Anda tidak mendukung Geolocation API.");
+            // Cek apakah browser mendukung geolocation
+            if (!navigator.geolocation) {
+                console.error("Browser tidak mendukung Geolocation API");
                 document.getElementById('hospitalList').innerHTML = `
                     <tr>
                         <td colspan="4" class="text-center">
@@ -1221,8 +1123,259 @@
                         </td>
                     </tr>
                 `;
+                return;
+            }
+
+            // Opsi untuk geolocation
+            const options = {
+                enableHighAccuracy: true,    // Gunakan GPS jika tersedia
+                timeout: 30000,              // Timeout 30 detik
+                maximumAge: 60000           // Cache lokasi maksimal 1 menit
+            };
+
+            // Fungsi success callback
+            function onSuccess(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                const accuracy = position.coords.accuracy;
+
+                console.log("Lokasi user ditemukan:", {
+                    lat: userLat,
+                    lng: userLng,
+                    accuracy: accuracy
+                });
+
+                // Validasi koordinat
+                if (!isFinite(userLat) || !isFinite(userLng) || 
+                    Math.abs(userLat) > 90 || Math.abs(userLng) > 180) {
+                    console.error("Koordinat tidak valid:", userLat, userLng);
+                    document.getElementById('hospitalList').innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <div style="color: #e74c3c;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Koordinat lokasi tidak valid. Silakan coba lagi.
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Update peta ke lokasi user
+                map.setView([userLat, userLng], 15);
+                
+                // Update variabel global
+                centerLat = userLat;
+                centerLng = userLng;
+
+                // Hapus semua marker lama
+                clearMarkers();
+                
+                // Hapus marker user lama jika ada
+                if (window.userMarker) {
+                    map.removeLayer(window.userMarker);
+                }
+                if (window.userAccuracyCircle) {
+                    map.removeLayer(window.userAccuracyCircle);
+                }
+
+                // Buat icon untuk user
+                const userIcon = L.divIcon({
+                    className: 'user-marker',
+                    html: '<i class="fas fa-user"></i>',
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 20],
+                    popupAnchor: [0, -20]
+                });
+
+                // Tambahkan marker untuk lokasi user
+                window.userMarker = L.marker([userLat, userLng], {
+                    icon: userIcon,
+                    zIndexOffset: 1000
+                }).addTo(map);
+
+                // Popup untuk marker user
+                const popupContent = `
+                    <div style="text-align: center;">
+                        <strong>📍 Lokasi Anda</strong><br>
+                        <small>Lat: ${userLat.toFixed(6)}</small><br>
+                        <small>Lng: ${userLng.toFixed(6)}</small><br>
+                        <small>Akurasi: ±${Math.round(accuracy)} meter</small>
+                    </div>
+                `;
+                
+                window.userMarker.bindPopup(popupContent).openPopup();
+
+                // Tambahkan lingkaran akurasi jika akurasi > 100 meter
+                if (accuracy > 100) {
+                    window.userAccuracyCircle = L.circle([userLat, userLng], {
+                        radius: accuracy,
+                        color: '#e74c3c',
+                        fillColor: '#e74c3c',
+                        fillOpacity: 0.1,
+                        weight: 2,
+                        dashArray: '5, 5'
+                    }).addTo(map);
+                }
+
+                // Update teks lokasi
+                document.getElementById('selectedLocation').textContent = "Lokasi Anda Saat Ini";
+
+                // Cari rumah sakit terdekat
+                getNearbyHospitals(userLat, userLng);
+            }
+
+            // Fungsi error callback
+            function onError(error) {
+                console.error("Geolocation error:", {
+                    code: error.code,
+                    message: error.message
+                });
+
+                let errorMessage = "";
+                let helpMessage = "";
+                let troubleshootSteps = "";
+
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Akses lokasi ditolak";
+                        helpMessage = "Anda perlu mengizinkan akses lokasi untuk menggunakan fitur ini.";
+                        troubleshootSteps = `
+                            <div style="text-align: left; margin-top: 10px;">
+                                <strong>Cara mengizinkan akses lokasi:</strong><br>
+                                1. Klik ikon <i class="fas fa-lock"></i> atau <i class="fas fa-info-circle"></i> di address bar<br>
+                                2. Pilih "Izinkan" untuk Lokasi<br>
+                                3. Refresh halaman dan coba lagi<br><br>
+                                <strong>Atau:</strong><br>
+                                • Periksa pengaturan privasi browser Anda<br>
+                                • Pastikan lokasi tidak diblokir untuk situs ini
+                            </div>
+                        `;
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Lokasi tidak dapat ditemukan";
+                        helpMessage = "Sistem tidak dapat menentukan lokasi Anda.";
+                        troubleshootSteps = `
+                            <div style="text-align: left; margin-top: 10px;">
+                                <strong>Solusi yang bisa dicoba:</strong><br>
+                                • Aktifkan GPS/Location Services di perangkat<br>
+                                • Periksa koneksi internet Anda<br>
+                                • Coba di tempat terbuka (tidak di dalam gedung)<br>
+                                • Restart browser dan coba lagi
+                            </div>
+                        `;
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Waktu pencarian lokasi habis";
+                        helpMessage = "Proses pencarian lokasi memakan waktu terlalu lama.";
+                        troubleshootSteps = `
+                            <div style="text-align: left; margin-top: 10px;">
+                                <strong>Solusi yang bisa dicoba:</strong><br>
+                                • Periksa koneksi internet Anda<br>
+                                • Pindah ke area dengan sinyal yang lebih baik<br>
+                                • Coba lagi dalam beberapa saat<br>
+                                • Pastikan GPS perangkat aktif
+                            </div>
+                        `;
+                        break;
+                    default:
+                        errorMessage = "Terjadi kesalahan tidak dikenal";
+                        helpMessage = `Detail error: ${error.message}`;
+                        troubleshootSteps = `
+                            <div style="text-align: left; margin-top: 10px;">
+                                <strong>Solusi umum:</strong><br>
+                                • Refresh halaman dan coba lagi<br>
+                                • Periksa pengaturan lokasi perangkat<br>
+                                • Gunakan browser terbaru<br>
+                                • Hubungi support jika masalah berlanjut
+                            </div>
+                        `;
+                        break;
+                }
+
+                // Update tabel dengan informasi error yang detail
+                document.getElementById('hospitalList').innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <div style="color: #e74c3c; margin-bottom: 10px; font-size: 16px;">
+                                <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                                ${helpMessage}
+                            </div>
+                            ${troubleshootSteps}
+                            <div style="margin-top: 15px;">
+                                <button onclick="getUserLocation()" class="location-btn">
+                                    <i class="fas fa-redo"></i> Coba Lagi
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            // Panggil geolocation API
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+        }
+
+        function checkHTTPS() {
+            if (window.location.protocol !== 'https:' && 
+                window.location.hostname !== 'localhost' && 
+                window.location.hostname !== '127.0.0.1') {
+                console.warn("⚠️ Geolocation bekerja optimal di HTTPS!");
+                console.warn("Protokol saat ini:", window.location.protocol);
+                
+                // Tampilkan peringatan jika perlu
+                const warning = document.createElement('div');
+                warning.style.cssText = `
+                    background: #fff3cd;
+                    color: #856404;
+                    padding: 10px;
+                    margin: 10px 0;
+                    border: 1px solid #ffeaa7;
+                    border-radius: 4px;
+                    text-align: center;
+                    font-size: 14px;
+                `;
+                warning.innerHTML = `
+                    <i class="fas fa-info-circle"></i> 
+                    Untuk hasil yang optimal, gunakan HTTPS atau buka di localhost
+                `;
+                
+                document.querySelector('.container').insertBefore(warning, document.querySelector('.map-container'));
             }
         }
+
+        function detectDeviceCapabilities() {
+            const capabilities = {
+                geolocation: !!navigator.geolocation,
+                https: window.location.protocol === 'https:',
+                serviceWorker: 'serviceWorker' in navigator,
+                localStorage: typeof(Storage) !== "undefined"
+            };
+            
+            console.log("Device capabilities:", capabilities);
+            return capabilities;
+        }
+
+        // Inisialisasi saat DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek kemampuan perangkat
+            detectDeviceCapabilities();
+            
+            // Cek HTTPS
+            checkHTTPS();
+            
+            // Inisialisasi peta
+            initMap();
+
+            // Event listener untuk tombol lokasi
+            document.getElementById('getLocationBtn').addEventListener('click', function() {
+                console.log("Tombol lokasi diklik");
+                getUserLocation();
+            });
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
