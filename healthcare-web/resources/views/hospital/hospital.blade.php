@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,15 +11,16 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             background-color: #fffff;
         }
-        
+
         .hero-section {
             position: relative;
             height: 100vh;
-            width: 99vw; /* Ubah menjadi viewport width */
+            width: 99vw;
+            /* Ubah menjadi viewport width */
             margin: 0;
             margin-bottom: 20px;
             margin-top: -25px;
@@ -34,7 +36,7 @@
             margin-left: -50vw;
             margin-right: -50vw;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -44,7 +46,7 @@
             height: 100%;
             z-index: 1;
         }
-        
+
         .hero-container {
             max-width: 1280px;
             margin: 0 auto;
@@ -53,35 +55,36 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .hero-text {
             position: relative;
             z-index: 2;
         }
-        
+
         .hero-section h1 {
             font-size: 35px;
             font-weight: bold;
             margin-bottom: 5px;
             text-transform: uppercase;
         }
-        
+
         .hero-section h2 {
             font-size: 35px;
             font-weight: bold;
             text-transform: uppercase;
         }
-        
+
         .hero-image {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw; /* Gunakan viewport width untuk mengisi seluruh lebar layar */
+            width: 100vw;
+            /* Gunakan viewport width untuk mengisi seluruh lebar layar */
             height: 100%;
             object-fit: cover;
             z-index: 0;
         }
-        
+
         .btn {
             display: inline-block;
             background-color: white;
@@ -94,23 +97,23 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .container {
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .title {
             text-align: center;
             margin: 20px 0;
             font-size: 20px;
             font-weight: bold;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 10px;
@@ -118,7 +121,7 @@
             border-radius: 5px;
             font-size: 14px;
         }
-        
+
         .btn-primary {
             background-color: #3498db;
             color: white;
@@ -134,6 +137,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
@@ -145,10 +149,10 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <h2 class="title">Pilih Lokasi Rumah Sakit</h2>
-        
+
         <form id="locationForm" action="/peta" method="GET">
             <div class="form-group">
                 <select class="form-control" id="provinsi" name="provinsi">
@@ -160,34 +164,34 @@
                     <option value="di_yogyakarta">DI Yogyakarta</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <select class="form-control" id="kabupaten" name="kabupaten">
                     <option value="">Pilih Kabupaten</option>
                     <!-- Opsi akan diisi melalui JavaScript -->
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <select class="form-control" id="kota" name="kota">
                     <option value="">Pilih Kota</option>
                     <!-- Opsi akan diisi melalui JavaScript -->
                 </select>
             </div>
-            
+
             <button type="submit" class="btn-primary" id="cariRumahSakit">Telusuri</button>
         </form>
     </div>
-    
+
     <script>
         const dataKabupaten = {
             jawa_barat: ['Bandung', 'Bekasi', 'Bogor', 'Cianjur', 'Cirebon'],
             jawa_tengah: ['Semarang', 'Solo', 'Magelang', 'Pekalongan', 'Tegal'],
             jawa_timur: ['Surabaya', 'Malang', 'Sidoarjo', 'Kediri', 'Jember'],
             dki_jakarta: ['Jakarta Pusat', 'Jakarta Barat', 'Jakarta Timur', 'Jakarta Selatan', 'Jakarta Utara'],
-            di_yogyakarta : ['Sleman', 'Bantul', 'Gunung Kidul', 'Kulon Progo', 'Yogyakarta Kota']
+            di_yogyakarta: ['Sleman', 'Bantul', 'Gunung Kidul', 'Kulon Progo', 'Yogyakarta Kota']
         };
-        
+
         const dataKota = {
             'Bandung': ['Bandung Kota', 'Cimahi', 'Lembang'],
             'Bekasi': ['Bekasi Kota', 'Cikarang', 'Tambun'],
@@ -215,16 +219,16 @@
             'Kulon Progo': ['Wates', 'Sentolo', 'Pengasih'],
             'Yogyakarta Kota': ['Gondokusuman', 'Jetis', 'Danurejan']
         };
-        
+
         // Handle perubahan pada provinsi
         document.getElementById('provinsi').addEventListener('change', function() {
             const provinsi = this.value;
             const kabupatenSelect = document.getElementById('kabupaten');
-            
+
             // Reset kabupaten dan kota
             kabupatenSelect.innerHTML = '<option value="">Pilih Kabupaten</option>';
             document.getElementById('kota').innerHTML = '<option value="">Pilih Kota</option>';
-            
+
             if (provinsi) {
                 dataKabupaten[provinsi].forEach(kab => {
                     const option = document.createElement('option');
@@ -234,15 +238,15 @@
                 });
             }
         });
-        
+
         // Handle perubahan pada kabupaten
         document.getElementById('kabupaten').addEventListener('change', function() {
             const kabupaten = this.value;
             const kotaSelect = document.getElementById('kota');
-            
+
             // Reset kota
             kotaSelect.innerHTML = '<option value="">Pilih Kota</option>';
-            
+
             if (kabupaten && dataKota[kabupaten]) {
                 dataKota[kabupaten].forEach(kota => {
                     const option = document.createElement('option');
@@ -252,13 +256,13 @@
                 });
             }
         });
-        
+
         // Validasi form sebelum submit
         document.getElementById('locationForm').addEventListener('submit', function(event) {
             const provinsi = document.getElementById('provinsi').value;
             const kabupaten = document.getElementById('kabupaten').value;
             const kota = document.getElementById('kota').value;
-            
+
             if (!provinsi || !kabupaten || !kota) {
                 event.preventDefault(); // Mencegah form submit
                 alert('Silakan pilih lokasi lengkap (Provinsi, Kabupaten, dan Kota)');
@@ -266,4 +270,5 @@
         });
     </script>
 </body>
+
 </html>

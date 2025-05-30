@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo-removebg-preview.png') }}">
+    <title>{{ $title ?? 'Healthcare Alomany - Rumah Sakit - Detail Rumah Sakit' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen overflow-x-hidden">
     <div class="flex-grow">
         <!-- saya tambahkan id navbar untuk keperluan snap-scroll page home-->
         <nav id="navbar" class="bg-white sticky top-0 z-50">
