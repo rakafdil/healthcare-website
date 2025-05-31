@@ -18,6 +18,7 @@
 
         body {
             background-color: #ffffff;
+            font-family: Arial, sans-serif;
         }
 
         .hero-section {
@@ -318,6 +319,25 @@
             margin: 10px 0;
             border-left: 4px solid #4caf50;
         }
+
+        .location-selector {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .location-selector select {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            min-width: 200px;
+        }
+
+        .manual-location-btn {
+            background-color: #2ecc71;
+        }
     </style>
 </head>
 
@@ -333,7 +353,22 @@
 
     <div class="container">
         <h2 class="title">Peta Ketersediaan Rumah Sakit</h2>
-        <p class="text-center">Lokasi: <span id="selectedLocation"></span></p>
+        <p class="text-center">Lokasi: <span id="selectedLocation">Memuat lokasi...</span></p>
+
+        <div id="locationSelector" class="location-selector" style="display: none;">
+            <select id="provinsiSelect">
+                <option value="">Pilih Provinsi</option>
+            </select>
+            <select id="kabupatenSelect" disabled>
+                <option value="">Pilih Kabupaten/Kota</option>
+            </select>
+            <select id="kotaSelect" disabled>
+                <option value="">Pilih Kecamatan/Kota</option>
+            </select>
+            <button id="applyLocationBtn" class="location-btn manual-location-btn" disabled>
+                <i class="fas fa-map-marker-alt"></i> Terapkan Lokasi
+            </button>
+        </div>
 
         <div class="map-container" id="map">
             <!-- Map will be loaded here -->
@@ -345,6 +380,9 @@
             </button>
             <button id="refreshDataBtn" class="location-btn" style="display: none;">
                 <i class="fas fa-refresh"></i> Refresh Data
+            </button>
+            <button id="changeLocationBtn" class="location-btn">
+                <i class="fas fa-map-marker-alt"></i> Pilih Lokasi Lain
             </button>
         </div>
 
@@ -383,30 +421,403 @@
     <script>
         // Global variables
         let map;
-        let centerLat = -6.2088;
-        let centerLng = 106.8456;
+        let centerLat = null;
+        let centerLng = null;
         let markers = [];
         let userMarker = null;
         let userAccuracyCircle = null;
         let currentRadius = 10; // Default radius 10 km
 
+        const locationCoordinates = {
+            jawa_barat: {
+                name: "Jawa Barat",
+                coordinates: {
+                    lat: -6.9147,
+                    lng: 107.6098
+                },
+                kabupaten: {
+                    Bandung: {
+                        name: "Bandung",
+                        coordinates: {
+                            lat: -6.914744,
+                            lng: 107.609810
+                        },
+                        kota: {
+                            'Bandung': {
+                                name: "Bandung",
+                                lat: -6.914744,
+                                lng: 107.609810
+                            },
+                            'Cimahi': {
+                                name: "Cimahi",
+                                lat: -6.87222,
+                                lng: 107.5425
+                            },
+                            'Lembang': {
+                                name: "Lembang",
+                                lat: -6.8117,
+                                lng: 107.6175
+                            }
+                        }
+                    },
+                    Bekasi: {
+                        name: "Bekasi",
+                        coordinates: {
+                            lat: -6.2349,
+                            lng: 107.0013
+                        },
+                        kota: {
+                            'Bekasi': {
+                                name: "Bekasi",
+                                lat: -6.2349,
+                                lng: 107.0013
+                            },
+                            'Cikarang': {
+                                name: "Cikarang",
+                                lat: -6.26111,
+                                lng: 107.15278
+                            },
+                            'Tambun': {
+                                name: "Tambun",
+                                lat: -6.178763,
+                                lng: 107.065758
+                            }
+                        }
+                    },
+                    Bogor: {
+                        name: "Bogor",
+                        coordinates: {
+                            lat: -6.595038,
+                            lng: 106.816635
+                        },
+                        kota: {
+                            'Bogor': {
+                                name: "Bogor",
+                                lat: -6.595038,
+                                lng: 106.816635
+                            },
+                            'Cibinong': {
+                                name: "Cibinong",
+                                lat: -6.497641,
+                                lng: 106.828224
+                            },
+                            'Cisarua': {
+                                name: "Cisarua",
+                                lat: -6.679303,
+                                lng: 106.939835
+                            }
+                        }
+                    }
+                }
+            },
+            jawa_tengah: {
+                name: "Jawa Tengah",
+                coordinates: {
+                    lat: -7.0051,
+                    lng: 110.4381
+                },
+                kabupaten: {
+                    Semarang: {
+                        name: "Semarang",
+                        coordinates: {
+                            lat: -7.0051,
+                            lng: 110.4381
+                        },
+                        kota: {
+                            'Semarang': {
+                                name: "Semarang",
+                                lat: -6.9667,
+                                lng: 110.4050
+                            },
+                            'Ungaran': {
+                                name: "Ungaran",
+                                lat: -7.1381,
+                                lng: 110.4051
+                            },
+                            'Ambarawa': {
+                                name: "Ambarawa",
+                                lat: -7.2633,
+                                lng: 110.3975
+                            }
+                        }
+                    },
+                    Solo: {
+                        name: "Solo",
+                        coordinates: {
+                            lat: -7.5695,
+                            lng: 110.8290
+                        },
+                        kota: {
+                            'Surakarta': {
+                                name: "Surakarta",
+                                lat: -7.5695,
+                                lng: 110.8290
+                            },
+                            'Laweyan': {
+                                name: "Laweyan",
+                                lat: -7.5583,
+                                lng: 110.8083
+                            },
+                            'Banjarsari': {
+                                name: "Banjarsari",
+                                lat: -7.5561,
+                                lng: 110.8167
+                            }
+                        }
+                    }
+                }
+            },
+            jawa_timur: {
+                name: "Jawa Timur",
+                coordinates: {
+                    lat: -7.2575,
+                    lng: 112.7521
+                },
+                kabupaten: {
+                    Surabaya: {
+                        name: "Surabaya",
+                        coordinates: {
+                            lat: -7.2492,
+                            lng: 112.7508
+                        },
+                        kota: {
+                            'Surabaya pusat': {
+                                name: "Surabaya Pusat",
+                                lat: -7.2575,
+                                lng: 112.7521
+                            },
+                            'Surabaya timur': {
+                                name: "Surabaya Timur",
+                                lat: -7.2575,
+                                lng: 112.7521
+                            },
+                            'Surabaya selatan': {
+                                name: "Surabaya Selatan",
+                                lat: -7.2575,
+                                lng: 112.7521
+                            }
+                        }
+                    },
+                    Malang: {
+                        name: "Malang",
+                        coordinates: {
+                            lat: -7.9666,
+                            lng: 112.6326
+                        },
+                        kota: {
+                            'Malang kota': {
+                                name: "Malang Kota",
+                                lat: -7.9666,
+                                lng: 112.6326
+                            },
+                            'Kepanjen': {
+                                name: "Kepanjen",
+                                lat: -8.1303,
+                                lng: 112.5644
+                            },
+                            'Turen': {
+                                name: "Turen",
+                                lat: -8.1680,
+                                lng: 112.6928
+                            }
+                        }
+                    }
+                }
+            },
+            dki_jakarta: {
+                name: "DKI Jakarta",
+                coordinates: {
+                    lat: -6.2088,
+                    lng: 106.8456
+                },
+                kabupaten: {
+                    Jakarta_pusat: {
+                        name: "Jakarta Pusat",
+                        coordinates: {
+                            lat: -6.1900,
+                            lng: 106.8450
+                        },
+                        kota: {
+                            'Menteng': {
+                                name: "Menteng",
+                                lat: -6.1870,
+                                lng: 106.8370
+                            },
+                            'Tanah abang': {
+                                name: "Tanah Abang",
+                                lat: -6.1970,
+                                lng: 106.8130
+                            },
+                            'Kemayoran': {
+                                name: "Kemayoran",
+                                lat: -6.1560,
+                                lng: 106.8610
+                            }
+                        }
+                    },
+                    Jakarta_barat: {
+                        name: "Jakarta Barat",
+                        coordinates: {
+                            lat: -6.1767,
+                            lng: 106.7900
+                        },
+                        kota: {
+                            'Grogol': {
+                                name: "Grogol",
+                                lat: -6.1611,
+                                lng: 106.7944
+                            },
+                            'Kalideres': {
+                                name: "Kalideres",
+                                lat: -6.1300,
+                                lng: 106.7200
+                            },
+                            'Cengkareng': {
+                                name: "Cengkareng",
+                                lat: -6.1415,
+                                lng: 106.7464
+                            }
+                        }
+                    }
+                }
+            },
+            di_yogyakarta: {
+                name: "DI Yogyakarta",
+                coordinates: {
+                    lat: -7.7971,
+                    lng: 110.3688
+                },
+                kabupaten: {
+                    sleman: {
+                        name: "Sleman",
+                        coordinates: {
+                            lat: -7.7325,
+                            lng: 110.4024
+                        },
+                        kota: {
+                            'depok': {
+                                name: "Depok",
+                                lat: -7.7844,
+                                lng: 110.4103
+                            },
+                            'ngaglik': {
+                                name: "Ngaglik",
+                                lat: -7.6902,
+                                lng: 110.3420
+                            },
+                            'mlati': {
+                                name: "Mlati",
+                                lat: -7.7360,
+                                lng: 110.3299
+                            }
+                        }
+                    },
+                    bantul: {
+                        name: "Bantul",
+                        coordinates: {
+                            lat: -7.8881,
+                            lng: 110.3289
+                        },
+                        kota: {
+                            'bantul kota': {
+                                name: "Bantul Kota",
+                                lat: -7.8881,
+                                lng: 110.3289
+                            },
+                            'pundong': {
+                                name: "Pundong",
+                                lat: -7.9522,
+                                lng: 110.3289
+                            },
+                            'srandakan': {
+                                name: "Srandakan",
+                                lat: -7.9599,
+                                lng: 110.2407
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Fungsi untuk mendapatkan parameter dari URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Fungsi untuk mengatur lokasi awal berdasarkan parameter URL
+        function setInitialLocationFromUrl() {
+            const provinsi = getUrlParameter('provinsi');
+            const kabupaten = getUrlParameter('kabupaten');
+            const kota = getUrlParameter('kota');
+            
+            if (provinsi && locationCoordinates[provinsi]) {
+                const provData = locationCoordinates[provinsi];
+                
+                if (kabupaten && provData.kabupaten[kabupaten]) {
+                    const kabData = provData.kabupaten[kabupaten];
+                    
+                    if (kota && kabData.kota[kota]) {
+                        // Set ke level kota
+                        centerLat = kabData.kota[kota].lat;
+                        centerLng = kabData.kota[kota].lng;
+                        document.getElementById('selectedLocation').textContent = 
+                            `${kabData.kota[kota].name}, ${kabData.name}, ${provData.name}`;
+                        return true;
+                    } else {
+                        // Set ke level kabupaten
+                        centerLat = kabData.coordinates.lat;
+                        centerLng = kabData.coordinates.lng;
+                        document.getElementById('selectedLocation').textContent = 
+                            `${kabData.name}, ${provData.name}`;
+                        return true;
+                    }
+                } else {
+                    // Set ke level provinsi
+                    centerLat = provData.coordinates.lat;
+                    centerLng = provData.coordinates.lng;
+                    document.getElementById('selectedLocation').textContent = provData.name;
+                    return true;
+                }
+            }
+            
+            return false; // Tidak ada parameter valid
+        }
+
         // Inisialisasi peta
         function initMap() {
-            // Default ke Jakarta jika tidak ada parameter lokasi
-            map = L.map('map').setView([centerLat, centerLng], 13);
+            // Coba set lokasi dari URL parameter
+            const hasLocationFromUrl = setInitialLocationFromUrl();
+            
+            if (hasLocationFromUrl) {
+                // Buat peta dengan view ke lokasi yang sudah ditentukan
+                map = L.map('map').setView([centerLat, centerLng], 13);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
 
-            // Load hospital data dari default location
-            loadInitialHospitals();
+                // Load hospital data dari lokasi yang sudah ditentukan
+                loadInitialHospitals();
+            } else {
+                // Jika tidak ada parameter URL yang valid, minta lokasi pengguna
+                document.getElementById('selectedLocation').textContent = "Menunggu lokasi Anda...";
+                getUserLocation();
+            }
         }
 
         // Memuat data rumah sakit awal
         function loadInitialHospitals() {
-            document.getElementById('selectedLocation').textContent = "Jakarta (Default)";
-            getNearbyHospitalsFromDB(centerLat, centerLng, currentRadius);
+            if (centerLat && centerLng) {
+                getNearbyHospitalsFromDB(centerLat, centerLng, currentRadius);
+            } else {
+                showError("Lokasi tidak tersedia. Silakan pilih lokasi manual atau izinkan akses lokasi.");
+            }
         }
 
         // Fungsi untuk mendapatkan rumah sakit terdekat dari database
@@ -664,12 +1075,10 @@
             markers = [];
         }
 
-        // Fungsi untuk mendapatkan lokasi pengguna yang sudah diperbaiki
+        // Fungsi untuk mendapatkan lokasi pengguna
         function getUserLocation() {
             const getLocationBtn = document.getElementById('getLocationBtn');
-            const refreshDataBtn = document.getElementById('refreshDataBtn');
             
-            // Disable button dan ubah teks
             getLocationBtn.disabled = true;
             getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengambil Lokasi...';
             
@@ -679,6 +1088,7 @@
                 showError('Browser Anda tidak mendukung fitur geolokasi');
                 getLocationBtn.disabled = false;
                 getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya';
+                showLocationSelector();
                 return;
             }
 
