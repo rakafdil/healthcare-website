@@ -15,6 +15,7 @@
 
         body {
             background-color: #fffff;
+            font-family: Arial, sans-serif;
         }
 
         .container {
@@ -67,7 +68,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* agar gambar tidak terdistorsi dan penuh menyesuaikan kontainer */
             z-index: 0;
         }
 
@@ -83,7 +83,7 @@
             left: 50px;
             transform: translateY(-50%);
             color: white;
-            /* text-shadow: 1px 1px 3px rgba(0,0,0,0.7); */
+            z-index: 2;
         }
 
         .hero-text h1 {
@@ -132,6 +132,11 @@
             font-size: 20px;
             cursor: pointer;
             padding: 0 15px;
+            user-select: none;
+        }
+
+        .nav-arrow:hover {
+            color: #007bff;
         }
 
         .nav-date {
@@ -205,158 +210,212 @@
             color: #333;
             font-weight: bold;
         }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .availability-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .availability-high { background-color: #d4edda; color: #155724; }
+        .availability-medium { background-color: #fff3cd; color: #856404; }
+        .availability-low { background-color: #f8d7da; color: #721c24; }
+        .availability-full { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- Tombol "Kembali ke Peta" di atas telah dihapus -->
-
-        <!-- Gambar header rumah sakit dengan teks overlay -->
+        <!-- Hero Section -->
         <div class="hero-section">
-            <img id="hospitalHeaderImage" src="/assets/foto fitur rumah sakit.png" alt="Gambar Rumah Sakit"
-                class="hero-image">
+            <img id="hospitalHeaderImage" src="/assets/foto fitur rumah sakit.png" alt="Gambar Rumah Sakit" class="hero-image">
             <div class="hero-text">
                 <h1>RUMAH SAKIT</h1>
                 <h2>KETERSEDIAAN KAMAR</h2>
-                <a href="/peta?provinsi={{ request('provinsi') ?? 'jawa_barat' }}&kabupaten={{ request('kabupaten') ?? 'Bandung' }}&kota={{ request('kota') ?? 'Bandung' }}"
-                    class="btn">Kembali ke Peta</a>
+                <a href="/peta?provinsi={{ request('provinsi') ?? 'jawa_barat' }}&kabupaten={{ request('kabupaten') ?? 'Bandung' }}&kota={{ request('kota') ?? 'Bandung' }}" class="btn">Kembali ke Peta</a>
             </div>
         </div>
 
         <h2 class="title">Detail Rumah Sakit</h2>
 
+        <!-- Hospital Info - Now Dynamic -->
         <div class="hospital-info">
-            <h3 id="hospitalName">Rumah Sakit Bhakti Wira Tamtama</h3>
-            <p id="hospitalAddress">Alamat: Jl. Dr. Sutomo No.17</p>
-            <p id="hospitalCapacity">Kapasitas: 20/80</p>
-            <p id="hospitalRating">Rating: 4.2/5</p>
+            <div id="loadingInfo" class="loading">Memuat informasi rumah sakit...</div>
+            <div id="hospitalDetails" style="display: none;">
+                <h3 id="hospitalName">-</h3>
+                <p id="hospitalAddress">Alamat: -</p>
+                <p id="hospitalCapacity">Kapasitas: -</p>
+                <p id="hospitalRating">Rating: -</p>
+            </div>
+            <div id="errorInfo" class="error" style="display: none;">
+                Gagal memuat informasi rumah sakit
+            </div>
         </div>
 
         <h3 class="schedule-title">Jadwal Praktik Harian</h3>
-        <h4 class="hospital-name" id="hospitalNameSchedule">Rumah Sakit Bhakti Wira Tamtama</h4>
+        <h4 class="hospital-name" id="hospitalNameSchedule">-</h4>
 
         <div class="navigation">
             <div class="nav-arrow" id="prevDate">&#10094;</div>
-            <div class="nav-date" id="currentDate">Kam, 24</div>
+            <div class="nav-date" id="currentDate">-</div>
             <div class="nav-arrow" id="nextDate">&#10095;</div>
         </div>
 
-        <div id="doctorsList">
-            <!-- Doctor Card 1 -->
-            <div class="doctor-card">
-                <div class="doctor-avatar">
-                    <img src="/assets/1a.png" alt="Dr. Hendrik Cahyono">
-                </div>
-                <div class="doctor-info">
-                    <p><span class="label">Nama Dokter :</span> dr. Hendrik Cahyono, Sp.PD</p>
-                    <p><span class="label">Spesialis :</span> Penyakit Dalam</p>
-                    <p><span class="label">Jam Praktek :</span> 18.00 - Selesai</p>
-                </div>
-            </div>
-
-            <!-- Doctor Card 2 -->
-            <div class="doctor-card">
-                <div class="doctor-avatar">
-                    <img src="/assets/1a.png" alt="Dr. Tessy Mubarok">
-                </div>
-                <div class="doctor-info">
-                    <p><span class="label">Nama Dokter :</span> dr. Tessy Mubarok, Sp.B</p>
-                    <p><span class="label">Spesialis :</span> Bedah Umum</p>
-                    <p><span class="label">Jam Praktek :</span> 06.30 - Selesai</p>
-                </div>
-            </div>
+        <!-- Doctors List - Now Dynamic -->
+        <div id="loadingDoctors" class="loading">Memuat jadwal dokter...</div>
+        <div id="doctorsList" style="display: none;"></div>
+        <div id="errorDoctors" class="error" style="display: none;">
+            Gagal memuat jadwal dokter
         </div>
     </div>
 
     <script>
-        // Get hospital ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const hospitalId = window.location.pathname.split('/').pop();
+        // Global variables
+        let currentDate = new Date();
+        let hospitalData = null;
+
+        // Get hospital ID from URL or Laravel variable
+        const hospitalId = {!! json_encode($hospital_id ?? null) !!} || window.location.pathname.split('/').pop();
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Ambil hospital_id dari halaman
-            const hospitalId = {!! json_encode($hospital_id ?? null) !!};
-
             if (hospitalId) {
                 loadHospitalDetails(hospitalId);
+                initializeDateNavigation();
             } else {
-                console.error('Hospital ID not provided');
-                window.location.href = '/peta'; // Redirect to map if no ID
+                showError('Hospital ID tidak ditemukan');
+                setTimeout(() => window.location.href = '/peta', 3000);
             }
         });
-        // Function to load hospital details
-        function loadHospitalDetails(id) {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // Fetch hospital basic info
-            fetch(`/api/hospital/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateHospitalInfo(data);
-                    
-                    // Fetch hospital capacity
-                    return fetch(`/api/hospital/capacity/${id}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    });
-                } else {
-                    throw new Error(data.message || 'Gagal memuat data rumah sakit');
-                }
-            })
-            .then(response => response.json())
-            .then(capacityData => {
-                if (capacityData.success) {
-                    const capacity = `${capacityData.current}/${capacityData.total}`;
-                    document.getElementById('hospitalCapacity').textContent = `Kapasitas: ${capacity}`;
-                }
-                
-                // Fetch doctors data
-                return fetch(`/api/hospital/doctors/${id}`, {
+        // Main function to load hospital details
+        async function loadHospitalDetails(id) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            try {
+                // Load hospital basic info
+                const response = await fetch(`/api/hospital/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     }
                 });
-            })
-            .then(response => response.json())
-            .then(doctorsData => {
-                if (doctorsData.success) {
-                    updateDoctorsList(doctorsData.doctors);
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    hospitalData = data;
+                    updateHospitalInfo(data);
+                    await loadHospitalCapacity(id);
+                    await loadHospitalDoctors(id);
+                } else {
+                    throw new Error(data.message || 'Gagal memuat data rumah sakit');
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching hospital data:', error);
-                useDummyData(id);
-            });
+            } catch (error) {
+                console.error('Error loading hospital details:', error);
+                showError('Gagal memuat detail rumah sakit: ' + error.message);
+            }
         }
 
-        // Update hospital information on the page
-        function updateHospitalInfo(hospital) {
-            document.getElementById('hospitalName').textContent = hospital.name;
-            document.getElementById('hospitalNameSchedule').textContent = hospital.name;
-            document.getElementById('hospitalAddress').textContent = `Alamat: ${hospital.address}`;
-            document.getElementById('hospitalCapacity').textContent = `Kapasitas: ${hospital.capacity}`;
-            document.getElementById('hospitalRating').textContent = `Rating: ${hospital.rating}/5`;
+        // Load hospital capacity separately
+        async function loadHospitalCapacity(id) {
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const response = await fetch(`/api/hospital/capacity/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
 
-            // Update hospital header image if available
-            if (hospital.imageUrl) {
-                document.getElementById('hospitalHeaderImage').src = hospital.imageUrl;
+                const capacityData = await response.json();
+                
+                if (capacityData.success) {
+                    updateCapacityDisplay(capacityData);
+                }
+            } catch (error) {
+                console.error('Error loading capacity:', error);
+            }
+        }
+
+        // Load hospital doctors
+        async function loadHospitalDoctors(id) {
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const response = await fetch(`/api/hospital/doctors/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+
+                const doctorsData = await response.json();
+                
+                if (doctorsData.success) {
+                    updateDoctorsList(doctorsData.doctors);
+                } else {
+                    showDoctorsError('Tidak ada jadwal dokter tersedia');
+                }
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+                showDoctorsError('Gagal memuat jadwal dokter');
+            }
+        }
+
+        // Update hospital information display
+        function updateHospitalInfo(data) {
+            document.getElementById('hospitalName').textContent = data.name || 'Nama tidak tersedia';
+            document.getElementById('hospitalNameSchedule').textContent = data.name || 'Nama tidak tersedia';
+            document.getElementById('hospitalAddress').textContent = `Alamat: ${data.address || 'Alamat tidak tersedia'}`;
+            document.getElementById('hospitalRating').textContent = `Rating: ${data.rating || 0}/5`;
+            
+            // Show hospital details and hide loading
+            document.getElementById('loadingInfo').style.display = 'none';
+            document.getElementById('hospitalDetails').style.display = 'block';
+        }
+
+        // Update capacity display with status indicator
+        function updateCapacityDisplay(capacityData) {
+            const current = capacityData.current || 0;
+            const total = capacityData.total || 0;
+            const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
+            
+            let status = 'full';
+            let statusText = 'Penuh';
+            
+            if (percentage >= 70) {
+                status = 'high';
+                statusText = 'Tersedia Banyak';
+            } else if (percentage >= 30) {
+                status = 'medium';
+                statusText = 'Tersedia Terbatas';
+            } else if (percentage > 0) {
+                status = 'low';
+                statusText = 'Tersedia Sedikit';
             }
 
-            // Update doctors list (in a real app, this would be dynamic)
-            updateDoctorsList(hospital.doctors);
+            const capacityHtml = `Kapasitas: ${current}/${total} <span class="availability-status availability-${status}">${statusText}</span>`;
+            document.getElementById('hospitalCapacity').innerHTML = capacityHtml;
         }
 
         // Update doctors list
@@ -364,54 +423,73 @@
             const doctorsList = document.getElementById('doctorsList');
             doctorsList.innerHTML = '';
 
-            doctors.forEach(doctor => {
-                const doctorCard = document.createElement('div');
-                doctorCard.className = 'doctor-card';
+            if (doctors.length === 0) {
+                doctorsList.innerHTML = '<div class="loading">Tidak ada dokter yang bertugas hari ini</div>';
+            } else {
+                doctors.forEach(doctor => {
+                    const doctorCard = document.createElement('div');
+                    doctorCard.className = 'doctor-card';
+                    doctorCard.innerHTML = `
+                        <div class="doctor-avatar">
+                            <img src="/assets/1a.png" alt="${doctor.name}" onerror="this.src='/assets/default-doctor.png'">
+                        </div>
+                        <div class="doctor-info">
+                            <p><span class="label">Nama Dokter :</span> ${doctor.name || 'Nama tidak tersedia'}</p>
+                            <p><span class="label">Spesialis :</span> ${doctor.specialty || 'Umum'}</p>
+                            <p><span class="label">Jam Praktek :</span> ${doctor.schedule || 'Jadwal tidak tersedia'}</p>
+                        </div>
+                    `;
+                    doctorsList.appendChild(doctorCard);
+                });
+            }
 
-                const gender = doctor.gender || (Math.random() > 0.5 ? 'male' : 'female');
+            // Show doctors list and hide loading
+            document.getElementById('loadingDoctors').style.display = 'none';
+            document.getElementById('doctorsList').style.display = 'block';
+        }
 
-                doctorCard.innerHTML = `
-                    <div class="doctor-avatar">
-                        <img src="/assets/1a.png" alt="${doctor.name}">
-                    </div>
-                    <div class="doctor-info">
-                        <p><span class="label">Nama Dokter :</span> ${doctor.name}</p>
-                        <p><span class="label">Spesialis :</span> ${doctor.specialty}</p>
-                        <p><span class="label">Jam Praktek :</span> ${doctor.schedule}</p>
-                    </div>
-                `;
+        // Initialize date navigation
+        function initializeDateNavigation() {
+            updateDateDisplay();
+            
+            document.getElementById('prevDate').addEventListener('click', () => {
+                currentDate.setDate(currentDate.getDate() - 1);
+                updateDateDisplay();
+                if (hospitalId) loadHospitalDoctors(hospitalId);
+            });
 
-                doctorsList.appendChild(doctorCard);
+            document.getElementById('nextDate').addEventListener('click', () => {
+                currentDate.setDate(currentDate.getDate() + 1);
+                updateDateDisplay();
+                if (hospitalId) loadHospitalDoctors(hospitalId);
             });
         }
 
+        // Update date display
+        function updateDateDisplay() {
+            const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            const dayName = days[currentDate.getDay()];
+            const date = currentDate.getDate();
+            const month = months[currentDate.getMonth()];
+            
+            document.getElementById('currentDate').textContent = `${dayName}, ${date} ${month}`;
+        }
 
-        // Fungsi untuk mengubah tinggi gambar
-        document.getElementById('applyHeight').addEventListener('click', () => {
-            const heightInput = document.getElementById('imageHeight');
-            const heroSection = document.querySelector('.hero-section');
+        // Show error message
+        function showError(message) {
+            document.getElementById('loadingInfo').style.display = 'none';
+            document.getElementById('errorInfo').textContent = message;
+            document.getElementById('errorInfo').style.display = 'block';
+        }
 
-            // Validasi input
-            let height = parseInt(heightInput.value);
-            if (isNaN(height) || height < 100) {
-                height = 100; // Minimal height
-                heightInput.value = 100;
-            } else if (height > 600) {
-                height = 600; // Maksimal height
-                heightInput.value = 600;
-            }
-
-            // Terapkan tinggi baru
-            heroSection.style.height = `${height}px`;
-        });
-
-        // Load hospital details when page loads
-        window.onload = function() {
-            updateDateDisplay();
-            if (hospitalId) {
-                loadHospitalDetails(hospitalId);
-            }
-        };
+        // Show doctors error
+        function showDoctorsError(message) {
+            document.getElementById('loadingDoctors').style.display = 'none';
+            document.getElementById('errorDoctors').textContent = message;
+            document.getElementById('errorDoctors').style.display = 'block';
+        }
     </script>
 </body>
 

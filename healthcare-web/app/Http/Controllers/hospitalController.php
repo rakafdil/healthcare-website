@@ -373,7 +373,6 @@ class HospitalController extends Controller
             $available = (int)$matches[1];
             $total = (int)$matches[2];
         } elseif (preg_match('/(\d+)/', $capacity, $matches)) {
-            // Jika hanya ada satu angka, anggap sebagai total dengan available = 50%
             $total = (int)$matches[1];
             $available = intval($total * 0.5);
         } else {
