@@ -26,11 +26,15 @@
         <div class="flex justify-center mb-6 border-b">
             <div class="flex gap-8">
                 <a href="#"
-                    class="px-4 py-2 border-b-2 {{ $step == 4 ? 'border-blue-500 text-blue-500' : 'border-transparent text-gray-500' }} transition-colors duration-200"
-                    id="blogTab" onclick="switchTab('blog'); return false;">Blog</a>
+                    class="px-4 py-2 border-b-2 transition-colors duration-200 tab-link"
+                    id="blogTab" 
+                    data-tab="blog"
+                    onclick="switchTab('blog'); return false;">Blog</a>
                 <a href="#"
-                    class="px-4 py-2 border-b-2 {{ $step == 5 ? 'border-blue-500 text-blue-500' : 'border-transparent text-gray-500' }} transition-colors duration-200"
-                    id="rumahSakitTab" onclick="switchTab('hospital'); return false;">Rumah Sakit</a>
+                    class="px-4 py-2 border-b-2 transition-colors duration-200 tab-link"
+                    id="rumahSakitTab" 
+                    data-tab="hospital"
+                    onclick="switchTab('hospital'); return false;">Rumah Sakit</a>
             </div>
         </div>
 
@@ -93,7 +97,7 @@
 <script>
     // Sample data for each condition (in a real app, this would come from the backend)
     let currentKondisi = 1;
-    let currentTab = 'blog';
+    let currentTab = '{{ $step == 4 ? "blog" : "hospital" }}';
 
     const kondisiData = {
         1: {
@@ -237,7 +241,6 @@
         url.searchParams.set('step', tab === 'blog' ? 4 : 5);
         localStorage.setItem('scrollPos', window.scrollY);
         window.location = url;
-        window.scrollTo(0, 0);
         // Update step styles
         if (tab === 'blog') {
             document.getElementById('blogTab').classList.add('border-blue-500', 'text-blue-500');
