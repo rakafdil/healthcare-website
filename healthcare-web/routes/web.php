@@ -80,6 +80,14 @@ Route::get('/peta', function () {
     return view('peta');
 });
 
+Route::get('/peta', [HospitalController::class, 'showMap'])->name('peta');
+
+// API routes
+Route::get('/hospitals/{id}/doctors', [HospitalController::class, 'getHospitalDoctors']);
+Route::get('/hospitals/{id}/specialties', [HospitalController::class, 'getHospitalSpecialties']);
+Route::get('/hospitals/{hospitalId}/doctors/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty']);
+Route::get('/doctors/debug/{hospitalId?}', [HospitalController::class, 'debugDoctors']);
+
 Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('hospital.detail');
 
 // Route detail alternatif

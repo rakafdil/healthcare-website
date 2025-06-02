@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #fffff;
+            background-color: #ffffff;
             font-family: Arial, sans-serif;
         }
 
@@ -239,6 +239,18 @@
         .availability-medium { background-color: #fff3cd; color: #856404; }
         .availability-low { background-color: #f8d7da; color: #721c24; }
         .availability-full { background-color: #f8d7da; color: #721c24; }
+
+        .hospital-details h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .hospital-details p {
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -246,32 +258,28 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero-section">
-            <img id="hospitalHeaderImage" src="/assets/foto fitur rumah sakit.png" alt="Gambar Rumah Sakit" class="hero-image">
+            <img id="hospitalHeaderImage" src="{{ asset('assets/foto fitur rumah sakit.png') }}" alt="Gambar Rumah Sakit" class="hero-image">
             <div class="hero-text">
                 <h1>RUMAH SAKIT</h1>
                 <h2>KETERSEDIAAN KAMAR</h2>
-                <a href="/peta?provinsi={{ request('provinsi') ?? 'jawa_barat' }}&kabupaten={{ request('kabupaten') ?? 'Bandung' }}&kota={{ request('kota') ?? 'Bandung' }}" class="btn">Kembali ke Peta</a>
+                <a href="{{ route('peta', ['provinsi' => request('provinsi', 'jawa_barat'), 'kabupaten' => request('kabupaten', 'Bandung'), 'kota' => request('kota', 'Bandung')]) }}" class="btn">Kembali ke Peta</a>
             </div>
         </div>
 
         <h2 class="title">Detail Rumah Sakit</h2>
 
-        <!-- Hospital Info - Now Dynamic -->
+        <!-- Hospital Info - Menggunakan data dari database -->
         <div class="hospital-info">
-            <div id="loadingInfo" class="loading">Memuat informasi rumah sakit...</div>
-            <div id="hospitalDetails" style="display: none;">
-                <h3 id="hospitalName">-</h3>
-                <p id="hospitalAddress">Alamat: -</p>
-                <p id="hospitalCapacity">Kapasitas: -</p>
-                <p id="hospitalRating">Rating: -</p>
-            </div>
-            <div id="errorInfo" class="error" style="display: none;">
-                Gagal memuat informasi rumah sakit
+            <div id="hospitalDetails" class="hospital-details">
+                <h3 id="hospitalName">{{ $hospital->nama ?? 'Nama tidak tersedia' }}</h3>
+                <p id="hospitalAddress">Alamat: {{ $hospital->alamat ?? 'Alamat tidak tersedia' }}</p>
+                <p id="hospitalCapacity">Kapasitas: <span id="capacityDisplay">{{ $hospital->kapasitas ?? 'Tidak diketahui' }}</span></p>
+                <p id="hospitalRating">Rating: {{ $hospital->rating ?? 0 }}/5</p>
             </div>
         </div>
 
         <h3 class="schedule-title">Jadwal Praktik Harian</h3>
-        <h4 class="hospital-name" id="hospitalNameSchedule">-</h4>
+        <h4 class="hospital-name" id="hospitalNameSchedule">{{ $hospital->nama ?? 'Nama tidak tersedia' }}</h4>
 
         <div class="navigation">
             <div class="nav-arrow" id="prevDate">&#10094;</div>
@@ -279,7 +287,7 @@
             <div class="nav-arrow" id="nextDate">&#10095;</div>
         </div>
 
-        <!-- Doctors List - Now Dynamic -->
+        <!-- Doctors List - Menggunakan data dari database -->
         <div id="loadingDoctors" class="loading">Memuat jadwal dokter...</div>
         <div id="doctorsList" style="display: none;"></div>
         <div id="errorDoctors" class="error" style="display: none;">
@@ -290,56 +298,27 @@
     <script>
         // Global variables
         let currentDate = new Date();
-        let hospitalData = null;
+        let hospitalData = @json($hospital ?? null);
 
-        // Get hospital ID from URL or Laravel variable
-        const hospitalId = {!! json_encode($hospital_id ?? null) !!} || window.location.pathname.split('/').pop();
+        // Get hospital ID from Laravel variable
+        const hospitalId = {{ $hospital_id ?? 'null' }};
 
         document.addEventListener('DOMContentLoaded', function() {
             if (hospitalId) {
-                loadHospitalDetails(hospitalId);
+                updateCapacityDisplay();
+                loadHospitalDoctors(hospitalId);
                 initializeDateNavigation();
             } else {
                 showError('Hospital ID tidak ditemukan');
-                setTimeout(() => window.location.href = '/peta', 3000);
+                setTimeout(() => window.location.href = '{{ route("peta") }}', 3000);
             }
         });
 
-        // Main function to load hospital details
-        async function loadHospitalDetails(id) {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            try {
-                // Load hospital basic info
-                const response = await fetch(`/api/hospital/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    hospitalData = data;
-                    updateHospitalInfo(data);
-                    await loadHospitalCapacity(id);
-                    await loadHospitalDoctors(id);
-                } else {
-                    throw new Error(data.message || 'Gagal memuat data rumah sakit');
-                }
-            } catch (error) {
-                console.error('Error loading hospital details:', error);
-                showError('Gagal memuat detail rumah sakit: ' + error.message);
-            }
-        }
-
-        // Load hospital capacity separately
-        async function loadHospitalCapacity(id) {
+        // Load hospital capacity
+        async function updateCapacityDisplay() {
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                const response = await fetch(`/api/hospital/capacity/${id}`, {
+                const response = await fetch(`/api/hospital/capacity/${hospitalId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -350,10 +329,31 @@
                 const capacityData = await response.json();
                 
                 if (capacityData.success) {
-                    updateCapacityDisplay(capacityData);
+                    const current = capacityData.current || 0;
+                    const total = capacityData.total || 0;
+                    const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
+                    
+                    let status = 'full';
+                    let statusText = 'Penuh';
+                    
+                    if (percentage >= 70) {
+                        status = 'high';
+                        statusText = 'Tersedia Banyak';
+                    } else if (percentage >= 30) {
+                        status = 'medium';
+                        statusText = 'Tersedia Terbatas';
+                    } else if (percentage > 0) {
+                        status = 'low';
+                        statusText = 'Tersedia Sedikit';
+                    }
+
+                    const capacityHtml = `${current}/${total} <span class="availability-status availability-${status}">${statusText}</span>`;
+                    document.getElementById('capacityDisplay').innerHTML = capacityHtml;
                 }
             } catch (error) {
                 console.error('Error loading capacity:', error);
+                // Gunakan data fallback dari server
+                document.getElementById('capacityDisplay').textContent = hospitalData ? hospitalData.kapasitas : 'Tidak diketahui';
             }
         }
 
@@ -382,42 +382,6 @@
             }
         }
 
-        // Update hospital information display
-        function updateHospitalInfo(data) {
-            document.getElementById('hospitalName').textContent = data.name || 'Nama tidak tersedia';
-            document.getElementById('hospitalNameSchedule').textContent = data.name || 'Nama tidak tersedia';
-            document.getElementById('hospitalAddress').textContent = `Alamat: ${data.address || 'Alamat tidak tersedia'}`;
-            document.getElementById('hospitalRating').textContent = `Rating: ${data.rating || 0}/5`;
-            
-            // Show hospital details and hide loading
-            document.getElementById('loadingInfo').style.display = 'none';
-            document.getElementById('hospitalDetails').style.display = 'block';
-        }
-
-        // Update capacity display with status indicator
-        function updateCapacityDisplay(capacityData) {
-            const current = capacityData.current || 0;
-            const total = capacityData.total || 0;
-            const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
-            
-            let status = 'full';
-            let statusText = 'Penuh';
-            
-            if (percentage >= 70) {
-                status = 'high';
-                statusText = 'Tersedia Banyak';
-            } else if (percentage >= 30) {
-                status = 'medium';
-                statusText = 'Tersedia Terbatas';
-            } else if (percentage > 0) {
-                status = 'low';
-                statusText = 'Tersedia Sedikit';
-            }
-
-            const capacityHtml = `Kapasitas: ${current}/${total} <span class="availability-status availability-${status}">${statusText}</span>`;
-            document.getElementById('hospitalCapacity').innerHTML = capacityHtml;
-        }
-
         // Update doctors list
         function updateDoctorsList(doctors) {
             const doctorsList = document.getElementById('doctorsList');
@@ -431,7 +395,7 @@
                     doctorCard.className = 'doctor-card';
                     doctorCard.innerHTML = `
                         <div class="doctor-avatar">
-                            <img src="/assets/1a.png" alt="${doctor.name}" onerror="this.src='/assets/default-doctor.png'">
+                            <img src="{{ asset('assets/1a.png') }}" alt="${doctor.name}" onerror="this.src='{{ asset('assets/default-doctor.png') }}'">
                         </div>
                         <div class="doctor-info">
                             <p><span class="label">Nama Dokter :</span> ${doctor.name || 'Nama tidak tersedia'}</p>
@@ -479,9 +443,10 @@
 
         // Show error message
         function showError(message) {
-            document.getElementById('loadingInfo').style.display = 'none';
-            document.getElementById('errorInfo').textContent = message;
-            document.getElementById('errorInfo').style.display = 'block';
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.title'));
         }
 
         // Show doctors error

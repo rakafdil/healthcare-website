@@ -258,101 +258,250 @@ class HospitalController extends Controller
         }
     }
 
-    // Method untuk menampilkan detail rumah sakit
+    // Method untuk menampilkan detail rumah sakit - DIPERBAIKI
     public function showHospitalDetail($id)
     {
-        $hospital = DB::table('rumah_sakit')
-            ->where('id_rumah_sakit', $id)
-            ->first();
-        
-        if (!$hospital) {
-            abort(404);
+        try {
+            $hospital = DB::table('rumah_sakit')
+                ->where('id_rumah_sakit', $id)
+                ->first();
+            
+            if (!$hospital) {
+                // Redirect ke peta jika hospital tidak ditemukan
+                return redirect()->route('peta')->with('error', 'Rumah sakit tidak ditemukan');
+            }
+            
+            return view('hospital.detail', [
+                'hospital' => $hospital,
+                'hospital_id' => $id
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in showHospitalDetail', [
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->route('peta')->with('error', 'Terjadi kesalahan saat memuat detail rumah sakit');
         }
-        
-        return view('hospital.detail', [
-            'hospital' => $hospital,
-            'hospital_id' => $id
-        ]);
     }
 
-    // Method untuk mendapatkan data rumah sakit (API)
+    // Method untuk mendapatkan data rumah sakit (API) - DIPERBAIKI
     public function getHospitalData($id)
     {
-        $hospital = DB::table('rumah_sakit')
-            ->where('id_rumah_sakit', $id)
-            ->first();
-        
-        if (!$hospital) {
+        try {
+            $hospital = DB::table('rumah_sakit')
+                ->where('id_rumah_sakit', $id)
+                ->first();
+            
+            if (!$hospital) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rumah sakit tidak ditemukan'
+                ], 404);
+            }
+
+            $availability = $this->parseCapacity($hospital->kapasitas);
+            
+            return response()->json([
+                'success' => true,
+                'name' => $hospital->nama,
+                'address' => $hospital->alamat,
+                'capacity' => $hospital->kapasitas,
+                'rating' => $hospital->rating,
+                'availability' => $availability,
+                'geometry' => [
+                    'location' => [
+                        'lat' => (float)$hospital->lat,
+                        'lng' => (float)$hospital->lng
+                    ]
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in getHospitalData', [
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Rumah sakit tidak ditemukan'
-            ], 404);
+                'message' => 'Terjadi kesalahan saat mengambil data rumah sakit'
+            ], 500);
         }
-
-        $availability = $this->parseCapacity($hospital->kapasitas);
-        
-        return response()->json([
-            'success' => true,
-            'name' => $hospital->nama,
-            'address' => $hospital->alamat,
-            'capacity' => $hospital->kapasitas,
-            'rating' => $hospital->rating,
-            'availability' => $availability,
-            'geometry' => [
-                'location' => [
-                    'lat' => (float)$hospital->lat,
-                    'lng' => (float)$hospital->lng
-                ]
-            ]
-        ]);
     }
 
-    // Method untuk mendapatkan dokter rumah sakit
+    // Method untuk mendapatkan dokter rumah sakit - DIPERBAIKI DAN DIGABUNG
     public function getHospitalDoctors($id)
     {
-        $doctors = DB::table('dokter_rumah_sakit')
-            ->where('id_rumah_sakit', $id)
-            ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
-            ->get();
-        
-        $formattedDoctors = [];
-        foreach ($doctors as $doctor) {
-            $formattedDoctors[] = [
-                'id' => $doctor->id_dokter,
-                'name' => $doctor->nama,
-                'specialty' => $doctor->spesialisasi,
-                'schedule' => $doctor->jam_praktek
-            ];
-        }
-        
-        return response()->json([
-            'success' => true,
-            'doctors' => $formattedDoctors
-        ]);
-    }
+        try {
+            // Log untuk debugging
+            Log::info('Getting doctors for hospital', ['hospital_id' => $id]);
+            
+            // Validasi input
+            if (!is_numeric($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID rumah sakit tidak valid'
+                ], 400);
+            }
+            
+            // Cek apakah hospital ada
+            $hospital = DB::table('rumah_sakit')
+                ->where('id_rumah_sakit', $id)
+                ->first();
+                
+            if (!$hospital) {
+                Log::warning('Hospital not found', ['hospital_id' => $id]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rumah sakit tidak ditemukan'
+                ], 404);
+            }
+            
+            // Query dokter berdasarkan struktur tabel dari seeder
+            $doctors = DB::table('dokter_rumah_sakit')
+                ->where('id_rumah_sakit', $id)
+                ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
+                ->orderBy('spesialisasi', 'asc') // Urutkan berdasarkan spesialisasi
+                ->orderBy('nama', 'asc') // Kemudian nama
+                ->get();
+            
+            Log::info('Doctors query result', [
+                'hospital_id' => $id,
+                'doctors_count' => $doctors->count()
+            ]);
+            
+            $formattedDoctors = [];
+            foreach ($doctors as $doctor) {
+                $formattedDoctors[] = [
+                    'id' => $doctor->id_dokter,
+                    'name' => trim($doctor->nama ?? 'Nama tidak tersedia'),
+                    'specialty' => trim($doctor->spesialisasi ?? 'Umum'),
+                    'schedule' => trim($doctor->jam_praktek ?? 'Jadwal tidak tersedia')
+                ];
+            }
+            
+            // Jika tidak ada dokter ditemukan
+            if (empty($formattedDoctors)) {
+                Log::info('No doctors found for hospital', ['hospital_id' => $id]);
+                
+                return response()->json([
+                    'success' => true,
+                    'doctors' => [],
+                    'total' => 0,
+                    'message' => 'Belum ada dokter yang terdaftar untuk rumah sakit ini'
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'doctors' => $formattedDoctors,
+                'total' => count($formattedDoctors),
+                'hospital_name' => $hospital->nama
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in getHospitalDoctors', [
+                'hospital_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
 
-    // Method untuk mengambil kapasitas rumah sakit
-    public function getHospitalCapacity($id)
-    {
-        $hospital = DB::table('rumah_sakit')
-            ->where('id_rumah_sakit', $id)
-            ->select('kapasitas')
-            ->first();
-        
-        if (!$hospital) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rumah sakit tidak ditemukan'
-            ], 404);
+                'message' => 'Terjadi kesalahan saat mengambil data dokter: ' . $e->getMessage()
+            ], 500);
         }
-        
-        $capacity = $this->parseCapacity($hospital->kapasitas);
-        
-        return response()->json([
-            'success' => true,
-            'current' => $capacity ? $capacity['available'] : 0,
-            'total' => $capacity ? $capacity['total'] : 0
-        ]);
+    }
+
+    // Method untuk mendapatkan daftar spesialisasi dokter di rumah sakit
+    public function getHospitalSpecialties($id)
+    {
+        try {
+            // Validasi input
+            if (!is_numeric($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID rumah sakit tidak valid'
+                ], 400);
+            }
+            
+            // Ambil daftar spesialisasi unik
+            $specialties = DB::table('dokter_rumah_sakit')
+                ->where('id_rumah_sakit', $id)
+                ->select('spesialisasi')
+                ->distinct()
+                ->orderBy('spesialisasi')
+                ->pluck('spesialisasi')
+                ->filter() // Hapus nilai kosong/null
+                ->values(); // Reset index array
+            
+            return response()->json([
+                'success' => true,
+                'specialties' => $specialties,
+                'total' => $specialties->count()
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in getHospitalSpecialties', [
+                'hospital_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data spesialisasi'
+            ], 500);
+        }
+    }
+
+    // Method untuk mendapatkan dokter berdasarkan spesialisasi
+    public function getDoctorsBySpecialty($hospitalId, $specialty)
+    {
+        try {
+            // Validasi input
+            if (!is_numeric($hospitalId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID rumah sakit tidak valid'
+                ], 400);
+            }
+            
+            $doctors = DB::table('dokter_rumah_sakit')
+                ->where('id_rumah_sakit', $hospitalId)
+                ->where('spesialisasi', 'LIKE', '%' . $specialty . '%')
+                ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
+                ->orderBy('nama')
+                ->get();
+            
+            $formattedDoctors = [];
+            foreach ($doctors as $doctor) {
+                $formattedDoctors[] = [
+                    'id' => $doctor->id_dokter,
+                    'name' => trim($doctor->nama ?? 'Nama tidak tersedia'),
+                    'specialty' => trim($doctor->spesialisasi ?? 'Umum'),
+                    'schedule' => trim($doctor->jam_praktek ?? 'Jadwal tidak tersedia')
+                ];
+            }
+            
+            return response()->json([
+                'success' => true,
+                'doctors' => $formattedDoctors,
+                'total' => count($formattedDoctors),
+                'specialty' => $specialty
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in getDoctorsBySpecialty', [
+                'hospital_id' => $hospitalId,
+                'specialty' => $specialty,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data dokter berdasarkan spesialisasi'
+            ], 500);
+        }
     }
 
     // Helper function untuk parsing data kapasitas - DIPERBAIKI
@@ -398,5 +547,60 @@ class HospitalController extends Controller
             'percentage' => $percentage,
             'status' => $status
         ];
+    }
+
+    // Method untuk debugging - mengecek data dokter
+    public function debugDoctors($hospitalId = null)
+    {
+        try {
+            // Cek struktur tabel
+            $tableStructure = DB::select('DESCRIBE dokter_rumah_sakit');
+            
+            if ($hospitalId) {
+                // Ambil data dokter untuk hospital tertentu
+                $doctors = DB::table('dokter_rumah_sakit')
+                    ->where('id_rumah_sakit', $hospitalId)
+                    ->get();
+                    
+                // Cek apakah hospital ada
+                $hospital = DB::table('rumah_sakit')
+                    ->where('id_rumah_sakit', $hospitalId)
+                    ->first();
+            } else {
+                // Ambil semua data dokter
+                $doctors = DB::table('dokter_rumah_sakit')->limit(10)->get();
+                $hospital = null;
+            }
+            
+            // Hitung total dokter per rumah sakit
+            $doctorCounts = DB::table('dokter_rumah_sakit')
+                ->select('id_rumah_sakit', DB::raw('COUNT(*) as total_doctors'))
+                ->groupBy('id_rumah_sakit')
+                ->orderBy('total_doctors', 'desc')
+                ->limit(10)
+                ->get();
+            
+            return response()->json([
+                'success' => true,
+                'hospital_id' => $hospitalId,
+                'hospital_info' => $hospital,
+                'total_doctors' => $doctors->count(),
+                'doctors' => $doctors,
+                'table_structure' => $tableStructure,
+                'doctor_counts_per_hospital' => $doctorCounts,
+                'query_info' => [
+                    'table_name' => 'dokter_rumah_sakit',
+                    'hospital_column' => 'id_rumah_sakit',
+                    'doctor_columns' => ['id_dokter', 'nama', 'spesialisasi', 'jam_praktek']
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 }
