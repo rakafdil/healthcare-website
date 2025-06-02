@@ -269,7 +269,7 @@ class HospitalController extends Controller
             abort(404);
         }
         
-        return view('hospital-detail', [
+        return view('hospital.detail', [
             'hospital' => $hospital,
             'hospital_id' => $id
         ]);

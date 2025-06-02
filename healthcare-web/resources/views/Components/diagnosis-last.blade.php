@@ -237,6 +237,7 @@
         url.searchParams.set('step', tab === 'blog' ? 4 : 5);
         localStorage.setItem('scrollPos', window.scrollY);
         window.location = url;
+        window.scrollTo(0, 0);
         // Update step styles
         if (tab === 'blog') {
             document.getElementById('blogTab').classList.add('border-blue-500', 'text-blue-500');
