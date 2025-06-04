@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\RumahSakit;
+use App\Models\DokterRumahSakit; // Import model yang sudah dibuat
 use Illuminate\Support\Facades\Log;
 
 class HospitalController extends Controller
@@ -15,7 +16,7 @@ class HospitalController extends Controller
         return view('peta');
     }
 
-    // Method untuk mendapatkan rumah sakit terdekat (API) - DIPERBAIKI
+    // Method untuk mendapatkan rumah sakit terdekat (API)
     public function getNearbyHospitals(Request $request)
     {
         try {
@@ -49,9 +50,42 @@ class HospitalController extends Controller
                 ], 400);
             }
 
-            // Query yang diperbaiki dengan penanganan error yang lebih baik
-            $hospitals = DB::table('rumah_sakit')
-                ->select(
+            // Query menggunakan Eloquent Model
+            $hospitals = RumahSakit::select(
+                'id_rumah_sakit as id',
+                'nama as name',
+                'alamat as vicinity',
+                'kapasitas',
+                'rating',
+                'lat',
+                'lng',
+                // Formula Haversine yang diperbaiki dengan penanganan edge case
+                DB::raw("ROUND(
+                    (6371 * acos(
+                        GREATEST(-1, LEAST(1, 
+                            cos(radians($lat)) * cos(radians(COALESCE(lat, 0))) * 
+                            cos(radians(COALESCE(lng, 0)) - radians($lng)) + 
+                            sin(radians($lat)) * sin(radians(COALESCE(lat, 0)))
+                        ))
+                    )), 2
+                ) AS distance")
+            )
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->where('lat', '!=', 0)
+            ->where('lng', '!=', 0)
+            ->havingRaw('distance <= ?', [$radius])
+            ->orderBy('distance')
+            ->limit($limit)
+            ->get();
+
+            Log::info('Hospitals found', ['count' => $hospitals->count()]);
+
+            // Jika tidak ada hasil, coba dengan radius yang lebih besar
+            if ($hospitals->isEmpty() && $radius < 50) {
+                Log::info('No hospitals found, trying larger radius');
+                
+                $hospitals = RumahSakit::select(
                     'id_rumah_sakit as id',
                     'nama as name',
                     'alamat as vicinity',
@@ -59,7 +93,6 @@ class HospitalController extends Controller
                     'rating',
                     'lat',
                     'lng',
-                    // Formula Haversine yang diperbaiki dengan penanganan edge case
                     DB::raw("ROUND(
                         (6371 * acos(
                             GREATEST(-1, LEAST(1, 
@@ -74,44 +107,10 @@ class HospitalController extends Controller
                 ->whereNotNull('lng')
                 ->where('lat', '!=', 0)
                 ->where('lng', '!=', 0)
-                ->havingRaw('distance <= ?', [$radius])
+                ->havingRaw('distance <= ?', [50]) // Coba radius 50km
                 ->orderBy('distance')
                 ->limit($limit)
                 ->get();
-
-            Log::info('Hospitals found', ['count' => $hospitals->count()]);
-
-            // Jika tidak ada hasil, coba dengan radius yang lebih besar
-            if ($hospitals->isEmpty() && $radius < 50) {
-                Log::info('No hospitals found, trying larger radius');
-                
-                $hospitals = DB::table('rumah_sakit')
-                    ->select(
-                        'id_rumah_sakit as id',
-                        'nama as name',
-                        'alamat as vicinity',
-                        'kapasitas',
-                        'rating',
-                        'lat',
-                        'lng',
-                        DB::raw("ROUND(
-                            (6371 * acos(
-                                GREATEST(-1, LEAST(1, 
-                                    cos(radians($lat)) * cos(radians(COALESCE(lat, 0))) * 
-                                    cos(radians(COALESCE(lng, 0)) - radians($lng)) + 
-                                    sin(radians($lat)) * sin(radians(COALESCE(lat, 0)))
-                                ))
-                            )), 2
-                        ) AS distance")
-                    )
-                    ->whereNotNull('lat')
-                    ->whereNotNull('lng')
-                    ->where('lat', '!=', 0)
-                    ->where('lng', '!=', 0)
-                    ->havingRaw('distance <= ?', [50]) // Coba radius 50km
-                    ->orderBy('distance')
-                    ->limit($limit)
-                    ->get();
             }
 
             // Format data untuk response
@@ -121,7 +120,7 @@ class HospitalController extends Controller
                 
                 $formattedHospitals[] = [
                     'id' => $hospital->id,
-                    'place_id' => (string)$hospital->id, // Pastikan string
+                    'place_id' => (string)$hospital->id,
                     'name' => $hospital->name ?? 'Nama tidak tersedia',
                     'vicinity' => $hospital->vicinity ?? 'Alamat tidak tersedia',
                     'rating' => $hospital->rating ?? 0,
@@ -162,7 +161,7 @@ class HospitalController extends Controller
         }
     }
 
-    // Method untuk mendapatkan statistik rumah sakit (API) - DIPERBAIKI
+    // Method untuk mendapatkan statistik rumah sakit (API)
     public function getHospitalStats(Request $request)
     {
         try {
@@ -171,8 +170,7 @@ class HospitalController extends Controller
             $radius = $request->input('radius', 10);
 
             // Hitung total rumah sakit dalam radius
-            $totalHospitals = DB::table('rumah_sakit')
-                ->whereNotNull('lat')
+            $totalHospitals = RumahSakit::whereNotNull('lat')
                 ->whereNotNull('lng')
                 ->where('lat', '!=', 0)
                 ->where('lng', '!=', 0)
@@ -188,8 +186,7 @@ class HospitalController extends Controller
                 ->count();
 
             // Hitung rating rata-rata
-            $averageRating = DB::table('rumah_sakit')
-                ->whereNotNull('lat')
+            $averageRating = RumahSakit::whereNotNull('lat')
                 ->whereNotNull('lng')
                 ->where('lat', '!=', 0)
                 ->where('lng', '!=', 0)
@@ -209,8 +206,7 @@ class HospitalController extends Controller
             $totalBeds = 0;
             $occupiedBeds = 0;
             
-            $hospitals = DB::table('rumah_sakit')
-                ->select('kapasitas')
+            $hospitals = RumahSakit::select('kapasitas')
                 ->whereNotNull('lat')
                 ->whereNotNull('lng')
                 ->where('lat', '!=', 0)
@@ -258,20 +254,17 @@ class HospitalController extends Controller
         }
     }
 
-    // Method untuk menampilkan detail rumah sakit - DIPERBAIKI
+    // Method untuk menampilkan detail rumah sakit
     public function showHospitalDetail($id)
     {
         try {
-            $hospital = DB::table('rumah_sakit')
-                ->where('id_rumah_sakit', $id)
-                ->first();
+            $hospital = RumahSakit::where('id_rumah_sakit', $id)->first();
             
             if (!$hospital) {
-                // Redirect ke peta jika hospital tidak ditemukan
                 return redirect()->route('peta')->with('error', 'Rumah sakit tidak ditemukan');
             }
             
-            return view('hospital.detail', [
+            return view('detail', [
                 'hospital' => $hospital,
                 'hospital_id' => $id
             ]);
@@ -285,13 +278,11 @@ class HospitalController extends Controller
         }
     }
 
-    // Method untuk mendapatkan data rumah sakit (API) - DIPERBAIKI
+    // Method untuk mendapatkan data rumah sakit (API)
     public function getHospitalData($id)
     {
         try {
-            $hospital = DB::table('rumah_sakit')
-                ->where('id_rumah_sakit', $id)
-                ->first();
+            $hospital = RumahSakit::where('id_rumah_sakit', $id)->first();
             
             if (!$hospital) {
                 return response()->json([
@@ -329,7 +320,50 @@ class HospitalController extends Controller
         }
     }
 
-    // Method untuk mendapatkan dokter rumah sakit - DIPERBAIKI DAN DIGABUNG
+    // **METHOD BARU: Mendapatkan kapasitas rumah sakit yang dibutuhkan oleh frontend**
+    public function getHospitalCapacity($id)
+    {
+        try {
+            $hospital = RumahSakit::where('id_rumah_sakit', $id)->first();
+            
+            if (!$hospital) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rumah sakit tidak ditemukan'
+                ], 404);
+            }
+
+            $availability = $this->parseCapacity($hospital->kapasitas);
+            
+            if (!$availability) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data kapasitas tidak valid'
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'current' => $availability['available'],
+                'total' => $availability['total'],
+                'percentage' => $availability['percentage'],
+                'status' => $availability['status']
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error in getHospitalCapacity', [
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data kapasitas'
+            ], 500);
+        }
+    }
+
+    // Method untuk mendapatkan dokter rumah sakit - MENGGUNAKAN MODEL
     public function getHospitalDoctors($id)
     {
         try {
@@ -345,9 +379,7 @@ class HospitalController extends Controller
             }
             
             // Cek apakah hospital ada
-            $hospital = DB::table('rumah_sakit')
-                ->where('id_rumah_sakit', $id)
-                ->first();
+            $hospital = RumahSakit::where('id_rumah_sakit', $id)->first();
                 
             if (!$hospital) {
                 Log::warning('Hospital not found', ['hospital_id' => $id]);
@@ -357,12 +389,11 @@ class HospitalController extends Controller
                 ], 404);
             }
             
-            // Query dokter berdasarkan struktur tabel dari seeder
-            $doctors = DB::table('dokter_rumah_sakit')
-                ->where('id_rumah_sakit', $id)
+            // Query dokter menggunakan Model
+            $doctors = DokterRumahSakit::where('id_rumah_sakit', $id)
                 ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
-                ->orderBy('spesialisasi', 'asc') // Urutkan berdasarkan spesialisasi
-                ->orderBy('nama', 'asc') // Kemudian nama
+                ->orderBy('spesialisasi', 'asc')
+                ->orderBy('nama', 'asc')
                 ->get();
             
             Log::info('Doctors query result', [
@@ -425,9 +456,8 @@ class HospitalController extends Controller
                 ], 400);
             }
             
-            // Ambil daftar spesialisasi unik
-            $specialties = DB::table('dokter_rumah_sakit')
-                ->where('id_rumah_sakit', $id)
+            // Ambil daftar spesialisasi unik menggunakan Model
+            $specialties = DokterRumahSakit::where('id_rumah_sakit', $id)
                 ->select('spesialisasi')
                 ->distinct()
                 ->orderBy('spesialisasi')
@@ -466,8 +496,7 @@ class HospitalController extends Controller
                 ], 400);
             }
             
-            $doctors = DB::table('dokter_rumah_sakit')
-                ->where('id_rumah_sakit', $hospitalId)
+            $doctors = DokterRumahSakit::where('id_rumah_sakit', $hospitalId)
                 ->where('spesialisasi', 'LIKE', '%' . $specialty . '%')
                 ->select('id_dokter', 'nama', 'spesialisasi', 'jam_praktek')
                 ->orderBy('nama')
@@ -504,7 +533,7 @@ class HospitalController extends Controller
         }
     }
 
-    // Helper function untuk parsing data kapasitas - DIPERBAIKI
+    // Helper function untuk parsing data kapasitas
     private function parseCapacity($capacity)
     {
         if (!$capacity) {
@@ -527,6 +556,9 @@ class HospitalController extends Controller
         } else {
             return null;
         }
+        
+        // Pastikan available tidak melebihi total
+        $available = min($available, $total);
         
         $percentage = ($total > 0) ? round(($available / $total) * 100, 2) : 0;
         
@@ -557,24 +589,19 @@ class HospitalController extends Controller
             $tableStructure = DB::select('DESCRIBE dokter_rumah_sakit');
             
             if ($hospitalId) {
-                // Ambil data dokter untuk hospital tertentu
-                $doctors = DB::table('dokter_rumah_sakit')
-                    ->where('id_rumah_sakit', $hospitalId)
-                    ->get();
+                // Ambil data dokter untuk hospital tertentu menggunakan Model
+                $doctors = DokterRumahSakit::where('id_rumah_sakit', $hospitalId)->get();
                     
                 // Cek apakah hospital ada
-                $hospital = DB::table('rumah_sakit')
-                    ->where('id_rumah_sakit', $hospitalId)
-                    ->first();
+                $hospital = RumahSakit::where('id_rumah_sakit', $hospitalId)->first();
             } else {
                 // Ambil semua data dokter
-                $doctors = DB::table('dokter_rumah_sakit')->limit(10)->get();
+                $doctors = DokterRumahSakit::limit(10)->get();
                 $hospital = null;
             }
             
             // Hitung total dokter per rumah sakit
-            $doctorCounts = DB::table('dokter_rumah_sakit')
-                ->select('id_rumah_sakit', DB::raw('COUNT(*) as total_doctors'))
+            $doctorCounts = DokterRumahSakit::select('id_rumah_sakit', DB::raw('COUNT(*) as total_doctors'))
                 ->groupBy('id_rumah_sakit')
                 ->orderBy('total_doctors', 'desc')
                 ->limit(10)

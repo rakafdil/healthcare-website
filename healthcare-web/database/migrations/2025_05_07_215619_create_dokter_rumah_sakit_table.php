@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('id_rumah_sakit')->index('id_rumah_sakit');
 
             $table->primary(['id_dokter', 'id_rumah_sakit']);
+            $table->foreign('id_rumah_sakit')->references('id_rumah_sakit')->on('rumah_sakit')->onDelete('cascade');
         });
     }
 

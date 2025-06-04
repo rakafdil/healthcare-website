@@ -18,7 +18,7 @@
 
         body {
             background-color: #ffffff;
-            font-family: Arial, sans-serif;
+            /* font-family: Arial, sans-serif; */
         }
 
         .hero-section {
@@ -342,14 +342,14 @@
 </head>
 
 <body>
-    <div class="hero-section">
+    {{-- <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
         <div class="hero-text">
             <h1>RUMAH SAKIT</h1>
             <h2>KETERSEDIAAN KAMAR</h2>
             <a href="/rumah-sakit" class="btn">Pencarian</a>
         </div>
-    </div>
+    </div> --}}
 
     <div class="container">
         <h2 class="title">Peta Ketersediaan Rumah Sakit</h2>

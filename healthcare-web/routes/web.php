@@ -83,15 +83,19 @@ Route::get('/peta', function () {
 Route::get('/peta', [HospitalController::class, 'showMap'])->name('peta');
 
 // API routes
-Route::get('/hospitals/{id}/doctors', [HospitalController::class, 'getHospitalDoctors']);
-Route::get('/hospitals/{id}/specialties', [HospitalController::class, 'getHospitalSpecialties']);
-Route::get('/hospitals/{hospitalId}/doctors/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty']);
-Route::get('/doctors/debug/{hospitalId?}', [HospitalController::class, 'debugDoctors']);
+Route::prefix('api/hospital')->group(function () {
+    Route::get('capacity/{id}', [HospitalController::class, 'getHospitalCapacity']);
+    Route::get('doctors/{id}', [HospitalController::class, 'getHospitalDoctors']);
+    Route::get('specialties/{id}', [HospitalController::class, 'getHospitalSpecialties']);
+    Route::get('doctors/{hospitalId}/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty']);
+    Route::get('data/{id}', [HospitalController::class, 'getHospitalData']);
+    Route::get('debug/{hospitalId?}', [HospitalController::class, 'debugDoctors']);
+});
 
-Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('hospital.detail');
+Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('detail');
 
 // Route detail alternatif
-Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])->name('hospital.detail.alt');
+Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])->name('detail.alt');
 
 // Fallback jika ID tidak disediakan
 Route::get('/detail', function () {

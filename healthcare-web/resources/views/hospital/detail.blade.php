@@ -15,7 +15,7 @@
 
         body {
             background-color: #ffffff;
-            font-family: Arial, sans-serif;
+            /* font-family: Arial, sans-serif; */
         }
 
         .container {
@@ -255,7 +255,7 @@
 </head>
 
 <body>
-    <div class="container">
+    {{-- <div class="container">
         <!-- Hero Section -->
         <div class="hero-section">
             <img id="hospitalHeaderImage" src="{{ asset('assets/foto fitur rumah sakit.png') }}" alt="Gambar Rumah Sakit" class="hero-image">
@@ -264,7 +264,7 @@
                 <h2>KETERSEDIAAN KAMAR</h2>
                 <a href="{{ route('peta', ['provinsi' => request('provinsi', 'jawa_barat'), 'kabupaten' => request('kabupaten', 'Bandung'), 'kota' => request('kota', 'Bandung')]) }}" class="btn">Kembali ke Peta</a>
             </div>
-        </div>
+        </div> --}}
 
         <h2 class="title">Detail Rumah Sakit</h2>
 

@@ -139,7 +139,7 @@
 </head>
 
 <body>
-    <div class="hero-section">
+    {{-- <div class="hero-section">
         <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
         <div class="hero-container">
             <div class="hero-text">
@@ -148,7 +148,7 @@
                 <a href="/" class="btn">Beranda</a>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="container">
         <h2 class="title">Pilih Lokasi Rumah Sakit</h2>
