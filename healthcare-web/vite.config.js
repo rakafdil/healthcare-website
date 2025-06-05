@@ -10,8 +10,8 @@ export default defineConfig({
                 'resources/routes/**',
                 'routes/**',
                 'resources/views/**',
-                'resources/js/**',
-                'resources/css/**',
+                'resources/css/rumah-sakit/detail.css',
+                'resources/js/rumah-sakit/detail.js'
             ],
         }),
         tailwindcss(),

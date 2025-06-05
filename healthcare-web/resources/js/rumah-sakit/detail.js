@@ -1,26 +1,27 @@
-// File: public/js/hospital-detail.js
-
+// Hospital Detail JavaScript
 // Global variables
 let currentDate = new Date();
 let hospitalData = null;
 let hospitalId = null;
 
-// Initialize variables from Laravel
-function initializeData(hospitalDataFromServer, hospitalIdFromServer) {
-    hospitalData = hospitalDataFromServer;
-    hospitalId = hospitalIdFromServer;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize hospital detail page
+function initializeHospitalDetail(data, id) {
+    hospitalData = data;
+    hospitalId = id;
+    
     if (hospitalId) {
         updateCapacityDisplay();
         loadHospitalDoctors(hospitalId);
         initializeDateNavigation();
     } else {
         showError('Hospital ID tidak ditemukan');
-        // Redirect akan diatur dari Blade template
+        setTimeout(() => {
+            if (typeof window.hospitalDetailConfig !== 'undefined' && window.hospitalDetailConfig.redirectUrl) {
+                window.location.href = window.hospitalDetailConfig.redirectUrl;
+            }
+        }, 3000);
     }
-});
+}
 
 // Load hospital capacity
 async function updateCapacityDisplay() {
@@ -56,12 +57,18 @@ async function updateCapacityDisplay() {
             }
 
             const capacityHtml = `${current}/${total} <span class="availability-status availability-${status}">${statusText}</span>`;
-            document.getElementById('capacityDisplay').innerHTML = capacityHtml;
+            const capacityDisplay = document.getElementById('capacityDisplay');
+            if (capacityDisplay) {
+                capacityDisplay.innerHTML = capacityHtml;
+            }
         }
     } catch (error) {
         console.error('Error loading capacity:', error);
         // Gunakan data fallback dari server
-        document.getElementById('capacityDisplay').textContent = hospitalData ? hospitalData.kapasitas : 'Tidak diketahui';
+        const capacityDisplay = document.getElementById('capacityDisplay');
+        if (capacityDisplay) {
+            capacityDisplay.textContent = hospitalData ? hospitalData.kapasitas : 'Tidak diketahui';
+        }
     }
 }
 
@@ -93,6 +100,8 @@ async function loadHospitalDoctors(id) {
 // Update doctors list
 function updateDoctorsList(doctors) {
     const doctorsList = document.getElementById('doctorsList');
+    if (!doctorsList) return;
+    
     doctorsList.innerHTML = '';
 
     if (doctors.length === 0) {
@@ -102,13 +111,13 @@ function updateDoctorsList(doctors) {
             const doctorCard = document.createElement('div');
             doctorCard.className = 'doctor-card';
             
-            // Get asset URL (will be passed from Blade template)
-            const defaultDoctorImage = window.defaultDoctorImageUrl || '/assets/1a.png';
-            const fallbackImage = window.fallbackDoctorImageUrl || '/assets/default-doctor.png';
+            // Get asset URLs from global config
+            const defaultDoctorImage = window.hospitalDetailConfig?.defaultDoctorImage || '/assets/1a.png';
+            const fallbackDoctorImage = window.hospitalDetailConfig?.fallbackDoctorImage || '/assets/default-doctor.png';
             
             doctorCard.innerHTML = `
                 <div class="doctor-avatar">
-                    <img src="${defaultDoctorImage}" alt="${doctor.name}" onerror="this.src='${fallbackImage}'">
+                    <img src="${defaultDoctorImage}" alt="${doctor.name}" onerror="this.src='${fallbackDoctorImage}'">
                 </div>
                 <div class="doctor-info">
                     <p><span class="label">Nama Dokter :</span> ${doctor.name || 'Nama tidak tersedia'}</p>
@@ -121,25 +130,35 @@ function updateDoctorsList(doctors) {
     }
 
     // Show doctors list and hide loading
-    document.getElementById('loadingDoctors').style.display = 'none';
-    document.getElementById('doctorsList').style.display = 'block';
+    const loadingDoctors = document.getElementById('loadingDoctors');
+    const doctorsListElement = document.getElementById('doctorsList');
+    
+    if (loadingDoctors) loadingDoctors.style.display = 'none';
+    if (doctorsListElement) doctorsListElement.style.display = 'block';
 }
 
 // Initialize date navigation
 function initializeDateNavigation() {
     updateDateDisplay();
     
-    document.getElementById('prevDate').addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() - 1);
-        updateDateDisplay();
-        if (hospitalId) loadHospitalDoctors(hospitalId);
-    });
+    const prevDateBtn = document.getElementById('prevDate');
+    const nextDateBtn = document.getElementById('nextDate');
+    
+    if (prevDateBtn) {
+        prevDateBtn.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            if (hospitalId) loadHospitalDoctors(hospitalId);
+        });
+    }
 
-    document.getElementById('nextDate').addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() + 1);
-        updateDateDisplay();
-        if (hospitalId) loadHospitalDoctors(hospitalId);
-    });
+    if (nextDateBtn) {
+        nextDateBtn.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            if (hospitalId) loadHospitalDoctors(hospitalId);
+        });
+    }
 }
 
 // Update date display
@@ -151,7 +170,10 @@ function updateDateDisplay() {
     const date = currentDate.getDate();
     const month = months[currentDate.getMonth()];
     
-    document.getElementById('currentDate').textContent = `${dayName}, ${date} ${month}`;
+    const currentDateElement = document.getElementById('currentDate');
+    if (currentDateElement) {
+        currentDateElement.textContent = `${dayName}, ${date} ${month}`;
+    }
 }
 
 // Show error message
@@ -159,12 +181,31 @@ function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
     errorDiv.textContent = message;
-    document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.title'));
+    
+    const container = document.querySelector('.container');
+    const title = document.querySelector('.title');
+    
+    if (container && title) {
+        container.insertBefore(errorDiv, title);
+    }
 }
 
 // Show doctors error
 function showDoctorsError(message) {
-    document.getElementById('loadingDoctors').style.display = 'none';
-    document.getElementById('errorDoctors').textContent = message;
-    document.getElementById('errorDoctors').style.display = 'block';
+    const loadingDoctors = document.getElementById('loadingDoctors');
+    const errorDoctors = document.getElementById('errorDoctors');
+    
+    if (loadingDoctors) loadingDoctors.style.display = 'none';
+    if (errorDoctors) {
+        errorDoctors.textContent = message;
+        errorDoctors.style.display = 'block';
+    }
 }
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if hospital data is available from global scope
+    if (typeof window.hospitalDetailData !== 'undefined' && typeof window.hospitalDetailId !== 'undefined') {
+        initializeHospitalDetail(window.hospitalDetailData, window.hospitalDetailId);
+    }
+});
