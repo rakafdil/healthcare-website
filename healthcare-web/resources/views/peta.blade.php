@@ -12,7 +12,6 @@
 
         <form action="{{ route('rumah-sakit') }}" method="GET">
             @csrf
-            <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
             <button type="submit" class="bg-white text-blue-600 font-semibold px-10 py-2 rounded-3xl">
                 Pencarian
             </button>

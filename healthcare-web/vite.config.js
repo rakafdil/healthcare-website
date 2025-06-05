@@ -10,6 +10,8 @@ export default defineConfig({
                 'resources/routes/**',
                 'routes/**',
                 'resources/views/**',
+                'resources/js/**',
+                'resources/css/**',
             ],
         }),
         tailwindcss(),

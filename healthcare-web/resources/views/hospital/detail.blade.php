@@ -255,17 +255,6 @@
 </head>
 
 <body>
-    {{-- <div class="container">
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <img id="hospitalHeaderImage" src="{{ asset('assets/foto fitur rumah sakit.png') }}" alt="Gambar Rumah Sakit" class="hero-image">
-            <div class="hero-text">
-                <h1>RUMAH SAKIT</h1>
-                <h2>KETERSEDIAAN KAMAR</h2>
-                <a href="{{ route('peta', ['provinsi' => request('provinsi', 'jawa_barat'), 'kabupaten' => request('kabupaten', 'Bandung'), 'kota' => request('kota', 'Bandung')]) }}" class="btn">Kembali ke Peta</a>
-            </div>
-        </div> --}}
-
         <h2 class="title">Detail Rumah Sakit</h2>
 
         <!-- Hospital Info - Menggunakan data dari database -->
@@ -431,7 +420,7 @@
 
         // Update date display
         function updateDateDisplay() {
-            const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
             
             const dayName = days[currentDate.getDay()];
