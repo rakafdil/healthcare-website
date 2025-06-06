@@ -27,6 +27,19 @@
             <hr class="flex-grow border-gray-300">
         </div>
 
+        @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        {{ $errors->first() }}
+    </div>
+@endif
+
+        
         <form method="POST" action="{{ route('masuk') }}">
             <input type="hidden" name="redirect_to" value="{{ request('redirect_to') }}">
             @csrf
