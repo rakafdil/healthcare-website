@@ -11,56 +11,28 @@
 </head>
 
 <body class="flex flex-col min-h-screen overflow-x-hidden">
-    <div class="md:hidden">
-        <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            id="mobile-menu-button">
-            <span class="sr-only">Open main menu</span>
-            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-        </button>
-    </div>
-    <div class="flex-grow">
-        <!-- saya tambahkan id navbar untuk keperluan snap-scroll page home-->
-        <nav id="navbar" class="bg-white top-0 z-50 sticky">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-between">
-                    <!-- Kiri: Logo + Menu -->
-                    <div class="flex items-center space-x-10">
-                        <div class="hidden md:block">
-                            <div class="flex items-baseline gap-x-4">
-                                <a href="/" class="flex items-center gap-x-4 self-center">
-                                    <div class="shrink-0">
-                                        <img class="h-8" src="{{ asset('assets/Logo.png') }}" alt="Your Company">
-                                    </div>
-                                    <div class="text-1xl font-bold" style="color: #FF0763;">
-                                        HEALTH CARE
-                                    </div>
-                                </a>
-                            </div>
+    <nav class="sticky top-0 z-50 bg-white">
+        <div class="block md:hidden">
+            <button type="button"
+                class="inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 gap-x-2"
+                id="mobile-menu-button">
+                <span class="sr-only">Open main menu</span>
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    aria-hidden="true" data-slot="icon">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <a href="#" class="-m-1.5 p-1.5">
+                    <div class="flex items-baseline gap-x-2">
+                        <div class="shrink-0">
+                            <img class="h-8" src="{{ asset('assets/Logo.png') }}" alt="Your Company">
+                        </div>
+                        <div class="text-1xl font-bold self-center" style="color: #FF0763;">
+                            HEALTH CARE
                         </div>
                     </div>
-
-                    <div class="hidden md:flex gap-x-8">
-                        <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')"> Sistem Pakar </x-nav-link>
-                        <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')"> Rumah Sakit </x-nav-link>
-                        <x-nav-link href="/blog" :active="request()->is('blog') || request()->is('blog/*')"> Blog </x-nav-link>
-                        @auth
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit"
-                                    class="text-black hover:bg-gray-700 hover:text-white self-center rounded-md px-3 py-2 text-sm font-medium">
-                                    Keluar
-                                </button>
-                            </form>
-                        @else
-                            <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')"> Masuk </x-nav-link>
-                        @endauth
-                    </div>
-                </div>
-            </div>
-
+                </a>
+            </button>
             <!-- Mobile menu, show/hide based on menu state. -->
             <div class="md:hidden hidden" role="dialog" aria-modal="true" id="mobile-menu">
                 <!-- Background backdrop, show/hide based on slide-over state. -->
@@ -69,8 +41,14 @@
                     class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div class="flex items-center justify-between">
                         <a href="#" class="-m-1.5 p-1.5">
-                            <span class="sr-only">Your Company</span>
-                            <img class="h-8 w-auto" src="{{ asset('assets/logo.png') }}" alt="">
+                            <div class="flex items-baseline gap-x-4">
+                                <div class="shrink-0">
+                                    <img class="h-8" src="{{ asset('assets/Logo.png') }}" alt="Your Company">
+                                </div>
+                                <div class="text-1xl font-bold self-center" style="color: #FF0763;">
+                                    HEALTH CARE
+                                </div>
+                            </div>
                         </a>
                         <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" id="mobile-close-button">
                             <span class="sr-only">Close menu</span>
@@ -108,8 +86,47 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
+        <div class="hidden md:block flex-grow">
+            <!-- saya tambahkan id navbar untuk keperluan snap-scroll page home-->
+            <nav id="navbar" class="sticky bg-white top-0 z-50">
+                <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16 items-center justify-between">
+                        <!-- Kiri: Logo + Menu -->
+                        <div class="flex items-center space-x-10">
+                            <div class="hidden md:block">
+                                <div class="flex items-baseline gap-x-4">
+                                    <a href="/" class="flex items-center gap-x-4 self-center">
+                                        <div class="shrink-0">
+                                            <img class="h-8" src="{{ asset('assets/Logo.png') }}" alt="Your Company">
+                                        </div>
+                                        <div class="text-1xl font-bold" style="color: #FF0763;">
+                                            HEALTH CARE
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="hidden md:flex gap-x-8">
+                            <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')"> Sistem Pakar </x-nav-link>
+                            <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')"> Rumah Sakit </x-nav-link>
+                            <x-nav-link href="/blog" :active="request()->is('blog') || request()->is('blog/*')"> Blog </x-nav-link>
+                            @auth
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                        class="text-black hover:bg-gray-700 hover:text-white self-center rounded-md px-3 py-2 text-sm font-medium">
+                                        Keluar
+                                    </button>
+                                </form>
+                            @else
+                                <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')"> Masuk </x-nav-link>
+                            @endauth
+                        </div>
+                    </div>
+                </div>
+        </div>
     </nav>
 
     <main>
