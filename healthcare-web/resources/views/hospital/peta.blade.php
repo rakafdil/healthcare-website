@@ -10,95 +10,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #ffffff;
-            /* font-family: Arial, sans-serif; */
-        }
-
-        .hero-section {
-            position: relative;
-            height: 100vh;
-            width: 99vw;
-            margin: 0;
-            margin-bottom: 20px;
-            background-color: #555;
-            display: flex;
-            align-items: center;
-            color: white;
-            padding: 0;
-            overflow: hidden;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .hero-text {
-            position: relative;
-            z-index: 2;
-            padding-left: 50px;
-        }
-
-        .hero-section h1 {
-            font-size: 35px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .hero-section h2 {
-            font-size: 35px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .hero-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: white;
-            color: #333;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            margin-top: 15px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
         .container {
             max-width: 1140px;
             margin: 0 auto;
@@ -342,14 +253,6 @@
 </head>
 
 <body>
-    {{-- <div class="hero-section">
-        <img src="assets/foto fitur rumah sakit.png" alt="Rumah Sakit" class="hero-image">
-        <div class="hero-text">
-            <h1>RUMAH SAKIT</h1>
-            <h2>KETERSEDIAAN KAMAR</h2>
-            <a href="/rumah-sakit" class="btn">Pencarian</a>
-        </div>
-    </div> --}}
 
     <div class="container">
         <h2 class="title">Peta Ketersediaan Rumah Sakit</h2>
