@@ -11,9 +11,19 @@
 </head>
 
 <body class="flex flex-col min-h-screen overflow-x-hidden">
+    <div class="md:hidden">
+        <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            id="mobile-menu-button">
+            <span class="sr-only">Open main menu</span>
+            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true" data-slot="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+        </button>
+    </div>
     <div class="flex-grow">
         <!-- saya tambahkan id navbar untuk keperluan snap-scroll page home-->
-        <nav id="navbar" class="bg-white sticky top-0 z-50">
+        <nav id="navbar" class="bg-white top-0 z-50 sticky">
             <div class="mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <!-- Kiri: Logo + Menu -->
@@ -52,30 +62,60 @@
             </div>
 
             <!-- Mobile menu, show/hide based on menu state. -->
-            <div class="md:hidden" id="mobile-menu">
-                <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                    <!-- Current: "bg-gray-900 text-white", Default: "text-black hover:bg-gray-700 hover:text-white" -->
-                    <a href="/"
-                        class="{{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium"
-                        aria-current="page">Home</a>
-                    <a href="/sistem-pakar"
-                        class="{{ request()->is('sistem-pakar') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Sistem
-                        Pakar</a>
-                    <a href="/rumah-sakit"
-                        class="{{ request()->is('rumah-sakit') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Rumah
-                        Sakit</a>
-                    <a href="/blog"
-                        class=" {{ request()->is('blog') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Blog</a>
-                    <a href="/masuk"
-                        class="{{ request()->is('masuk') ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white' }} block rounded-md px-3 py-2 text-base font-medium ">Masuk</a>
+            <div class="md:hidden hidden" role="dialog" aria-modal="true" id="mobile-menu">
+                <!-- Background backdrop, show/hide based on slide-over state. -->
+                <div class="fixed inset-0 z-50 bg-black bg-opacity-25" id="mobile-backdrop"></div>
+                <div
+                    class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="-m-1.5 p-1.5">
+                            <span class="sr-only">Your Company</span>
+                            <img class="h-8 w-auto" src="{{ asset('assets/logo.png') }}" alt="">
+                        </a>
+                        <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" id="mobile-close-button">
+                            <span class="sr-only">Close menu</span>
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" aria-hidden="true" data-slot="icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-6 flow-root">
+                        <div class="-my-6 divide-y divide-gray-500/5">
+                            <div class="space-y-2 py-6">
+
+                                <x-nav-link href="/" :active="request()->is('') || request()->is('/*')" :mobile="true"> Home
+                                </x-nav-link>
+                                <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')" :mobile="true"> Sistem Pakar
+                                </x-nav-link>
+                                <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')" :mobile="true"> Rumah Sakit
+                                </x-nav-link>
+                                <x-nav-link href="/blog" :active="request()->is('blog') || request()->is('blog/*')" :mobile="true"> Blog </x-nav-link>
+                            </div>
+                        </div>
+                        <div class="py-6">
+
+                            @auth
+                                <x-nav-link href="{{ route('logout') }}" :mobile="true"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Keluar
+                                </x-nav-link>
+                            @else
+                                <x-nav-link href="/masuk" :active="request()->is('masuk') || request()->is('masuk/*')" :mobile="true"> Masuk </x-nav-link>
+                            @endauth
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
+    </div>
 
-        <main>
-            {{ $slot }}
+    </nav>
 
-        </main>
+    <main>
+        {{ $slot }}
+
+    </main>
 
     </div>
 
@@ -112,7 +152,34 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileCloseButton = document.getElementById('mobile-close-button');
+            const mobileBackdrop = document.getElementById('mobile-backdrop');
 
+            // Open mobile menu
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.remove('hidden');
+            });
+
+            // Close mobile menu
+            function closeMobileMenu() {
+                mobileMenu.classList.add('hidden');
+            }
+
+            mobileCloseButton.addEventListener('click', closeMobileMenu);
+            mobileBackdrop.addEventListener('click', closeMobileMenu);
+
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
