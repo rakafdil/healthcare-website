@@ -7,96 +7,11 @@
     <title>Detail Rumah Sakit</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #ffffff;
-            /* font-family: Arial, sans-serif; */
-        }
-
-        .container {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
         .title {
             text-align: center;
             margin: 20px 0;
             font-size: 24px;
             font-weight: bold;
-        }
-
-        .hero-section {
-            position: relative;
-            height: 100vh;
-            width: 99vw;
-            margin: 0;
-            margin-bottom: 20px;
-            margin-top: -25px;
-            background-color: #555;
-            display: flex;
-            align-items: center;
-            color: white;
-            padding: 0;
-            overflow: hidden;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .hero-section img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .hero-text {
-            position: absolute;
-            top: 50%;
-            left: 50px;
-            transform: translateY(-50%);
-            color: white;
-            z-index: 2;
-        }
-
-        .hero-text h1 {
-            font-size: 35px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .hero-text h2 {
-            font-size: 35px;
-            font-weight: bold;
-            text-transform: uppercase;
         }
 
         .hospital-info {
