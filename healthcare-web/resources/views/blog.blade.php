@@ -3,7 +3,7 @@
         Blog
     </x-slot>
 
-    <x-blog-hero />
+    <x-hero.blog />
 
     <div class="w-full h-screen flex flex-col items-center ">
         <div>

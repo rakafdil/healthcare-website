@@ -3,7 +3,7 @@
         Baca Blog
     </x-slot>
 
-    <x-blog-hero />
+    <x-hero.blog />
 
     <div class="text-center items-center max-w-3xl mx-auto px-4 py-8">
         <div class="relative space-y-5 top-8 flex flex-col items-center">

@@ -52,7 +52,7 @@ Route::get('/blog', function () {
     return view('blog');
 });
 
-Route::get('/about', function () {
+Route::get('/tentang-kita', function () {
     return view('about');
 });
 
