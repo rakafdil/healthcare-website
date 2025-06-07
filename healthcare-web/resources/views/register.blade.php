@@ -31,9 +31,14 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium">Email</label>
-                <input type="email" name="email" class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
-            </div>
+    <label class="block text-sm font-medium">Email</label>
+    <input type="email" name="email" value="{{ old('email') }}"
+        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
+
+    @if ($errors->has('email'))
+        <p class="text-sm text-red-600 mt-1">{{ $errors->first('email') }}</p>
+    @endif
+</div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium">Password</label>

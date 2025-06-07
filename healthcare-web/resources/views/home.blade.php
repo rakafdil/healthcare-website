@@ -16,7 +16,7 @@
                     <span>DI </span><span class="text-blue-500 mr-[5%]">HEALTHCARE</span>
                 </h1>
                 <div class="w-[12%] h-[3px] bg-white mt-6 ml-auto mr-[23%]"></div>
-                <a href="#tentang-kita"
+                <a href="tentang-kita"
                     class="mt-6 mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-screen-xl ml-auto hover:bg-blue-100 transition">
                     Tentang Kita
                 </a>

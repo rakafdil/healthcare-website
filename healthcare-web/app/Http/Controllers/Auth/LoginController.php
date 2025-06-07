@@ -48,8 +48,6 @@ class LoginController extends Controller
             return redirect('/home');
         }
 
-        return back()->withErrors([
-            'login' => 'Login gagal. Cek email/username dan password.',
-        ])->withInput();
+        return back()->with('error', 'Login gagal. Cek email/username dan password.')->withInput();
     }
 }

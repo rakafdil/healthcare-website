@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnosis - Rumah Sakit Terdekat</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
+<div class="bg-gray-50">
     <div class="container mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row gap-6">
             <!-- Kondisi List (Left Panel) -->
@@ -14,18 +6,14 @@
                 <h2 class="text-sm font-semibold mb-4">Kondisi-Kondisi yang Memungkinkan</h2>
                 <div id="kondisiList" class="space-y-3">
                     <!-- Sample diagnosis results -->
-                    <button class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-200 font-semibold" 
-                            data-index="0" onclick="selectKondisi(0)">
-                        Flu (85.2%)
-                    </button>
-                    <button class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-100" 
-                            data-index="1" onclick="selectKondisi(1)">
-                        Demam (72.8%)
-                    </button>
-                    <button class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-100" 
-                            data-index="2" onclick="selectKondisi(2)">
-                        Alergi (45.3%)
-                    </button>
+                    @foreach ($datas as $data)
+                        <button
+                            class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-200 font-semibold"
+                            data-index="{{ $loop->index }}" onclick="selectKondisi({{ $loop->index }})">
+                            {{ $data->name }} ({{ $data->probability }}%)
+                        </button>
+                    @endforeach
+
                 </div>
             </div>
 
@@ -37,10 +25,13 @@
                 <!-- Centered tabs -->
                 <div class="flex justify-center mb-6 border-b">
                     <div class="flex gap-8">
-                        <a href="#" class="px-4 py-2 border-b-2 border-blue-500 text-blue-500 transition-colors duration-200 tab-link"
+                        <a href="#"
+                            class="px-4 py-2 border-b-2 border-blue-500 text-blue-500 transition-colors duration-200 tab-link"
                             id="blogTab" data-tab="blog" onclick="switchTab('blog'); return false;">Blog</a>
-                        <a href="#" class="px-4 py-2 border-b-2 border-transparent text-gray-500 transition-colors duration-200 tab-link"
-                            id="rumahSakitTab" data-tab="hospital" onclick="switchTab('hospital'); return false;">Rumah Sakit</a>
+                        <a href="#"
+                            class="px-4 py-2 border-b-2 border-transparent text-gray-500 transition-colors duration-200 tab-link"
+                            id="rumahSakitTab" data-tab="hospital" onclick="switchTab('hospital'); return false;">Rumah
+                            Sakit</a>
                     </div>
                 </div>
 
@@ -56,15 +47,20 @@
                 <!-- Blog Content -->
                 <div id="blogContent" class="grid grid-cols-1 gap-6">
                     <!-- Sample blog articles -->
-                    <div class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div
+                        class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                         <div class="flex flex-col md:flex-row">
                             <div class="w-full md:w-1/3 h-48">
-                                <img src="https://via.placeholder.com/300x200" alt="Article image" class="w-full h-full object-cover">
+                                <img src="https://via.placeholder.com/300x200" alt="Article image"
+                                    class="w-full h-full object-cover">
                             </div>
                             <div class="w-full md:w-2/3 p-4">
                                 <h3 class="font-semibold mb-2">5 Langkah Mudah Mengatasi Flu</h3>
-                                <p class="text-sm text-gray-600 mb-4">Panduan lengkap untuk mengatasi gejala flu dengan cepat dan efektif.</p>
-                                <a href="#" class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">Baca Artikel</a>
+                                <p class="text-sm text-gray-600 mb-4">Panduan lengkap untuk mengatasi gejala flu dengan
+                                    cepat dan efektif.</p>
+                                <a href="#"
+                                    class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">Baca
+                                    Artikel</a>
                             </div>
                         </div>
                     </div>
@@ -90,7 +86,7 @@
                             <div class="text-sm text-gray-600">Tingkat Hunian</div>
                         </div>
                     </div>
-                    
+
                     <div id="hospitalList" class="space-y-4">
                         <!-- Hospital data will be populated here -->
                     </div>
@@ -111,17 +107,24 @@
         let hospitals = [];
 
         // Sample diagnosis data
-        const diagnosisResults = [
-            { disease: 'Flu', probability: 0.852 },
-            { disease: 'Demam', probability: 0.728 },
-            { disease: 'Alergi', probability: 0.453 }
+        const diagnosisResults = [{
+                disease: 'Flu',
+                probability: 0.852
+            },
+            {
+                disease: 'Demam',
+                probability: 0.728
+            },
+            {
+                disease: 'Alergi',
+                probability: 0.453
+            }
         ];
 
         // Sample blog data for each condition
         const kondisiData = {
             0: {
-                articles: [
-                    {
+                articles: [{
                         title: "5 Langkah Mudah Mengatasi Flu",
                         excerpt: "Panduan lengkap untuk mengatasi gejala flu dengan cepat dan efektif.",
                         image: "https://via.placeholder.com/300x200"
@@ -134,8 +137,7 @@
                 ]
             },
             1: {
-                articles: [
-                    {
+                articles: [{
                         title: "Cara Menurunkan Demam Secara Alami",
                         excerpt: "Metode alami untuk menurunkan demam tanpa obat-obatan kimia.",
                         image: "https://via.placeholder.com/300x200"
@@ -148,8 +150,7 @@
                 ]
             },
             2: {
-                articles: [
-                    {
+                articles: [{
                         title: "Mengenal Berbagai Jenis Alergi",
                         excerpt: "Panduan lengkap tentang alergi makanan, udara, dan kulit.",
                         image: "https://via.placeholder.com/300x200"
@@ -188,7 +189,7 @@
                     },
                     (error) => {
                         let errorMessage = 'Gagal mendapatkan lokasi: ';
-                        switch(error.code) {
+                        switch (error.code) {
                             case error.PERMISSION_DENIED:
                                 errorMessage += 'Akses lokasi ditolak';
                                 break;
@@ -214,11 +215,11 @@
             try {
                 const response = await fetch(`/api/hospitals/nearby?lat=${lat}&lng=${lng}&radius=${radius}&limit=10`);
                 const data = await response.json();
-                
+
                 if (!data.success) {
                     throw new Error(data.message || 'Gagal mengambil data rumah sakit');
                 }
-                
+
                 return data.results || [];
             } catch (error) {
                 console.error('Error fetching hospitals:', error);
@@ -231,11 +232,11 @@
             try {
                 const response = await fetch(`/api/hospitals/stats?lat=${lat}&lng=${lng}&radius=${radius}`);
                 const data = await response.json();
-                
+
                 if (!data.success) {
                     throw new Error(data.message || 'Gagal mengambil statistik rumah sakit');
                 }
-                
+
                 return data.stats || {};
             } catch (error) {
                 console.error('Error fetching hospital stats:', error);
@@ -266,14 +267,15 @@
 
             hospitalData.forEach(hospital => {
                 const hospitalCard = document.createElement('div');
-                hospitalCard.className = 'border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white';
-                
+                hospitalCard.className =
+                    'border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white';
+
                 // Determine availability status and color
                 let availabilityColor = 'gray';
                 let availabilityText = 'Tidak diketahui';
-                
+
                 if (hospital.availability) {
-                    switch(hospital.availability.status) {
+                    switch (hospital.availability.status) {
                         case 'high':
                             availabilityColor = 'green';
                             availabilityText = `${hospital.availability.available} tersedia`;
@@ -320,11 +322,11 @@
                                 </span>
                             </div>
                             <div class="flex gap-2">
-                                <a href="/hospital/${hospital.id}" 
+                                <a href="/hospital/${hospital.id}"
                                    class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-sm">
                                     Lihat Detail
                                 </a>
-                                <button onclick="showDirections(${hospital.geometry.location.lat}, ${hospital.geometry.location.lng})" 
+                                <button onclick="showDirections(${hospital.geometry.location.lat}, ${hospital.geometry.location.lng})"
                                         class="inline-block px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200 text-sm">
                                     Petunjuk Arah
                                 </button>
@@ -332,7 +334,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 hospitalList.appendChild(hospitalCard);
             });
         }
@@ -347,8 +349,9 @@
             document.getElementById('totalHospitals').textContent = stats.total_hospitals || 0;
             document.getElementById('averageRating').textContent = stats.average_rating || 'N/A';
             document.getElementById('availableBeds').textContent = stats.total_available_beds || 0;
-            document.getElementById('occupancyRate').textContent = stats.occupancy_rate ? stats.occupancy_rate + '%' : 'N/A';
-            
+            document.getElementById('occupancyRate').textContent = stats.occupancy_rate ? stats.occupancy_rate + '%' :
+                'N/A';
+
             document.getElementById('hospitalStats').classList.remove('hidden');
         }
 
@@ -356,14 +359,14 @@
         async function loadHospitalData() {
             const loadingIndicator = document.getElementById('loadingIndicator');
             const locationStatus = document.getElementById('locationStatus');
-            
+
             try {
                 loadingIndicator.classList.remove('hidden');
                 locationStatus.classList.add('hidden');
-                
+
                 // Get user location
                 userLocation = await getUserLocation();
-                
+
                 // Show location success message
                 locationStatus.innerHTML = `
                     <div class="flex items-center text-green-700 bg-green-100">
@@ -374,19 +377,19 @@
                     </div>
                 `;
                 locationStatus.classList.remove('hidden');
-                
+
                 // Fetch hospitals and stats
                 const [hospitalData, stats] = await Promise.all([
                     fetchNearbyHospitals(userLocation.lat, userLocation.lng),
                     fetchHospitalStats(userLocation.lat, userLocation.lng)
                 ]);
-                
+
                 hospitals = hospitalData;
-                
+
                 // Display results
                 displayHospitals(hospitals);
                 displayHospitalStats(stats);
-                
+
                 // Update location status
                 locationStatus.innerHTML = `
                     <div class="flex items-center text-green-700 bg-green-100">
@@ -396,10 +399,10 @@
                         Ditemukan ${hospitals.length} rumah sakit dalam radius 10 km
                     </div>
                 `;
-                
+
             } catch (error) {
                 console.error('Error loading hospital data:', error);
-                
+
                 // Show error message
                 locationStatus.innerHTML = `
                     <div class="flex items-center text-red-700 bg-red-100">
@@ -410,7 +413,7 @@
                     </div>
                 `;
                 locationStatus.classList.remove('hidden');
-                
+
                 // Load default hospitals (without location)
                 try {
                     const defaultHospitals = await fetchNearbyHospitals(-6.2088, 106.8456); // Jakarta coordinates
@@ -461,7 +464,7 @@
         // Function to switch between tabs
         function switchTab(tab) {
             currentTab = tab;
-            
+
             // Update tab styles
             if (tab === 'blog') {
                 document.getElementById('blogTab').classList.add('border-blue-500', 'text-blue-500');
@@ -481,7 +484,7 @@
                 document.getElementById('blogContent').classList.add('hidden');
                 document.getElementById('rumahSakitContent').classList.remove('hidden');
                 document.getElementById('seeMoreLink').href = '/rumah-sakit';
-                
+
                 // Load hospital data when hospital tab is first opened
                 if (hospitals.length === 0) {
                     loadHospitalData();
@@ -498,13 +501,14 @@
                 // Populate blog content
                 const blogContent = document.getElementById('blogContent');
                 const kondisi = kondisiData[currentKondisi];
-                
+
                 if (kondisi && kondisi.articles) {
                     blogContent.innerHTML = '';
-                    
+
                     kondisi.articles.forEach(article => {
                         const articleCard = document.createElement('div');
-                        articleCard.className = 'border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300';
+                        articleCard.className =
+                            'border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300';
                         articleCard.innerHTML = `
                             <div class="flex flex-col md:flex-row">
                                 <div class="w-full md:w-1/3 h-48">
@@ -529,5 +533,3 @@
             updateContent();
         });
     </script>
-</body>
-</html>

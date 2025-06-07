@@ -10,6 +10,7 @@ use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
@@ -52,7 +53,7 @@ Route::get('/blog', function () {
     return view('blog');
 });
 
-Route::get('/about', function () {
+Route::get('/tentang-kita', function () {
     return view('about');
 });
 
@@ -70,6 +71,8 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::get('/lupa-password', function () {
     return view('auth.lupa-password');
 })->name('password.request');
+Route::post('/lupa-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+
 
 // Route register menggunakan RegisterController
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

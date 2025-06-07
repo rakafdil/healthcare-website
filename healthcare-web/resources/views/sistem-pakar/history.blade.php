@@ -1,5 +1,5 @@
 <x-layout title="Healthcare Alomany - Riwayat Sistem Pakar">
-    <x-sistem-pakar-hero />
+    <x-hero.sistem-pakar />
 
     <div class="px-4 md:px-8 lg:px-20 py-8">
         <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
@@ -127,7 +127,8 @@
                     @foreach ($results as $result)
                         {{-- @dd($result) --}}
                         @if ($result->probabilitas > 0)
-                            <x-diagnosis-list :probability="$result->probabilitas" :disease="$result->nama_penyakit" :description="$result->deskripsi" :precautions="$result->precautions" />
+                            <x-sistem-pakar.diagnosis-list :probability="$result->probabilitas" :disease="$result->nama_penyakit" :description="$result->deskripsi"
+                                :precautions="$result->precautions" />
                         @endif
                     @endforeach
                 </div>

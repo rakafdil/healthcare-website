@@ -1,14 +1,14 @@
 {{-- resources/views/symptoms-page.blade.php --}}
 
 <x-layout title="Healthcare Alomany - Melakukan Diagnosa - Sistem Pakar">
-    <x-sistem-pakar-hero />
+    <x-hero.sistem-pakar />
 
     <div class="flex justify-center">
         <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
     </div>
     {{-- <pre>{{ print_r(session()->all(), true) }}</pre> --}}
 
-    <x-symptoms-steps :current_step="$step" :total_steps="5" />
+    <x-sistem-pakar.symptoms-steps :current_step="$step" :total_steps="5" />
     <div class="px-20 py-8 text-2xl">
 
         @if ($step == 1)
@@ -140,7 +140,7 @@
                 document.getElementById('backBtn').addEventListener('click', function() {
                     const urlParams = new URLSearchParams(window.location.search);
                     let step = parseInt(urlParams.get('step') || '1');
-                    step = Math.max(1, step - 1); // biar gak bisa kurang dari 1
+                    step = Math.max(1, step - 1);
 
                     const baseUrl = window.location.origin + window.location.pathname;
                     window.location.href = `${baseUrl}?step=${step}`;
@@ -281,17 +281,12 @@
 
             @foreach (session('diagnosis.result') as $item)
                 @if ($item->probability > 0)
-                    <x-diagnosis-list :probability="$item->probability" :disease="$item->disease" :description="$item->description" :precautions="$item->precautions" />
+                    <x-sistem-pakar.diagnosis-list :probability="$item->probability" :disease="$item->disease" :description="$item->description"
+                        :precautions="$item->precautions" />
                 @endif
             @endforeach
-        @elseif($step == 4)
-            {{-- @php
-                $diagnosis = session('diagnosis.result');
-                dd($diagnosis[0]);
-            @endphp --}}
-            <x-diagnosis-last step="4" />
-        @elseif($step == 5)
-            <x-diagnosis-last step="5" />
+        @elseif($step == 4 || $step == 5)
+            <x-sistem-pakar.diagnosis-last :step="$step" />
         @endif
 
         @if ($step == 3 || $step == 4 || $step == 5)
