@@ -9,169 +9,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3498db',
+                        primaryHover: '#2980b9',
+                        success: '#27ae60',
+                        warning: '#f39c12',
+                        danger: '#e74c3c',
+                        disabled: '#bdc3c7',
+                        dark: '#2c3e50',
+                        lightDark: '#7f8c8d',
+                        lightGray: '#f8f8f8',
+                        borderGray: '#ddd',
+                        availabilityHigh: '#27ae60',
+                        availabilityMedium: '#f39c12',
+                        availabilityLow: '#e74c3c',
+                        availabilityFull: '#95a5a6',
+                        availabilityUnknown: '#bdc3c7',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        .container {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .title {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .map-container {
-            width: 100%;
-            height: 400px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            position: relative;
-            z-index: 1;
-        }
-
-        .location-controls {
-            margin-top: 10px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .location-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 5px;
-        }
-
-        .location-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .location-btn:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
-
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        .recommendations-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table th,
-        table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            font-size: 16px;
-        }
-
-        .availability-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .availability-high { background-color: #27ae60; }
-        .availability-medium { background-color: #f39c12; }
-        .availability-low { background-color: #e74c3c; }
-        .availability-full { background-color: #95a5a6; }
-        .availability-unknown { background-color: #bdc3c7; }
-
-        .stats-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .stat-item {
-            background: white;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .hero-section {
-                height: 450px;
-            }
-
-            .hero-section h1,
-            .hero-section h2 {
-                font-size: 28px;
-            }
-
-            .hero-text {
-                padding-left: 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-section {
-                height: 350px;
-            }
-
-            .hero-section h1,
-            .hero-section h2 {
-                font-size: 22px;
-            }
-
-            .hero-text {
-                padding-left: 20px;
-            }
-        }
-
         .hospital-marker {
             width: 32px;
             height: 32px;
@@ -212,106 +76,66 @@
         .leaflet-marker-pane .user-marker {
             z-index: 1000 !important;
         }
-        
-        .error-message {
-            background-color: #ffebee;
-            color: #c62828;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 10px 0;
-            border-left: 4px solid #f44336;
-        }
-        
-        .success-message {
-            background-color: #e8f5e8;
-            color: #2e7d32;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 10px 0;
-            border-left: 4px solid #4caf50;
-        }
-
-        .location-selector {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .location-selector select {
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            min-width: 200px;
-        }
-
-        .manual-location-btn {
-            background-color: #2ecc71;
-        }
     </style>
 </head>
 
-<body>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-5 max-w-6xl">
+        <h2 class="text-2xl font-bold text-center my-5">Peta Ketersediaan Rumah Sakit</h2>
+        <p class="text-center">Lokasi: <span id="selectedLocation" class="font-medium">Memuat lokasi...</span></p>
 
-    <div class="container">
-        <h2 class="title">Peta Ketersediaan Rumah Sakit</h2>
-        <p class="text-center">Lokasi: <span id="selectedLocation">Memuat lokasi...</span></p>
-
-        <div id="locationSelector" class="location-selector" style="display: none;">
-            <select id="provinsiSelect">
+        <div id="locationSelector" class="flex justify-center my-5 gap-2 flex-wrap hidden">
+            <select id="provinsiSelect" class="px-3 py-2 border rounded">
                 <option value="">Pilih Provinsi</option>
             </select>
-            <select id="kabupatenSelect" disabled>
+            <select id="kabupatenSelect" class="px-3 py-2 border rounded" disabled>
                 <option value="">Pilih Kabupaten/Kota</option>
             </select>
-            <select id="kotaSelect" disabled>
+            <select id="kotaSelect" class="px-3 py-2 border rounded" disabled>
                 <option value="">Pilih Kecamatan/Kota</option>
             </select>
-            <button id="applyLocationBtn" class="location-btn manual-location-btn" disabled>
-                <i class="fas fa-map-marker-alt"></i> Terapkan Lokasi
+            <button id="applyLocationBtn" class="bg-success text-white px-4 py-2 rounded disabled:bg-disabled disabled:cursor-not-allowed" disabled>
+                <i class="fas fa-map-marker-alt mr-1"></i> Terapkan Lokasi
             </button>
         </div>
 
-        <div class="map-container" id="map">
-            <!-- Map will be loaded here -->
-        </div>
+        <div class="w-full h-96 mb-4 border border-gray-300 relative z-10" id="map"></div>
 
-        <div class="location-controls">
-            <button id="getLocationBtn" class="location-btn">
-                <i class="fas fa-location-dot"></i> Gunakan Lokasi Saya
+        <div class="flex justify-center my-3">
+            <button id="getLocationBtn" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded mx-1">
+                <i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saya
             </button>
-            <button id="refreshDataBtn" class="location-btn" style="display: none;">
-                <i class="fas fa-refresh"></i> Refresh Data
+            <button id="refreshDataBtn" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded mx-1 hidden">
+                <i class="fas fa-refresh mr-1"></i> Refresh Data
             </button>
-            <button id="changeLocationBtn" class="location-btn">
-                <i class="fas fa-map-marker-alt"></i> Pilih Lokasi Lain
+            <button id="changeLocationBtn" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded mx-1">
+                <i class="fas fa-map-marker-alt mr-1"></i> Pilih Lokasi Lain
             </button>
         </div>
 
-        <div id="statsContainer" class="stats-container" style="display: none;">
-            <h4>Statistik Area</h4>
-            <div class="stats-grid" id="statsGrid">
-                <!-- Stats akan ditampilkan di sini -->
-            </div>
+        <div id="statsContainer" class="bg-gray-50 p-4 rounded-lg my-5 hidden">
+            <h4 class="text-center font-bold mb-3">Statistik Area</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="statsGrid"></div>
         </div>
 
-        <h3 class="recommendations-title">Rekomendasi Berdasarkan Jarak dan Ketersediaan</h3>
+        <h3 class="text-lg font-bold text-center my-5">Rekomendasi Berdasarkan Jarak dan Ketersediaan</h3>
 
-        <div class="table-container">
-            <table>
+        <div class="w-full overflow-x-auto">
+            <table class="w-full">
                 <thead>
-                    <tr>
-                        <th>Nama Rumah Sakit</th>
-                        <th>Jarak dari Anda</th>
-                        <th>Kapasitas</th>
-                        <th>Rating</th>
-                        <th></th>
+                    <tr class="bg-gray-50">
+                        <th class="px-4 py-3 text-left">Nama Rumah Sakit</th>
+                        <th class="px-4 py-3 text-left">Jarak dari Anda</th>
+                        <th class="px-4 py-3 text-left">Kapasitas</th>
+                        <th class="px-4 py-3 text-left">Rating</th>
+                        <th class="px-4 py-3 text-left"></th>
                     </tr>
                 </thead>
                 <tbody id="hospitalList">
                     <tr>
-                        <td colspan="5" class="loading">Memuat data rumah sakit...</td>
+                        <td colspan="5" class="px-4 py-5 text-center">
+                            <i class="fas fa-spinner fa-spin mr-2"></i> Memuat data rumah sakit...
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -828,7 +652,7 @@
                             <i class="fas fa-hospital" style="font-size: 48px; color: #bdc3c7; margin-bottom: 15px;"></i><br>
                             <strong>Tidak ada rumah sakit ditemukan</strong><br>
                             <span style="color: #7f8c8d;">Coba perluas radius pencarian atau ubah lokasi</span>
-                        </td>
+                        </td>x
                     </tr>
                 `;
             }

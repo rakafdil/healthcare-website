@@ -5,55 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rumah Sakit - Ketersediaan Kamar</title>
-    <style>
-        .container {
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .title {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            display: block;
-            margin: 0 auto;
-            width: 150px;
-            text-align: center;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-50 min-h-screen">
 
-    <div class="container">
-        <h2 class="title">Pilih Lokasi Rumah Sakit</h2>
+    <div class="container mx-auto p-5 max-w-lg">
+        <h2 class="text-center text-xl font-bold text-gray-800 my-5">
+            Pilih Lokasi Rumah Sakit
+        </h2>
 
-        <form id="locationForm" action="/peta" method="GET">
-            <div class="form-group">
-                <select class="form-control" id="provinsi" name="provinsi">
+        <form id="locationForm" action="/peta" method="GET" class="space-y-5">
+            <div>
+                <select 
+                    class="w-full p-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" 
+                    id="provinsi" 
+                    name="provinsi"
+                >
                     <option value="">Pilih Provinsi</option>
                     <option value="jawa_barat">Jawa Barat</option>
                     <option value="jawa_tengah">Jawa Tengah</option>
@@ -63,21 +31,38 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <select class="form-control" id="kabupaten" name="kabupaten">
+            <div>
+                <select 
+                    class="w-full p-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" 
+                    id="kabupaten" 
+                    name="kabupaten"
+                >
                     <option value="">Pilih Kabupaten</option>
                     <!-- Opsi akan diisi melalui JavaScript -->
                 </select>
             </div>
 
-            <div class="form-group">
-                <select class="form-control" id="kota" name="kota">
+            <div>
+                <select 
+                    class="w-full p-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" 
+                    id="kota" 
+                    name="kota"
+                >
                     <option value="">Pilih Kota</option>
                     <!-- Opsi akan diisi melalui JavaScript -->
                 </select>
             </div>
 
-            <button type="submit" class="btn-primary" id="cariRumahSakit">Telusuri</button>
+            <button 
+                type="submit" 
+                class="w-full py-4 px-6 rounded-lg font-medium text-base transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 text-white"
+                style="background-color: #499BE8; hover:background-color: #3a7bc8; focus:ring-color: #499BE8;"
+                id="cariRumahSakit"
+                onmouseover="this.style.backgroundColor='#3a7bc8'" 
+                onmouseout="this.style.backgroundColor='#499BE8'"
+            >
+                Telusuri
+            </button>
         </form>
     </div>
 
