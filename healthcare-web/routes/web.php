@@ -129,3 +129,8 @@ Route::post('/logout', function () {
 
     return redirect('/')->with('success', 'Berhasil logout');
 })->name('logout');
+
+// Dasboard routes
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
