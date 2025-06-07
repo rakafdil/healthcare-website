@@ -621,74 +621,143 @@
         }
 
         // =====================================
-        // LOCATION SERVICE
+        // LOCATION SELECTOR SERVICE
         // =====================================
-        class LocationService {
-            static getUserLocation() {
-                const btn = document.getElementById('getLocationBtn');
-                
-                UI.updateButtonState('getLocationBtn', '<i class="fas fa-spinner fa-spin"></i> Mengambil Lokasi...', null, true);
-                UI.showLoading();
-
-                if (!navigator.geolocation) {
-                    UI.showError('Browser Anda tidak mendukung fitur geolokasi');
-                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya', null, false);
-                    return;
-                }
-
-                const options = {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 60000
-                };
-
-                navigator.geolocation.getCurrentPosition(
-                    position => this.onLocationSuccess(position),
-                    error => this.onLocationError(error),
-                    options
-                );
+        class LocationSelectorService {
+            static init() {
+                this.populateProvinsi();
+                this.setupEventListeners();
             }
 
-            static onLocationSuccess(position) {
-                const { latitude: lat, longitude: lng, accuracy } = position.coords;
-
-                if (!Utils.isValidCoordinate(lat, lng)) {
-                    UI.showError('Koordinat lokasi tidak valid');
-                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya', null, false);
-                    return;
-                }
-
-                // Update state and map
-                state.setCenter(lat, lng);
-                state.map.setView([lat, lng], CONFIG.USER_ZOOM);
+            static populateProvinsi() {
+                const provinsiSelect = document.getElementById('provinsiSelect');
+                provinsiSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
                 
-                // Add user marker
-                mapManager.addUserMarker(lat, lng, accuracy);
-                
-                // Update UI
-                UI.updateLocationText("Lokasi Anda Saat Ini");
-                UI.updateButtonState('getLocationBtn', '<i class="fas fa-check"></i> Lokasi Ditemukan', '#27ae60');
-                document.getElementById('refreshDataBtn').classList.remove('hidden');
-                
-                // Load hospital data
-                HospitalService.loadNearbyHospitals();
-                
-                // Reset button after 3 seconds
-                setTimeout(() => {
-                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot"></i> Gunakan Lokasi Saya', '#3498db', false);
-                }, 3000);
+                Object.keys(LOCATION_DATA).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = LOCATION_DATA[key].name;
+                    provinsiSelect.appendChild(option);
+                });
             }
 
-            static onLocationError(error) {
-                const errorMessages = {
-                    [error.PERMISSION_DENIED]: 'Akses lokasi ditolak. Silakan izinkan akses lokasi pada browser.',
-                    [error.POSITION_UNAVAILABLE]: 'Informasi lokasi tidak tersedia.',
-                    [error.TIMEOUT]: 'Waktu habis dalam mendapatkan lokasi.'
-                };
+            static populateKabupaten(provinsiKey) {
+                const kabupatenSelect = document.getElementById('kabupatenSelect');
+                kabupatenSelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
                 
-                const message = errorMessages[error.code] || 'Gagal mendapatkan lokasi Anda';
-                UI.showError(message);
-                UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot"></i> Coba Lagi', null, false);
+                if (dataKabupaten[provinsiKey]) {
+                    kabupatenSelect.disabled = false;
+                    dataKabupaten[provinsiKey].forEach(kabupaten => {
+                        const option = document.createElement('option');
+                        option.value = kabupaten.name;
+                        option.textContent = kabupaten.name;
+                        kabupatenSelect.appendChild(option);
+                    });
+                } else {
+                    kabupatenSelect.disabled = true;
+                    document.getElementById('kotaSelect').disabled = true;
+                }
+            }
+
+            static populateKota(kabupatenName) {
+                const kotaSelect = document.getElementById('kotaSelect');
+                kotaSelect.innerHTML = '<option value="">Pilih Kecamatan/Kota</option>';
+                
+                if (dataKota[kabupatenName]) {
+                    kotaSelect.disabled = false;
+                    dataKota[kabupatenName].forEach(kota => {
+                        const option = document.createElement('option');
+                        option.value = kota.name;
+                        option.textContent = kota.name;
+                        kotaSelect.appendChild(option);
+                    });
+                } else {
+                    kotaSelect.disabled = true;
+                }
+            }
+
+            static setupEventListeners() {
+                // Provinsi change handler
+                document.getElementById('provinsiSelect').addEventListener('change', function() {
+                    const provinsiKey = this.value;
+                    if (provinsiKey) {
+                        LocationSelectorService.populateKabupaten(provinsiKey);
+                    } else {
+                        document.getElementById('kabupatenSelect').disabled = true;
+                        document.getElementById('kotaSelect').disabled = true;
+                    }
+                    document.getElementById('applyLocationBtn').disabled = true;
+                });
+
+                // Kabupaten change handler
+                document.getElementById('kabupatenSelect').addEventListener('change', function() {
+                    const kabupatenName = this.value;
+                    if (kabupatenName) {
+                        LocationSelectorService.populateKota(kabupatenName);
+                    } else {
+                        document.getElementById('kotaSelect').disabled = true;
+                    }
+                    document.getElementById('applyLocationBtn').disabled = true;
+                });
+
+                // Kota change handler
+                document.getElementById('kotaSelect').addEventListener('change', function() {
+                    document.getElementById('applyLocationBtn').disabled = !this.value;
+                });
+
+                // Apply location button
+                document.getElementById('applyLocationBtn').addEventListener('click', () => {
+                    const provinsiKey = document.getElementById('provinsiSelect').value;
+                    const kabupatenName = document.getElementById('kabupatenSelect').value;
+                    const kotaName = document.getElementById('kotaSelect').value;
+                    
+                    let locationName = LOCATION_DATA[provinsiKey].name;
+                    let locationCoords = null;
+
+                    if (kotaName) {
+                        // Cari koordinat kota/kecamatan
+                        const kotaData = dataKota[kabupatenName].find(k => k.name === kotaName);
+                        if (kotaData) {
+                            locationCoords = { lat: kotaData.lat, lng: kotaData.lng };
+                            locationName = `${kotaName}, ${kabupatenName}, ${locationName}`;
+                        }
+                    } else if (kabupatenName) {
+                        // Cari koordinat kabupaten
+                        const kabupatenData = dataKabupaten[provinsiKey].find(k => k.name === kabupatenName);
+                        if (kabupatenData) {
+                            locationCoords = { lat: kabupatenData.lat, lng: kabupatenData.lng };
+                            locationName = `${kabupatenName}, ${locationName}`;
+                        }
+                    } else {
+                        // Gunakan koordinat provinsi
+                        locationCoords = {
+                            lat: LOCATION_DATA[provinsiKey].lat,
+                            lng: LOCATION_DATA[provinsiKey].lng
+                        };
+                    }
+
+                    if (locationCoords) {
+                        // Update map view
+                        state.setCenter(locationCoords.lat, locationCoords.lng);
+                        state.map.setView([locationCoords.lat, locationCoords.lng], CONFIG.DEFAULT_ZOOM);
+                        
+                        // Update UI
+                        UI.updateLocationText(locationName);
+                        document.getElementById('locationSelector').classList.add('hidden');
+                        document.getElementById('refreshDataBtn').classList.remove('hidden');
+                        
+                        // Load hospital data
+                        HospitalService.loadNearbyHospitals();
+                    }
+                });
+
+                // Change location button
+                document.getElementById('changeLocationBtn').addEventListener('click', function() {
+                    document.getElementById('locationSelector').classList.remove('hidden');
+                    state.removeUserMarker();
+                    document.getElementById('refreshDataBtn').classList.add('hidden');
+                    UI.updateLocationText("Silakan pilih lokasi");
+                });
             }
         }
 
@@ -887,6 +956,8 @@
                 LocationService.getUserLocation();
             });
             
+            LocationSelectorService.init();
+
             // Refresh button
             document.getElementById('refreshDataBtn').addEventListener('click', function() {
                 UI.updateButtonState('refreshDataBtn', '<i class="fas fa-spinner fa-spin"></i> Memuat...', null, true);
