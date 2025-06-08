@@ -68,7 +68,7 @@
 
                 <!-- Rumah Sakit Content -->
                 <div id="rumahSakitContent" class="hidden">
-                    <div id="hospitalStats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 hidden">
+                    <div id="hospitalStats" class="grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white p-4 rounded-lg shadow-sm text-center">
                             <div class="text-2xl font-bold text-blue-600" id="totalHospitals">-</div>
                             <div class="text-sm text-gray-600">Total RS</div>

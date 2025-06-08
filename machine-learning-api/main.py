@@ -14,11 +14,11 @@ def sanitize(data):
         return None
     return data
 
-with open("machine-learning-api/symptom_index.json") as f:
+with open("symptom_index.json") as f:
     symptoms = json.load(f)
 
 # Load the model
-model = pickle.load(open('machine-learning-api/ExtraTrees.pkl', 'rb'))
+model = pickle.load(open('ExtraTrees.pkl', 'rb'))
 
 diseases = [
     '(vertigo) Paroymsal  Positional Vertigo', 'AIDS', 'Acne', 'Alcoholic hepatitis', 'Allergy', 
@@ -31,10 +31,55 @@ diseases = [
     'Urinary tract infection', 'Varicose veins', 'hepatitis A'
 ]
 
+diseases_translated = {
+    "(vertigo) Paroymsal Positional Vertigo": "Vertigo Posisi",
+    "AIDS": "AIDS",
+    "Acne": "Jerawat",
+    "Alcoholic hepatitis": "Hepatitis Alkoholik",
+    "Allergy": "Alergi",
+    "Arthritis": "Artritis",
+    "Bronchial Asthma": "Asma Bronkial",
+    "Cervical spondylosis": "Spondilosis Serviks",
+    "Chicken pox": "Cacar Air",
+    "Chronic cholestasis": "Kolestasis Kronis",
+    "Common Cold": "Flu Biasa",
+    "Dengue": "Demam Berdarah",
+    "Diabetes": "Diabetes",
+    "Dimorphic hemmorhoids(piles)": "Ambeien",
+    "Drug Reaction": "Reaksi Obat",
+    "Fungal infection": "Infeksi Jamur",
+    "GERD": "GERD",
+    "Gastroenteritis": "Gastroenteritis",
+    "Heart attack": "Serangan Jantung",
+    "Hepatitis B": "Hepatitis B",
+    "Hepatitis C": "Hepatitis C",
+    "Hepatitis D": "Hepatitis D",
+    "Hepatitis E": "Hepatitis E",
+    "Hypertension": "Hipertensi",
+    "Hyperthyroidism": "Hipertiroidisme",
+    "Hypoglycemia": "Hipoglikemia",
+    "Hypothyroidism": "Hipotiroidisme",
+    "Impetigo": "Impetigo",
+    "Jaundice": "Penyakit Kuning",
+    "Malaria": "Malaria",
+    "Migraine": "Migrain",
+    "Osteoarthristis": "Osteoartritis",
+    "Paralysis (brain hemorrhage)": "Kelumpuhan (Perdarahan Otak)",
+    "Peptic ulcer diseae": "Penyakit Tukak Lambung",
+    "Pneumonia": "Pneumonia",
+    "Psoriasis": "Psoriasis",
+    "Tuberculosis": "Tuberkulosis",
+    "Typhoid": "Tifoid",
+    "Urinary tract infection": "Infeksi Saluran Kemih",
+    "Varicose veins": "Varises",
+    "hepatitis A": "Hepatitis A"
+}
+
+
 
 print(len(symptoms))
-desc=pd.read_csv("machine-learning-api/symptoms-datasets/symptom_Description.csv")
-prec=pd.read_csv("machine-learning-api/symptoms-datasets/symptom_precaution.csv")
+desc=pd.read_csv("symptoms-datasets/symptom_Description.csv")
+prec=pd.read_csv("symptoms-datasets/symptom_precaution.csv")
 app = Flask(__name__)
 
 
@@ -65,8 +110,8 @@ def predict():
     # Top 5 predicted classes and their probabilities
     top5_idx = np.argsort(proba[0])[-5:][::-1]
     top5_proba = np.sort(proba[0])[-5:][::-1]
-    top5_diseases = [diseases[i] for i in top5_idx]
-
+    top5_diseases = [diseases_translated[diseases[i]] for i in top5_idx]
+    
     # Build response
     response = []
     for i in range(5):

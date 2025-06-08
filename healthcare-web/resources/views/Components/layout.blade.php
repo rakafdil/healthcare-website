@@ -8,6 +8,7 @@
     <title>{{ $title ?? 'Healthcare Alomany - Rumah Sakit - Detail Rumah Sakit' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body class="flex flex-col min-h-screen overflow-x-hidden">
