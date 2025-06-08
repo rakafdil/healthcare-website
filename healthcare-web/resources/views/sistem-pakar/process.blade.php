@@ -93,10 +93,19 @@
                 @csrf
 
                 <label for="gejala" class="block text-xl font-semibold mb-3">Apa yang Anda alami?</label>
-                <input type="text" id="gejala-input" placeholder="Ketik gejala..." autocomplete="off"
-                    class="w-full px-4 py-2 border-2 border-black rounded-lg">
-                <ul id="suggestions" class="max-h-60 overflow-y-auto bg-white shadow-md rounded-md mt-1"
-                    style="display: none;"></ul>
+
+                <!-- Filter dropdown -->
+                <div class="mb-4">
+                    <select id="group-filter" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg bg-white">
+                        <option value="">Filter berdasarkan kategori gejala</option>
+                    </select>
+                </div>
+
+                <input type="text" id="gejala-input" placeholder="Ketik gejala atau klik untuk melihat semua..."
+                    autocomplete="off" class="w-full px-4 py-2 border-2 border-black rounded-lg">
+                <div id="suggestions"
+                    class="max-h-80 overflow-y-auto bg-white shadow-md rounded-md mt-1 border border-gray-300"
+                    style="display: none;"></div>
                 <div class="mb-6"></div>
 
                 <div class="mt-8 bg-gray-50 py-4 px-4 rounded-lg">
@@ -120,19 +129,54 @@
             </form>
 
             <script>
-                const symptoms = @json($allSymptoms->pluck('nama_gejala_ind')->toArray());
+                // Get grouped symptoms data from controller
+                const allSymptomsData = @json($allSymptoms->toArray());
                 const symptomsMap = @json($allSymptoms->pluck('nama_gejala_eng', 'nama_gejala_ind')->toArray());
                 const previousSymptoms = @json($previousSymptoms);
+
+                // Group symptoms by tipe
+                const groupedSymptoms = {};
+                allSymptomsData.forEach(symptom => {
+                    const tipe = symptom.tipe || 'LAINNYA';
+                    if (!groupedSymptoms[tipe]) {
+                        groupedSymptoms[tipe] = [];
+                    }
+                    groupedSymptoms[tipe].push(symptom.nama_gejala_ind);
+                });
+
+                // Define the order of groups
+                const groupOrder = [
+                    'GEJALA UMUM & SISTEMIK',
+                    'SISTEM SARAF & NEUROLOGIS',
+                    'SISTEM KARDIOVASKULAR',
+                    'SISTEM PERNAPASAN',
+                    'SISTEM PENCERNAAN',
+                    'SISTEM URINARI',
+                    'SISTEM MUSKULOSKELETAL',
+                    'MATA & PENGLIHATAN',
+                    'KULIT & DERMATOLOGI',
+                    'KUKU',
+                    'SISTEM HEMATOLOGI & PENDARAHAN',
+                    'SISTEM ENDOKRIN & METABOLIK',
+                    'KESEHATAN MENTAL & PSIKOLOGIS',
+                    'GEJALA KHUSUS & LAINNYA',
+                    'RIWAYAT & FAKTOR RISIKO'
+                ];
 
                 const input = document.getElementById('gejala-input');
                 const suggestions = document.getElementById('suggestions');
                 const selectedList = document.getElementById('selected-symptoms');
                 const hiddenInput = document.getElementById('gejala-hidden');
                 const submitBtn = document.getElementById('submit-btn');
+                const groupFilter = document.getElementById('group-filter');
 
                 let selected = [...previousSymptoms]; // Initialize with previous selections if any
+                let isShowingAll = false;
+                let currentFilter = '';
+
                 // Initial rendering of any previously selected symptoms
                 window.addEventListener('DOMContentLoaded', () => {
+                    populateGroupFilter();
                     renderSelected();
                     validateForm();
                 });
@@ -146,42 +190,190 @@
                     window.location.href = `${baseUrl}?step=${step}`;
                 });
 
+                // Group filter change event
+                groupFilter.addEventListener('change', (e) => {
+                    currentFilter = e.target.value;
+                    input.value = '';
+
+                    if (currentFilter) {
+                        showFilteredSymptoms(currentFilter);
+                    } else {
+                        suggestions.style.display = 'none';
+                        isShowingAll = false;
+                    }
+                });
+
+                // Show all symptoms grouped when input is clicked
+                input.addEventListener('click', () => {
+                    if (input.value === '') {
+                        if (currentFilter) {
+                            showFilteredSymptoms(currentFilter);
+                        } else {
+                            showAllGroupedSymptoms();
+                        }
+                    }
+                });
+
                 input.addEventListener('input', () => {
                     const keyword = input.value.toLowerCase();
                     suggestions.innerHTML = '';
+                    isShowingAll = false;
+
                     if (keyword.length > 0) {
-                        const matchedSymptoms = symptoms
-                            .filter(item => item.toLowerCase().includes(keyword) && !selected.includes(item));
+                        const matchedSymptoms = [];
+
+                        // Search through all symptoms or filtered symptoms
+                        allSymptomsData.forEach(symptom => {
+                            if (symptom.nama_gejala_ind.toLowerCase().includes(keyword) &&
+                                !selected.includes(symptom.nama_gejala_ind)) {
+
+                                // Apply group filter if active
+                                if (!currentFilter || symptom.tipe === currentFilter) {
+                                    matchedSymptoms.push(symptom);
+                                }
+                            }
+                        });
 
                         if (matchedSymptoms.length > 0) {
                             suggestions.style.display = 'block';
 
+                            // Group matched symptoms
+                            const matchedGrouped = {};
                             matchedSymptoms.forEach(symptom => {
-                                const li = document.createElement('li');
-                                li.textContent = symptom;
-                                li.classList.add('p-2', 'hover:bg-blue-100', 'cursor-pointer');
-                                li.onclick = () => {
-                                    selected.push(symptom);
-                                    renderSelected();
-                                    validateForm();
-                                    input.value = '';
-                                    suggestions.innerHTML = '';
-                                    suggestions.style.display = 'none';
-                                };
-                                suggestions.appendChild(li);
+                                const tipe = symptom.tipe || 'LAINNYA';
+                                if (!matchedGrouped[tipe]) {
+                                    matchedGrouped[tipe] = [];
+                                }
+                                matchedGrouped[tipe].push(symptom.nama_gejala_ind);
+                            });
+
+                            // Render grouped results
+                            groupOrder.forEach(groupName => {
+                                if (matchedGrouped[groupName] && matchedGrouped[groupName].length > 0) {
+                                    renderGroup(groupName, matchedGrouped[groupName]);
+                                }
+                            });
+
+                            // Render any remaining groups not in the order
+                            Object.keys(matchedGrouped).forEach(groupName => {
+                                if (!groupOrder.includes(groupName)) {
+                                    renderGroup(groupName, matchedGrouped[groupName]);
+                                }
                             });
                         } else {
                             suggestions.style.display = 'none';
                         }
                     } else {
-                        suggestions.style.display = 'none';
+                        if (currentFilter) {
+                            showFilteredSymptoms(currentFilter);
+                        } else {
+                            showAllGroupedSymptoms();
+                        }
                     }
                 });
 
+                function populateGroupFilter() {
+                    // Clear existing options except the first one
+                    while (groupFilter.children.length > 1) {
+                        groupFilter.removeChild(groupFilter.lastChild);
+                    }
+
+                    // Add options based on available groups in order
+                    groupOrder.forEach(groupName => {
+                        if (groupedSymptoms[groupName] && groupedSymptoms[groupName].length > 0) {
+                            const option = document.createElement('option');
+                            option.value = groupName;
+                            option.textContent = groupName;
+                            groupFilter.appendChild(option);
+                        }
+                    });
+
+                    // Add any remaining groups not in the order
+                    Object.keys(groupedSymptoms).forEach(groupName => {
+                        if (!groupOrder.includes(groupName) && groupedSymptoms[groupName].length > 0) {
+                            const option = document.createElement('option');
+                            option.value = groupName;
+                            option.textContent = groupName;
+                            groupFilter.appendChild(option);
+                        }
+                    });
+                }
+
+                function showFilteredSymptoms(filterGroup) {
+                    suggestions.innerHTML = '';
+                    suggestions.style.display = 'block';
+                    isShowingAll = true;
+
+                    if (groupedSymptoms[filterGroup]) {
+                        const availableSymptoms = groupedSymptoms[filterGroup].filter(symptom => !selected.includes(symptom));
+                        if (availableSymptoms.length > 0) {
+                            renderGroup(filterGroup, availableSymptoms);
+                        }
+                    }
+                }
+
+                function showAllGroupedSymptoms() {
+                    suggestions.innerHTML = '';
+                    suggestions.style.display = 'block';
+                    isShowingAll = true;
+
+                    // Render all groups in order
+                    groupOrder.forEach(groupName => {
+                        if (groupedSymptoms[groupName] && groupedSymptoms[groupName].length > 0) {
+                            const availableSymptoms = groupedSymptoms[groupName].filter(symptom => !selected.includes(
+                                symptom));
+                            if (availableSymptoms.length > 0) {
+                                renderGroup(groupName, availableSymptoms);
+                            }
+                        }
+                    });
+
+                    // Render any remaining groups not in the order
+                    Object.keys(groupedSymptoms).forEach(groupName => {
+                        if (!groupOrder.includes(groupName)) {
+                            const availableSymptoms = groupedSymptoms[groupName].filter(symptom => !selected.includes(
+                                symptom));
+                            if (availableSymptoms.length > 0) {
+                                renderGroup(groupName, availableSymptoms);
+                            }
+                        }
+                    });
+                }
+
+                function renderGroup(groupName, symptoms) {
+                    if (symptoms.length === 0) return;
+
+                    // Create group header
+                    const groupHeader = document.createElement('div');
+                    groupHeader.classList.add('px-3', 'py-2', 'bg-blue-100', 'font-semibold', 'text-blue-800', 'text-sm',
+                        'border-b');
+                    groupHeader.textContent = groupName;
+                    suggestions.appendChild(groupHeader);
+
+                    // Create symptoms list for this group
+                    symptoms.forEach(symptom => {
+                        const li = document.createElement('div');
+                        li.textContent = symptom;
+                        li.classList.add('px-4', 'py-2', 'hover:bg-blue-50', 'cursor-pointer', 'text-sm', 'border-b',
+                            'border-gray-100');
+                        li.onclick = () => {
+                            selected.push(symptom);
+                            renderSelected();
+                            validateForm();
+                            input.value = '';
+                            suggestions.innerHTML = '';
+                            suggestions.style.display = 'none';
+                            isShowingAll = false;
+                        };
+                        suggestions.appendChild(li);
+                    });
+                }
+
                 // Close suggestions when clicking outside
                 document.addEventListener('click', (event) => {
-                    if (event.target !== input && event.target !== suggestions) {
+                    if (!event.target.closest('#gejala-input') && !event.target.closest('#suggestions')) {
                         suggestions.style.display = 'none';
+                        isShowingAll = false;
                     }
                 });
 
@@ -206,7 +398,6 @@
                                 'pb-2'
                             );
 
-
                             const textSpan = document.createElement('span');
                             textSpan.textContent = symptom;
                             textSpan.classList.add('flex-grow'); // push the trash icon to far right
@@ -228,6 +419,15 @@
                                 selected = selected.filter(s => s !== symptom);
                                 renderSelected();
                                 validateForm();
+
+                                // Refresh suggestions if showing all or filtered
+                                if (isShowingAll) {
+                                    if (currentFilter) {
+                                        showFilteredSymptoms(currentFilter);
+                                    } else {
+                                        showAllGroupedSymptoms();
+                                    }
+                                }
                             };
 
                             li.appendChild(textSpan);
@@ -238,7 +438,6 @@
 
                     hiddenInput.value = selected.join(',');
                 }
-
 
                 function validateForm() {
                     if (selected.length > 0) {
@@ -286,7 +485,7 @@
                 @endif
             @endforeach
         @elseif($step == 4 || $step == 5)
-            <x-sistem-pakar.diagnosis-last :step="$step" />
+            <x-sistem-pakar.diagnosis-last :step="$step" :datas="session('diagnosis.result')" />
         @endif
 
         @if ($step == 3 || $step == 4 || $step == 5)

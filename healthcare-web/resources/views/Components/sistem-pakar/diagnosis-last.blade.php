@@ -10,7 +10,7 @@
                         <button
                             class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-200 font-semibold"
                             data-index="{{ $loop->index }}" onclick="selectKondisi({{ $loop->index }})">
-                            {{ $data->name }} ({{ $data->probability }}%)
+                            {{ $data->disease }} ({{ $data->probability }}%)
                         </button>
                     @endforeach
 

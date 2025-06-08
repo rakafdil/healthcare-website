@@ -8,7 +8,7 @@ class Gejala extends Model
 {
     protected $table = 'gejala';
     protected $primaryKey = 'id_gejala';
-    protected $fillable = ['nama_gejala_ind', 'nama_gejala_eng'];
+    protected $fillable = ['nama_gejala_ind', 'nama_gejala_eng', 'tipe'];
     public $timestamps = false;
 
     public function sessions()

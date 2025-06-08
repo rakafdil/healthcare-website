@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->bigIncrements('id_gejala');  // This will auto-increment
             $table->string('nama_gejala_ind', 150);
             $table->string('nama_gejala_eng', 150);
+            $table->string('tipe', 150);
         });
 
     }
