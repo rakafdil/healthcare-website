@@ -69,8 +69,9 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 Route::get('/lupa-password', function () {
-    return view('auth.lupa-password');
+    return view('lupa-password');
 })->name('password.request');
+
 Route::post('/lupa-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 
 
