@@ -934,6 +934,177 @@
         }
 
         // =====================================
+        // LOCATION SERVICE
+        // =====================================
+        class LocationService {
+            static getUserLocation() {
+                const button = document.getElementById('getLocationBtn');
+                
+                // Update button state
+                UI.updateButtonState('getLocationBtn', '<i class="fas fa-spinner fa-spin mr-1"></i> Mencari lokasi...', null, true);
+                
+                // Check if geolocation is supported
+                if (!navigator.geolocation) {
+                    UI.showError('Geolocation tidak didukung oleh browser ini');
+                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saya', null, false);
+                    return;
+                }
+
+                // Geolocation options
+                const options = {
+                    enableHighAccuracy: true,  // Gunakan GPS jika tersedia
+                    timeout: 10000,           // Timeout 10 detik
+                    maximumAge: 300000        // Cache maksimal 5 menit
+                };
+
+                // Get current position
+                navigator.geolocation.getCurrentPosition(
+                    (position) => this.onLocationSuccess(position),
+                    (error) => this.onLocationError(error),
+                    options
+                );
+            }
+
+            static onLocationSuccess(position) {
+                const { latitude, longitude, accuracy } = position.coords;
+                
+                console.log('Location obtained:', { latitude, longitude, accuracy });
+                
+                // Validate coordinates
+                if (!Utils.isValidCoordinate(latitude, longitude)) {
+                    UI.showError('Koordinat lokasi tidak valid');
+                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saya', null, false);
+                    return;
+                }
+
+                // Update application state
+                state.setCenter(latitude, longitude);
+                
+                // Update map view
+                state.map.setView([latitude, longitude], CONFIG.USER_ZOOM);
+                
+                // Add user marker
+                mapManager.addUserMarker(latitude, longitude, accuracy);
+                
+                // Update UI
+                UI.updateLocationText(`Lokasi Anda (±${Math.round(accuracy)}m akurasi)`);
+                UI.updateButtonState('getLocationBtn', '<i class="fas fa-check mr-1"></i> Lokasi Ditemukan', '#27ae60', false);
+                
+                // Hide location selector and show refresh button
+                document.getElementById('locationSelector').classList.add('hidden');
+                document.getElementById('refreshDataBtn').classList.remove('hidden');
+                
+                // Load nearby hospitals
+                HospitalService.loadNearbyHospitals();
+                
+                // Show success message
+                UI.showSuccess('Lokasi Anda berhasil ditemukan!');
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saya', null, false);
+                }, 3000);
+            }
+
+            static onLocationError(error) {
+                console.error('Geolocation error:', error);
+                
+                let errorMessage = 'Gagal mendapatkan lokasi';
+                let userFriendlyMessage = '';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Akses lokasi ditolak oleh pengguna";
+                        userFriendlyMessage = "Silakan izinkan akses lokasi di browser Anda atau pilih lokasi secara manual";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Informasi lokasi tidak tersedia";
+                        userFriendlyMessage = "Tidak dapat menentukan lokasi Anda. Coba lagi atau pilih lokasi manual";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Timeout mencari lokasi";
+                        userFriendlyMessage = "Pencarian lokasi memakan waktu terlalu lama. Coba lagi atau pilih lokasi manual";
+                        break;
+                    default:
+                        errorMessage = "Error tidak dikenal dalam pencarian lokasi";
+                        userFriendlyMessage = "Terjadi kesalahan. Silakan coba lagi atau pilih lokasi manual";
+                        break;
+                }
+                
+                // Show error message
+                UI.showError(errorMessage);
+                
+                // Reset button
+                UI.updateButtonState('getLocationBtn', '<i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saya', null, false);
+                
+                // Show location selector as fallback
+                document.getElementById('locationSelector').classList.remove('hidden');
+                UI.updateLocationText("Silakan pilih lokasi secara manual");
+                
+                // Show user-friendly alert
+                setTimeout(() => {
+                    alert(userFriendlyMessage);
+                }, 1000);
+            }
+
+            static async reverseGeocode(lat, lng) {
+                try {
+                    // Menggunakan Nominatim API untuk reverse geocoding
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+                        {
+                            headers: {
+                                'User-Agent': 'Hospital-Finder-App'
+                            }
+                        }
+                    );
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data && data.display_name) {
+                            return data.display_name;
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Reverse geocoding failed:', error);
+                }
+                
+                return `Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            }
+
+            static watchPosition() {
+                if (!navigator.geolocation) return null;
+                
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 30000,
+                    maximumAge: 60000
+                };
+                
+                return navigator.geolocation.watchPosition(
+                    (position) => {
+                        console.log('Position updated:', position.coords);
+                        // Update user marker position if needed
+                        if (state.userMarker) {
+                            const { latitude, longitude, accuracy } = position.coords;
+                            mapManager.addUserMarker(latitude, longitude, accuracy);
+                        }
+                    },
+                    (error) => {
+                        console.warn('Position watch error:', error);
+                    },
+                    options
+                );
+            }
+
+            static clearWatch(watchId) {
+                if (watchId && navigator.geolocation) {
+                    navigator.geolocation.clearWatch(watchId);
+                }
+            }
+        }
+
+        // =====================================
         // INITIALIZE APPLICATION
         // =====================================
         let state, mapManager;
