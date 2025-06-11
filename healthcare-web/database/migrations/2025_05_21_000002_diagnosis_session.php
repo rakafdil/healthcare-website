@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('diagnosis_session', function (Blueprint $table) {
             $table->bigIncrements('id_session');
             $table->unsignedBigInteger('user_id');
+            $table->integer('umur');
+            $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('user_id')->references('id')->on('users');

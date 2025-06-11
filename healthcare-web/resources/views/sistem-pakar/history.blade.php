@@ -45,6 +45,12 @@
                         </span>
                     </div>
                 </div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between">
+                    <div class="mb-3 md:mb-0">
+                        <span class="text-sm text-gray-500">Umur & Gender</span>
+                        <p class="text-lg font-medium text-gray-800">{{ $umur }} Tahun | {{ $gender }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Main content with symptoms and diagnosis -->

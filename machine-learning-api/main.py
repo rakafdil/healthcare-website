@@ -14,14 +14,14 @@ def sanitize(data):
         return None
     return data
 
-with open("symptom_index.json") as f:
+with open("machine-learning-api/symptom_index.json") as f:
     symptoms = json.load(f)
 
 # Load the model
-model = pickle.load(open('ExtraTrees.pkl', 'rb'))
+model = pickle.load(open('machine-learning-api/ExtraTrees.pkl', 'rb'))
 
 diseases = [
-    '(vertigo) Paroymsal  Positional Vertigo', 'AIDS', 'Acne', 'Alcoholic hepatitis', 'Allergy', 
+    '(vertigo) Paroymsal Positional Vertigo', 'AIDS', 'Acne', 'Alcoholic hepatitis', 'Allergy', 
     'Arthritis', 'Bronchial Asthma', 'Cervical spondylosis', 'Chicken pox', 'Chronic cholestasis', 
     'Common Cold', 'Dengue', 'Diabetes', 'Dimorphic hemmorhoids(piles)', 'Drug Reaction', 
     'Fungal infection', 'GERD', 'Gastroenteritis', 'Heart attack', 'Hepatitis B', 'Hepatitis C', 
@@ -78,8 +78,8 @@ diseases_translated = {
 
 
 print(len(symptoms))
-desc=pd.read_csv("symptoms-datasets/symptom_Description.csv")
-prec=pd.read_csv("symptoms-datasets/symptom_precaution.csv")
+desc=pd.read_csv("machine-learning-api/symptoms-datasets/symptom_Description.csv")
+prec=pd.read_csv("machine-learning-api/symptoms-datasets/symptom_precaution.csv")
 app = Flask(__name__)
 
 

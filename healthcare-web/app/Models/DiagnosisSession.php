@@ -8,7 +8,7 @@ class DiagnosisSession extends Model
 {
     protected $table = 'diagnosis_session';
     protected $primaryKey = 'id_session';
-    protected $fillable = ['user_id', 'created_at'];
+    protected $fillable = ['user_id', 'created_at', 'umur', 'gender'];
     public $timestamps = false;
 
     public function user()

@@ -92,11 +92,10 @@ class SistemPakarController extends Controller
         $user = auth()->user();
         $sessions = [];
         if ($user !== null) {
-            $history = History::find($user->id);
             $sessions = DiagnosisSession::where('user_id', $user->id)
                 ->orderByDesc('created_at')
                 ->get();
-            return view('sistem-pakar.index', compact('history', 'sessions'));
+            return view('sistem-pakar.index', compact('sessions'));
         } else {
             return view('sistem-pakar.index', compact('sessions'));
         }
@@ -130,8 +129,10 @@ class SistemPakarController extends Controller
         $date_time = Carbon::parse($session->created_at);
         $tanggal = $date_time->format('d-m-Y');
         $waktu = $date_time->format('H:i:s');
+        $umur = $session->umur ?? null;
+        $gender = $session->gender ?? null;
 
-        return view('sistem-pakar.history', compact('gejala', 'results', 'tanggal', 'waktu', 'id_session'));
+        return view('sistem-pakar.history', compact('gejala', 'results', 'tanggal', 'waktu', 'id_session', 'umur', 'gender'));
     }
 
     public function submitStep(Request $request)
@@ -145,6 +146,13 @@ class SistemPakarController extends Controller
         }
         if ($request->has('gender')) {
             session(['diagnosis.gender' => $request->input('gender')]);
+        }
+
+        if ($step === 2 && session('diagnosis.umur') == null) {
+            abort(404, 'Data tidak ditemukan');
+        }
+        if (($step === 3 || $step === 4 || $step === 5) && session('diagnosis.result') == null) {
+            abort(404, 'Data tidak ditemukan');
         }
 
         return view('sistem-pakar.process', [
@@ -166,6 +174,8 @@ class SistemPakarController extends Controller
         $session = DiagnosisSession::create([
             'user_id' => $user->id,
             'created_at' => now(),
+            'umur' => $diagnosis['umur'],
+            'gender' => $diagnosis['gender']
         ]);
 
         // 2. Simpan gejala ke tabel pivot session_gejala
