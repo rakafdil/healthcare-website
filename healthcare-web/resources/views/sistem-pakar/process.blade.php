@@ -9,15 +9,14 @@
     {{-- <pre>{{ print_r(session()->all(), true) }}</pre> --}}
     {{-- @dd(session()) --}}
     <div class="flex my-6 justify-center">
-        @foreach (range(1, 5) as $i)
+        @foreach (range(1, 4) as $i)
             @php
                 // Set step names
                 $stepName = match ($i) {
-                    1 => 'Info',
-                    2 => 'Gejala',
-                    3 => 'Kondisi',
-                    4 => 'Detail',
-                    default => 'Perawatan',
+                    1 => ['Info'],
+                    2 => ['Gejala'],
+                    3 => ['Kondisi'],
+                    4 => ['Artikel &', 'Perawatan'], // Array untuk multiple lines
                 };
 
                 // Default: enabled
@@ -25,11 +24,11 @@
 
                 // Logic to disable based on session
                 if (session('diagnosis.gender') === null && $i > 1) {
-                    $disabled = true; // Step 2 to 5
+                    $disabled = true; // Step 2 to 4
                 } elseif (session('diagnosis.gejala') === null && $i > 2) {
-                    $disabled = true; // Step 3 to 5
+                    $disabled = true; // Step 3 to 4
                 } elseif (session('diagnosis.result') === null && $i > 3) {
-                    $disabled = true; // Step 4 to 5
+                    $disabled = true; // Step 4
                 }
 
                 // Style class for disabled state
@@ -41,7 +40,12 @@
             @endphp
 
             <div class="flex flex-col items-center mx-4 px-6">
-                <div class="text-2xl font-medium text-gray-700 mb-2 w-full text-center">{{ $stepName }}</div>
+                <div
+                    class="h-16 flex flex-col justify-center items-center text-center text-2xl font-medium text-gray-700 mb-2">
+                    @foreach ($stepName as $line)
+                        <div>{{ $line }}</div>
+                    @endforeach
+                </div>
                 <a href="{{ $disabled ? '#' : url('/sistem-pakar/symptoms') . '?step=' . $i }}"
                     class="w-12 h-12 flex items-center justify-center rounded-full border transition {{ $linkClass }}">
                     {{ $i }}
@@ -169,7 +173,6 @@
                 </div>
 
             </form>
-
             <script>
                 // Get grouped symptoms data from controller
                 const allSymptomsData = @json($allSymptoms->toArray());
@@ -526,18 +529,18 @@
                         :precautions="$item->precautions" />
                 @endif
             @endforeach
-        @elseif($step == 4 || $step == 5)
+        @elseif($step == 4)
             <x-sistem-pakar.diagnosis-last :step="$step" :datas="session('diagnosis.result')" />
         @endif
 
-        @if ($step == 3 || $step == 4 || $step == 5)
+        @if ($step == 3 || $step == 4)
             <div class="mt-8 flex justify-between">
                 <button type="button"
                     onclick="saveScrollAndGo('{{ url('/sistem-pakar/symptoms?step=' . ($step - 1)) }}')"
                     class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                     Kembali
                 </button>
-                @if ($step == 5)
+                @if ($step == 4)
                     <form id="finishForm" method="POST" action="{{ url('/sistem-pakar/symptoms/finish') }}">
                         @csrf
                         <button type="submit"
