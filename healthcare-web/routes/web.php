@@ -135,6 +135,6 @@ Route::post('/logout', function () {
 })->name('logout');
 
 // Dasboard routes
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+Route::get('/dashboard', ['\App\Http\Controllers\DashboardController', 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
