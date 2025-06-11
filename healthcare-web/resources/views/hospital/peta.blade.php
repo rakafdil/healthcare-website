@@ -216,139 +216,149 @@
 
         const dataKota = {
             // Jawa Barat
-            'Bandung': [
-                { name: 'Bandung Kota', lat: -6.9147, lng: 107.6098 },
-                { name: 'Cimahi', lat: -6.8728, lng: 107.5429 },
-                { name: 'Lembang', lat: -6.8181, lng: 107.6155 }
-            ],
-            'Bekasi': [
-                { name: 'Bekasi Kota', lat: -6.2383, lng: 106.9756 },
-                { name: 'Cikarang', lat: -6.3066, lng: 107.1722 },
-                { name: 'Tambun', lat: -6.2574, lng: 107.0505 }
-            ],
-            'Bogor': [
-                { name: 'Bogor Kota', lat: -6.595, lng: 106.8166 },
-                { name: 'Cibinong', lat: -6.4859, lng: 106.8543 },
-                { name: 'Cisarua', lat: -6.6705, lng: 106.9328 }
-            ],
-            'Cianjur': [
-                { name: 'Cianjur Kota', lat: -6.8222, lng: 107.1424 },
-                { name: 'Cugenang', lat: -6.7703, lng: 107.1318 },
-                { name: 'Sukaluyu', lat: -6.7802, lng: 107.125 }
-            ],
-            'Cirebon': [
-                { name: 'Cirebon Kota', lat: -6.732, lng: 108.552 },
-                { name: 'Sumber', lat: -6.7463, lng: 108.4803 },
-                { name: 'Arjawinangun', lat: -6.729, lng: 108.4438 }
-            ],
+            'jawa_barat': {
+                'Bandung': [
+                    { name: 'Bandung Kota', lat: -6.9147, lng: 107.6098 },
+                    { name: 'Cimahi', lat: -6.8728, lng: 107.5429 },
+                    { name: 'Lembang', lat: -6.8181, lng: 107.6155 }
+                ],
+                'Bekasi': [
+                    { name: 'Bekasi Kota', lat: -6.2383, lng: 106.9756 },
+                    { name: 'Cikarang', lat: -6.3066, lng: 107.1722 },
+                    { name: 'Tambun', lat: -6.2574, lng: 107.0505 }
+                ],
+                'Bogor': [
+                    { name: 'Bogor Kota', lat: -6.595, lng: 106.8166 },
+                    { name: 'Cibinong', lat: -6.4859, lng: 106.8543 },
+                    { name: 'Cisarua', lat: -6.6705, lng: 106.9328 }
+                ],
+                'Cianjur': [
+                    { name: 'Cianjur Kota', lat: -6.8222, lng: 107.1424 },
+                    { name: 'Cugenang', lat: -6.7703, lng: 107.1318 },
+                    { name: 'Sukaluyu', lat: -6.7802, lng: 107.125 }
+                ],
+                'Cirebon': [
+                    { name: 'Cirebon Kota', lat: -6.732, lng: 108.552 },
+                    { name: 'Sumber', lat: -6.7463, lng: 108.4803 },
+                    { name: 'Arjawinangun', lat: -6.729, lng: 108.4438 }
+                ],
+            },
 
             // Jawa Tengah
-            'Semarang': [
-                { name: 'Semarang Kota', lat: -6.9667, lng: 110.4167 },
-                { name: 'Ungaran', lat: -7.1397, lng: 110.4066 },
-                { name: 'Ambarawa', lat: -7.2603, lng: 110.4031 }
-            ],
-            'Solo': [
-                { name: 'Solo Kota', lat: -7.5667, lng: 110.8167 },
-                { name: 'Laweyan', lat: -7.5691, lng: 110.7969 },
-                { name: 'Banjarsari', lat: -7.5587, lng: 110.8221 }
-            ],
-            'Magelang': [
-                { name: 'Magelang Kota', lat: -7.4818, lng: 110.2177 },
-                { name: 'Mertoyudan', lat: -7.512, lng: 110.2342 },
-                { name: 'Secang', lat: -7.4578, lng: 110.2811 }
-            ],
-            'Pekalongan': [
-                { name: 'Pekalongan Kota', lat: -6.8833, lng: 109.667 },
-                { name: 'Kajen', lat: -7.05, lng: 109.6 },
-                { name: 'Wonopringgo', lat: -7.05, lng: 109.716 }
-            ],
-            'Tegal': [
-                { name: 'Tegal Kota', lat: -6.869, lng: 109.1256 },
-                { name: 'Slawi', lat: -6.9811, lng: 109.1336 },
-                { name: 'Adiwerna', lat: -6.9526, lng: 109.1341 }
-            ],
+            'jawa_tengah': {
+                'Semarang': [
+                    { name: 'Semarang Kota', lat: -6.9667, lng: 110.4167 },
+                    { name: 'Ungaran', lat: -7.1397, lng: 110.4066 },
+                    { name: 'Ambarawa', lat: -7.2603, lng: 110.4031 }
+                ],
+                'Solo': [
+                    { name: 'Solo Kota', lat: -7.5667, lng: 110.8167 },
+                    { name: 'Laweyan', lat: -7.5691, lng: 110.7969 },
+                    { name: 'Banjarsari', lat: -7.5587, lng: 110.8221 }
+                ],
+                'Magelang': [
+                    { name: 'Magelang Kota', lat: -7.4818, lng: 110.2177 },
+                    { name: 'Mertoyudan', lat: -7.512, lng: 110.2342 },
+                    { name: 'Secang', lat: -7.4578, lng: 110.2811 }
+                ],
+                'Pekalongan': [
+                    { name: 'Pekalongan Kota', lat: -6.8833, lng: 109.667 },
+                    { name: 'Kajen', lat: -7.05, lng: 109.6 },
+                    { name: 'Wonopringgo', lat: -7.05, lng: 109.716 }
+                ],
+                'Tegal': [
+                    { name: 'Tegal Kota', lat: -6.869, lng: 109.1256 },
+                    { name: 'Slawi', lat: -6.9811, lng: 109.1336 },
+                    { name: 'Adiwerna', lat: -6.9526, lng: 109.1341 }
+                ],
+            },
 
             // Jawa Timur
-            'Surabaya': [
-                { name: 'Surabaya Pusat', lat: -7.2575, lng: 112.7521 },
-                { name: 'Surabaya Timur', lat: -7.275, lng: 112.787 },
-                { name: 'Surabaya Selatan', lat: -7.321, lng: 112.730 }
-            ],
-            'Malang': [
-                { name: 'Malang Kota', lat: -7.9819, lng: 112.6265 },
-                { name: 'Kepanjen', lat: -8.1317, lng: 112.5666 },
-                { name: 'Turen', lat: -8.1762, lng: 112.7086 }
-            ],
-            'Sidoarjo': [
-                { name: 'Sidoarjo Kota', lat: -7.45, lng: 112.717 },
-                { name: 'Waru', lat: -7.3757, lng: 112.7284 },
-                { name: 'Taman', lat: -7.4062, lng: 112.6989 }
-            ],
-            'Kediri': [
-                { name: 'Kediri Kota', lat: -7.8166, lng: 112.0111 },
-                { name: 'Pare', lat: -7.7676, lng: 112.1955 },
-                { name: 'Ngasem', lat: -7.8132, lng: 111.9726 }
-            ],
-            'Jember': [
-                { name: 'Jember Kota', lat: -8.1737, lng: 113.7004 },
-                { name: 'Patrang', lat: -8.1617, lng: 113.7093 },
-                { name: 'Sumbersari', lat: -8.1664, lng: 113.7156 }
-            ],
+            'jawa_timur': {
+                'Surabaya': [
+                    { name: 'Surabaya Pusat', lat: -7.2575, lng: 112.7521 },
+                    { name: 'Surabaya Timur', lat: -7.275, lng: 112.787 },
+                    { name: 'Surabaya Selatan', lat: -7.321, lng: 112.730 }
+                ],
+                'Malang': [
+                    { name: 'Malang Kota', lat: -7.9819, lng: 112.6265 },
+                    { name: 'Kepanjen', lat: -8.1317, lng: 112.5666 },
+                    { name: 'Turen', lat: -8.1762, lng: 112.7086 }
+                ],
+                'Sidoarjo': [
+                    { name: 'Sidoarjo Kota', lat: -7.45, lng: 112.717 },
+                    { name: 'Waru', lat: -7.3757, lng: 112.7284 },
+                    { name: 'Taman', lat: -7.4062, lng: 112.6989 }
+                ],
+                'Kediri': [
+                    { name: 'Kediri Kota', lat: -7.8166, lng: 112.0111 },
+                    { name: 'Pare', lat: -7.7676, lng: 112.1955 },
+                    { name: 'Ngasem', lat: -7.8132, lng: 111.9726 }
+                ],
+                'Jember': [
+                    { name: 'Jember Kota', lat: -8.1737, lng: 113.7004 },
+                    { name: 'Patrang', lat: -8.1617, lng: 113.7093 },
+                    { name: 'Sumbersari', lat: -8.1664, lng: 113.7156 }
+                ],
+            },
 
             // DKI Jakarta
-            'Jakarta Pusat': [
-                { name: 'Menteng', lat: -6.1907, lng: 106.8361 },
-                { name: 'Tanah Abang', lat: -6.1905, lng: 106.8108 },
-                { name: 'Kemayoran', lat: -6.1652, lng: 106.8531 }
-            ],
-            'Jakarta Barat': [
-                { name: 'Grogol', lat: -6.1768, lng: 106.7907 },
-                { name: 'Kalideres', lat: -6.1333, lng: 106.6956 },
-                { name: 'Cengkareng', lat: -6.1488, lng: 106.7417 }
-            ],
-            'Jakarta Timur': [
-                { name: 'Cakung', lat: -6.2034, lng: 106.9483 },
-                { name: 'Duren Sawit', lat: -6.2294, lng: 106.9031 },
-                { name: 'Jatinegara', lat: -6.2206, lng: 106.8828 }
-            ],
-            'Jakarta Selatan': [
-                { name: 'Kebayoran Baru', lat: -6.2441, lng: 106.7997 },
-                { name: 'Pasar Minggu', lat: -6.2699, lng: 106.8394 },
-                { name: 'Tebet', lat: -6.236, lng: 106.8554 }
-            ],
-            'Jakarta Utara': [
-                { name: 'Koja', lat: -6.1105, lng: 106.8905 },
-                { name: 'Kelapa Gading', lat: -6.1543, lng: 106.9121 },
-                { name: 'Pademangan', lat: -6.1289, lng: 106.8455 }
-            ],
+            'dki-jakarta': {
+                'Jakarta Pusat': [
+                    { name: 'Menteng', lat: -6.1907, lng: 106.8361 },
+                    { name: 'Tanah Abang', lat: -6.1905, lng: 106.8108 },
+                    { name: 'Kemayoran', lat: -6.1652, lng: 106.8531 }
+                ],
+                'Jakarta Barat': [
+                    { name: 'Grogol', lat: -6.1768, lng: 106.7907 },
+                    { name: 'Kalideres', lat: -6.1333, lng: 106.6956 },
+                    { name: 'Cengkareng', lat: -6.1488, lng: 106.7417 }
+                ],
+                'Jakarta Timur': [
+                    { name: 'Cakung', lat: -6.2034, lng: 106.9483 },
+                    { name: 'Duren Sawit', lat: -6.2294, lng: 106.9031 },
+                    { name: 'Jatinegara', lat: -6.2206, lng: 106.8828 }
+                ],
+                'Jakarta Selatan': [
+                    { name: 'Kebayoran Baru', lat: -6.2441, lng: 106.7997 },
+                    { name: 'Pasar Minggu', lat: -6.2699, lng: 106.8394 },
+                    { name: 'Tebet', lat: -6.236, lng: 106.8554 }
+                ],
+                'Jakarta Utara': [
+                    { name: 'Koja', lat: -6.1105, lng: 106.8905 },
+                    { name: 'Kelapa Gading', lat: -6.1543, lng: 106.9121 },
+                    { name: 'Pademangan', lat: -6.1289, lng: 106.8455 }
+                ],
+            },
 
             // DI Yogyakarta
-            'Sleman': [
-                { name: 'Depok', lat: -7.7641, lng: 110.3852 },
-                { name: 'Ngaglik', lat: -7.6954, lng: 110.3874 },
-                { name: 'Mlati', lat: -7.7422, lng: 110.3578 }
-            ],
-            'Bantul': [
-                { name: 'Bantul Kota', lat: -7.8886, lng: 110.3282 },
-                { name: 'Pundong', lat: -7.986, lng: 110.3244 },
-                { name: 'Srandakan', lat: -7.9591, lng: 110.1669 }
-            ],
-            'Gunung Kidul': [
-                { name: 'Wonosari', lat: -7.9829, lng: 110.6038 },
-                { name: 'Playen', lat: -7.9717, lng: 110.5514 },
-                { name: 'Semanu', lat: -8.0112, lng: 110.6577 }
-            ],
-            'Kulon Progo': [
-                { name: 'Wates', lat: -7.8897, lng: 110.1645 },
-                { name: 'Sentolo', lat: -7.8362, lng: 110.2055 },
-                { name: 'Pengasih', lat: -7.8454, lng: 110.1683 }
-            ],
-            'Yogyakarta Kota': [
-                { name: 'Gondokusuman', lat: -7.7896, lng: 110.3758 },
-                { name: 'Jetis', lat: -7.7879, lng: 110.3675 },
-                { name: 'Danurejan', lat: -7.8004, lng: 110.3761 }
-            ]
+            'di-yogyakarta': {
+                'Sleman': [
+                    { name: 'Depok', lat: -7.7641, lng: 110.3852 },
+                    { name: 'Ngaglik', lat: -7.6954, lng: 110.3874 },
+                    { name: 'Mlati', lat: -7.7422, lng: 110.3578 }
+                ],
+                'Bantul': [
+                    { name: 'Bantul Kota', lat: -7.8886, lng: 110.3282 },
+                    { name: 'Pundong', lat: -7.986, lng: 110.3244 },
+                    { name: 'Srandakan', lat: -7.9591, lng: 110.1669 }
+                ],
+                'Gunung Kidul': [
+                    { name: 'Wonosari', lat: -7.9829, lng: 110.6038 },
+                    { name: 'Playen', lat: -7.9717, lng: 110.5514 },
+                    { name: 'Semanu', lat: -8.0112, lng: 110.6577 }
+                ],
+                'Kulon Progo': [
+                    { name: 'Wates', lat: -7.8897, lng: 110.1645 },
+                    { name: 'Sentolo', lat: -7.8362, lng: 110.2055 },
+                    { name: 'Pengasih', lat: -7.8454, lng: 110.1683 }
+                ],
+                'Yogyakarta Kota': [
+                    { name: 'Gondokusuman', lat: -7.7896, lng: 110.3758 },
+                    { name: 'Jetis', lat: -7.7879, lng: 110.3675 },
+                    { name: 'Danurejan', lat: -7.8004, lng: 110.3761 }
+                ]
+            }
         };
 
         // =====================================
@@ -527,10 +537,32 @@
 
             setLocationFromUrl() {
                 const provinsi = Utils.getUrlParameter('provinsi');
+                const kabupaten = Utils.getUrlParameter('kabupaten'); 
+                const kota = Utils.getUrlParameter('kota');
+                
                 if (provinsi && LOCATION_DATA[provinsi]) {
-                    const location = LOCATION_DATA[provinsi];
+                    let location = LOCATION_DATA[provinsi];
+                    let locationName = location.name;
+                    
+                    // Cek jika ada parameter kota
+                    if (kota && kabupaten && dataKota[kabupaten]) {
+                        const kotaData = dataKota[kabupaten].find(k => k.name === kota);
+                        if (kotaData) {
+                            location = kotaData;
+                            locationName = `${kota}, ${kabupaten}, ${locationName}`;
+                        }
+                    }
+                    // Cek jika ada parameter kabupaten saja
+                    else if (kabupaten && dataKabupaten[provinsi]) {
+                        const kabupatenData = dataKabupaten[provinsi].find(k => k.name === kabupaten);
+                        if (kabupatenData) {
+                            location = kabupatenData;
+                            locationName = `${kabupaten}, ${locationName}`;
+                        }
+                    }
+                    
                     this.state.setCenter(location.lat, location.lng);
-                    UI.updateLocationText(location.name);
+                    UI.updateLocationText(locationName);
                     return true;
                 }
                 return false;
@@ -663,9 +695,11 @@
                 const kotaSelect = document.getElementById('kotaSelect');
                 kotaSelect.innerHTML = '<option value="">Pilih Kecamatan/Kota</option>';
                 
-                if (dataKota[kabupatenName]) {
+                const provinsiKey = document.getElementById('provinsiSelect').value;
+                
+                if (dataKota[provinsiKey] && dataKota[provinsiKey][kabupatenName]) {
                     kotaSelect.disabled = false;
-                    dataKota[kabupatenName].forEach(kota => {
+                    dataKota[provinsiKey][kabupatenName].forEach(kota => {
                         const option = document.createElement('option');
                         option.value = kota.name;
                         option.textContent = kota.name;
@@ -714,14 +748,14 @@
                     let locationName = LOCATION_DATA[provinsiKey].name;
                     let locationCoords = null;
 
-                    if (kotaName) {
+                    if (kotaName && dataKota[provinsiKey] && dataKota[provinsiKey][kabupatenName]) {
                         // Cari koordinat kota/kecamatan
-                        const kotaData = dataKota[kabupatenName].find(k => k.name === kotaName);
+                        const kotaData = dataKota[provinsiKey][kabupatenName].find(k => k.name === kotaName);
                         if (kotaData) {
                             locationCoords = { lat: kotaData.lat, lng: kotaData.lng };
                             locationName = `${kotaName}, ${kabupatenName}, ${locationName}`;
                         }
-                    } else if (kabupatenName) {
+                    } else if (kabupatenName && dataKabupaten[provinsiKey]) {
                         // Cari koordinat kabupaten
                         const kabupatenData = dataKabupaten[provinsiKey].find(k => k.name === kabupatenName);
                         if (kabupatenData) {
