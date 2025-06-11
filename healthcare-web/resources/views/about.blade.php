@@ -132,19 +132,19 @@
                                 <svg class="h-6 w-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span class="text-gray-700">Natural Language Processing untuk memahami deskripsi gejala secara alami</span>
+                                <span class="text-gray-700">Berbagai opsi gejala untuk dipilih oleh pengguna</span>
                             </li>
                             <li class="flex items-start">
                                 <svg class="h-6 w-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span class="text-gray-700">Algoritma prediktif berbasis deep learning</span>
+                                <span class="text-gray-700">Algoritma prediktif berbasi Extra Tree model</span>
                             </li>
                             <li class="flex items-start">
                                 <svg class="h-6 w-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span class="text-gray-700">Database medis yang terus diperbarui</span>
+                                <span class="text-gray-700">Data Ketersediaan rumah sakit yang terus di update</span>
                             </li>
                             <li class="flex items-start">
                                 <svg class="h-6 w-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
