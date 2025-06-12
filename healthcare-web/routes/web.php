@@ -46,6 +46,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/sistem-pakar/history', [SistemPakarController::class, 'history'])
         ->name('sistem-pakar.history');
+
+    Route::delete('/sistem-pakar/history/{id}', [SistemPakarController::class, 'destroyHistory'])
+        ->name('sistem-pakar.history.destroy');
+
+    Route::post('/sistem-pakar/history/{id}/retake', [SistemPakarController::class, 'retake'])
+        ->name('sistem-pakar.history.retake');
 });
 
 Route::get('/rumah-sakit', function () {

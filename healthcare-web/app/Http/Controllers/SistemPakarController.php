@@ -6,9 +6,9 @@ use App\Models\Gejala;
 use Error;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use App\Models\History;
 use \App\Models\DiagnosisSession;
 use Carbon\Carbon;
+use \App\Models\DiagnosisResult;
 
 class SistemPakarController extends Controller
 {
@@ -170,15 +170,31 @@ class SistemPakarController extends Controller
             return redirect()->route('sistem-pakar.index')->with('error', 'Session tidak valid.');
         }
 
-        // 1. Simpan session diagnosis
-        $session = DiagnosisSession::create([
-            'user_id' => $user->id,
-            'created_at' => now(),
-            'umur' => $diagnosis['umur'],
-            'gender' => $diagnosis['gender']
-        ]);
+        // Simpan session diagnosis
+        if ($diagnosis['session'] !== null) {
+            $session = DiagnosisSession::where('id_session', $diagnosis['session'])
+                ->with(['gejalas', 'results'])
+                ->firstOrFail();
 
-        // 2. Simpan gejala ke tabel pivot session_gejala
+            // Update data umur dan gender
+            $session->umur = $diagnosis['umur'];
+            $session->gender = $diagnosis['gender'];
+            $session->created_at = now();
+            $session->save();
+
+            // Hapus data gejala & hasil lama
+            $session->gejalas()->detach();
+            DiagnosisResult::where('id_session', $session->id_session)->delete();
+        } else {
+            $session = DiagnosisSession::create([
+                'user_id' => $user->id,
+                'created_at' => now(),
+                'umur' => $diagnosis['umur'],
+                'gender' => $diagnosis['gender']
+            ]);
+        }
+
+        // Simpan gejala ke tabel pivot session_gejala
         if (!empty($diagnosis['gejala'])) {
             foreach ($diagnosis['gejala'] as $gejalaInd) {
                 $gejala = Gejala::where('nama_gejala_ind', $gejalaInd)->first();
@@ -188,10 +204,10 @@ class SistemPakarController extends Controller
             }
         }
 
-        // 3. Simpan hasil diagnosis ke diagnosis_result
+        // Simpan hasil diagnosis ke diagnosis_result
         if (!empty($diagnosis['result'])) {
             foreach ($diagnosis['result'] as $result) {
-                \App\Models\DiagnosisResult::create([
+                DiagnosisResult::create([
                     'id_session' => $session->id_session,
                     'nama_penyakit' => $result->disease ?? '',
                     'probabilitas' => $result->probability ?? 0,
@@ -207,4 +223,48 @@ class SistemPakarController extends Controller
         return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
     }
 
+    public function destroyHistory($id)
+    {
+        $session = DiagnosisSession::where('id_session', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // Delete related records first
+        $session->gejalas()->detach();
+        $session->results()->delete();
+
+        // Delete the session
+        $session->delete();
+
+        return redirect()
+            ->route('sistem-pakar.index')
+            ->with('success', 'Riwayat berhasil dihapus');
+    }
+
+    public function retake($id)
+    {
+        $session = DiagnosisSession::where('id_session', $id)
+            ->with(['gejalas', 'results'])
+            ->firstOrFail();
+
+        // Store the symptoms in session for reuse
+        session()->put('diagnosis.umur', $session->umur);
+        session()->put('diagnosis.gender', $session->gender);
+        session()->put('diagnosis.gejala', $session->gejalas->pluck('nama_gejala_ind')->toArray());
+
+        // Store the results as an array of objects
+        $results = $session->results->map(function ($result) {
+            return (object) [
+                'disease' => $result->nama_penyakit,
+                'probability' => $result->probabilitas,
+                'description' => $result->deskripsi,
+                'precautions' => json_decode($result->precautions)
+            ];
+        })->toArray();
+
+        session()->put('diagnosis.result', $results);
+        session()->put('diagnosis.session', $id);
+
+        return redirect()->route('sistem-pakar.process', ['step' => 1]);
+    }
 }
