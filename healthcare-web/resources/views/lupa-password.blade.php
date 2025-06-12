@@ -3,63 +3,48 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <div class="container mt-5" style="max-width: 500px;">
-        <h2 class="mb-4 text-center">Lupa Password</h2>
+<body class="bg-gradient-to-b from-sky-400 to-sky-600 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-semibold">Lupa Password</h2>
+            <p class="text-sm text-gray-600">Masukkan email untuk mendapatkan link reset password.</p>
+        </div>
 
-        <!-- Pesan Sukses -->
-        <div id="successMessage" class="alert alert-success d-none"></div>
+        @if (session('status'))
+            <div class="mb-4 p-3 text-sm text-green-800 bg-green-100 rounded">
+                {{ session('status') }}
+            </div>
+        @endif
 
-        <!-- Pesan Error -->
-        <div id="errorMessage" class="alert alert-danger d-none"></div>
+        @if ($errors->any())
+            <div class="mb-4 p-3 text-sm text-red-800 bg-red-100 rounded">
+                {{ $errors->first() }}
+            </div>
+        @endif
 
-        <form id="forgotPasswordForm" method="POST" action="#">
-            <div class="mb-3">
-                <label for="email" class="form-label">Alamat Email</label>
-                <input type="email" name="email" id="email" class="form-control"
-                    placeholder="Masukkan email kamu" required autofocus>
+        <form method="POST" action="{{ route('password.email') }}">
+            @csrf
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input type="email" id="email" name="email"
+                    class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+                    placeholder="you@example.com" required autofocus>
             </div>
 
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">
-                    Kirim Link Reset Password
-                </button>
-            </div>
+            <button type="submit"
+                class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 font-semibold">
+                Kirim Link Reset Password
+            </button>
         </form>
 
-        <div class="mt-3 text-center">
-            <a href="login.html">← Kembali ke halaman login</a>
+        <div class="mt-4 text-center text-sm">
+            <a href="{{ route('masuk') }}" class="text-blue-500 hover:underline">← Kembali ke halaman login</a>
         </div>
     </div>
-
-    <script>
-        // Contoh handling form secara lokal (tanpa server)
-        document.getElementById('forgotPasswordForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const email = document.getElementById('email').value;
-
-            if (email === '') {
-                document.getElementById('errorMessage').textContent = 'Email harus diisi.';
-                document.getElementById('errorMessage').classList.remove('d-none');
-                document.getElementById('successMessage').classList.add('d-none');
-                return;
-            }
-
-            // Simulasi pengiriman sukses
-            document.getElementById('successMessage').textContent = 'Link reset password telah dikirim ke email Anda.';
-            document.getElementById('successMessage').classList.remove('d-none');
-            document.getElementById('errorMessage').classList.add('d-none');
-
-            // Reset form
-            document.getElementById('forgotPasswordForm').reset();
-        });
-    </script>
 </body>
 
 </html>
