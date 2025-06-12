@@ -353,24 +353,29 @@
 
 </x-layout>
 
-<!-- CSS untuk Carousel -->
+<!-- Responsive CSS untuk Carousel -->
 <style>
     .carousel-container {
         overflow: hidden;
         position: relative;
+        width: 100%;
+        max-width: 100%;
     }
 
     .carousel-slides {
         display: flex;
         transition: transform 0.5s ease;
+        width: 100%;
     }
 
     .section {
         flex: 0 0 100%;
-        min-height: 500px;
+        min-height: 400px;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
     .carousel-button {
@@ -390,36 +395,96 @@
     }
 
     .carousel-button-left {
-        left: 20px;
+        left: 10px;
     }
 
     .carousel-button-right {
-        right: 20px;
+        right: 10px;
     }
 
     .carousel-dots {
         position: absolute;
-        bottom: 20px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 10px;
+        gap: 8px;
     }
 
     .carousel-dot {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.5);
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .carousel-dot.active {
         background-color: white;
         transform: scale(1.2);
     }
+
+    /* ======= Responsive Breakpoints ======= */
+
+    /* Small devices (mobile) */
+    @media (max-width: 600px) {
+        .section {
+            min-height: 300px;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .carousel-button {
+            width: 30px;
+            height: 30px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+        }
+    }
+
+    /* Medium devices (tablet) */
+    @media (min-width: 601px) and (max-width: 1024px) {
+        .section {
+            min-height: 400px;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .carousel-button {
+            width: 35px;
+            height: 35px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+        }
+    }
+
+    /* Large devices (desktop) */
+    @media (min-width: 1025px) {
+        .section {
+            min-height: 500px;
+            padding: 30px;
+            font-size: 18px;
+        }
+
+        .carousel-button {
+            width: 40px;
+            height: 40px;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+        }
+    }
 </style>
+
 
 <!-- JS untuk Carousel -->
 <script>
