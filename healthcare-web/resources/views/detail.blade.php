@@ -11,9 +11,9 @@
         <div class="w-30 h-0.5 bg-white my-4 rounded-full"></div>
 
 <form action="{{ url('peta') }}" method="GET">
-    <input type="hidden" name="provinsi" value="jawa_barat">
-    <input type="hidden" name="kabupaten" value="Bandung">
-    <input type="hidden" name="kota" value="Bandung">
+    <input type="hidden" name="provinsi">
+    <input type="hidden" name="kabupaten">
+    <input type="hidden" name="kota">
     <button type="submit" class="bg-white text-blue-600 font-semibold px-10 py-2 rounded-3xl">
         Peta
     </button>
