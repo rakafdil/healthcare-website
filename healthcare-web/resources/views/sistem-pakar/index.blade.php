@@ -1,6 +1,7 @@
 <x-layout title="Healthcare Alomany - Sistem Pakar">
 
-    <x-hero.sistem-pakar />
+    <x-hero hero_img="{{ asset('assets/foto fitur sistem pakar.png') }}" img_alt="foto fitur sistem pakar"
+        text1="SISTEM PAKAR" text2="DIAGNOSA PENYAKIT" route="{{ route('home') }}" />
 
     <div class="px-4 md:px-8 lg:px-20
     py-8">

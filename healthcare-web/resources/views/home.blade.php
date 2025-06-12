@@ -1,33 +1,34 @@
 <x-layout title="Healthcare Alomany - Beranda">
 
     <div class="w-full min-h-screen relative overflow-hidden">
-    <!-- Background Image -->
-    <img src="{{ asset('assets/Desktop - 2.png') }}" class="absolute inset-0 w-full h-full object-cover z-0" alt="Full Width Image" />
-    
-    <!-- Optional Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-white/5 backdrop-blur-sm z-10"></div>
+        <!-- Background Image -->
+        <img src="{{ asset('assets/Desktop - 2.png') }}" class="absolute inset-0 w-full h-full object-cover z-0"
+            alt="Full Width Image" />
 
-    <!-- Container -->
-    <div class="relative z-20 flex flex-col h-full px-4 md:px-8 max-w-screen-xl mx-auto">
-        <!-- Hero Content -->
-        <div class="flex flex-col justify-center text-right h-[60vh] pt-28 sm:pt-32">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-                SELAMAT DATANG<br />
-                <span>DI </span><span class="text-blue-500 mr-0 md:mr-[5%]">HEALTHCARE</span>
-            </h1>
-            <div class="w-24 h-[3px] bg-white mt-6 ml-auto mr-0 md:mr-[23%]"></div>
-            <a href="tentang-kita"
-                class="mt-6 mr-0 md:mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-max ml-auto hover:bg-blue-100 transition">
-                Tentang Kita
-            </a>
-        </div>
+        <!-- Optional Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-white/5 backdrop-blur-sm z-10"></div>
 
-            
-        <!-- Feature Cards -->
-        <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 mb-10">
-            <!-- Card Template (gunakan untuk keempat card) -->
-            <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
+        <!-- Container -->
+        <div class="relative z-20 flex flex-col h-full px-4 md:px-8 max-w-screen-xl mx-auto">
+            <!-- Hero Content -->
+            <div class="flex flex-col justify-center text-right h-[60vh] pt-28 sm:pt-32">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+                    SELAMAT DATANG<br />
+                    <span>DI </span><span class="text-blue-500 mr-0 md:mr-[5%]">HEALTHCARE</span>
+                </h1>
+                <div class="w-24 h-[3px] bg-white mt-6 ml-auto mr-0 md:mr-[23%]"></div>
+                <a href="tentang-kita"
+                    class="mt-6 mr-0 md:mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-max ml-auto hover:bg-blue-100 transition">
+                    Tentang Kita
+                </a>
+            </div>
+
+
+            <!-- Feature Cards -->
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 mb-10">
+                <!-- Card Template (gunakan untuk keempat card) -->
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M3.207 11.571a2 2 0 0 0 0 2.829l1.414 1.414a2 2 0 0 0 2.829 0l6.97-6.971a2 2 0 0 0 .586-1.46l-.032-1.407a2 2 0 0 0-1.978-1.955l-1.375-.014a2 2 0 0 0-1.435.585zm10.507-3.436l-6.971 6.972a1 1 0 0 1-1.415 0l-1.414-1.415a1 1 0 0 1 0-1.414L10.893 5.3a1 1 0 0 1 .718-.293l1.374.014a1 1 0 0 1 .99.978l.031 1.407a1 1 0 0 1-.292.73"
@@ -38,64 +39,68 @@
                                 d="m2 17.457l-.707-.707l2.457-2.457l.707.707zM16.854 1.354a.5.5 0 1 1 .707.707l-3 3a.5.5 0 1 1-.707-.707z" />
                         </g>
                     </svg>
-                <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Sistem Pakar</h3>
-                <p class="text-gray-600 mb-4">Diagnosa Penyakit</p>
-                <a href="sistem-pakar" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
-                    Masuk Ke Halaman
-                </a>
-            </div>
+                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Sistem Pakar</h3>
+                    <p class="text-gray-600 mb-4">Diagnosa Penyakit</p>
+                    <a href="sistem-pakar"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
+                </div>
 
-            <!-- Rumah Sakit -->
-            <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
+                <!-- Rumah Sakit -->
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M10.497 16.803L15.253 12H14.25q-.184 0-.36-.044l-3.865 3.902l-3.863-3.902Q5.986 12 5.8 12H4.799l4.755 4.803c.26.263.682.263.942 0m6.227-12.49a4.42 4.42 0 0 1 .978 4.7A2 2 0 0 0 17.5 9h-.889a3.415 3.415 0 0 0-.598-3.984A3.306 3.306 0 0 0 11.3 5l-.951.963a.5.5 0 0 1-.711 0l-.96-.97a3.3 3.3 0 0 0-4.706-.016C2.899 6.061 2.713 7.711 3.42 9H2.5q-.09 0-.18.01a4.4 4.4 0 0 1 .941-4.736a4.3 4.3 0 0 1 6.127.016l.605.61l.596-.603l.109-.106a4.306 4.306 0 0 1 6.026.121M7.962 6.307a.5.5 0 0 0-.922-.004L5.47 10H2.5a.5.5 0 0 0 0 1h3.3a.5.5 0 0 0 .46-.304l1.235-2.907l2.043 4.903a.5.5 0 0 0 .886.073l2.143-3.429l1.307 1.493a.5.5 0 0 0 .376.171h3.25a.5.5 0 0 0 0-1h-3.023l-1.6-1.83a.5.5 0 0 0-.801.065l-1.987 3.179z" />
                         </g>
                     </svg>
-                <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Rumah Sakit</h3>
-                <p class="text-gray-600 mb-4">Cek Ketersedian kamar</p>
-                <a href="rumah-sakit" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
-                    Masuk Ke Halaman
-                </a>
-            </div>
+                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Rumah Sakit</h3>
+                    <p class="text-gray-600 mb-4">Cek Ketersedian kamar</p>
+                    <a href="rumah-sakit"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
+                </div>
 
 
                 <!-- Blog Kesehatan -->
-            <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
-                    class="w-12 h-12 text-blue-500 mb-4">
-                    <path
-                    d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14c0 1.103.897 2 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM5 20V9h14l.002 11H5z">
-                    </path>                       
-                    <path d="M7 11h5v2H7zm0 4h10v2H7z"></path>
-                </svg>
-                <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Blog Kesehatan</h3>
-                <p class="text-gray-600 mb-4">Berisi Artikel Peduli Kesehatan</p>
-                <a href="artikel" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
-                    Masuk Ke Halaman
-                </a>
-            </div>
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+                        class="w-12 h-12 text-blue-500 mb-4">
+                        <path
+                            d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14c0 1.103.897 2 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM5 20V9h14l.002 11H5z">
+                        </path>
+                        <path d="M7 11h5v2H7zm0 4h10v2H7z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Blog Kesehatan</h3>
+                    <p class="text-gray-600 mb-4">Berisi Artikel Peduli Kesehatan</p>
+                    <a href="artikel"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
+                </div>
 
 
-            <!-- Hasil Analisa -->
-            <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
+                <!-- Hasil Analisa -->
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M6.25 1.5a4.75 4.75 0 1 0 0 9.5a4.75 4.75 0 0 0 0-9.5M0 6.25a6.25 6.25 0 1 1 11.32 3.656l2.387 2.387a1 1 0 1 1-1.414 1.414L9.906 11.32A6.25 6.25 0 0 1 0 6.25m5.962-1.723a.625.625 0 0 0-1.095-.044L4.101 5.75H3.046a.625.625 0 1 0 0 1.25h1.408a.63.63 0 0 0 .535-.302l.36-.596l.93 1.87a.625.625 0 0 0 1.016.15L8.345 7h1.11a.625.625 0 1 0 0-1.25h-1.38a.63.63 0 0 0-.456.197l-.621.663z"
                                 clip-rule="evenodd" />
                         </g>
-                </svg>
-                <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Hasil Analisa</h3>
-                <p class="text-gray-600 mb-4">Hasil analisa diagnosa penyakit</p>
-                <a href="sistem-pakar" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
-                    Masuk Ke Halaman
-                </a>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Hasil Analisa</h3>
+                    <p class="text-gray-600 mb-4">Hasil analisa diagnosa penyakit</p>
+                    <a href="sistem-pakar"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
+                </div>
             </div>
-         </div>
+        </div>
     </div>
-</div>
 
 
     <!-- sistem pakar -->

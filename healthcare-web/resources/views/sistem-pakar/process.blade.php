@@ -1,7 +1,8 @@
 {{-- resources/views/symptoms-page.blade.php --}}
 
 <x-layout title="Healthcare Alomany - Melakukan Diagnosa - Sistem Pakar">
-    <x-hero.sistem-pakar />
+    <x-hero hero_img="{{ asset('assets/foto fitur sistem pakar.png') }}" img_alt="foto fitur sistem pakar"
+        text1="SISTEM PAKAR" text2="DIAGNOSA PENYAKIT" route="{{ route('sistem-pakar.index') }}" />
 
     <div class="flex justify-center">
         <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
