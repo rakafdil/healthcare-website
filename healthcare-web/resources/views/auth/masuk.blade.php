@@ -28,13 +28,13 @@
         </div>
 
         @if(session('error'))
-    <div class="alert alert-danger">
+    <div class="mb-4 p-3 text-red-700 bg-red-100 border border-red-300 rounded">
         {{ session('error') }}
     </div>
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger">
+    <div class="mb-4 p-3 text-red-700 bg-red-100 border border-red-300 rounded">
         {{ $errors->first() }}
     </div>
 @endif

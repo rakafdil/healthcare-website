@@ -11,7 +11,7 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('masuk');
+        return view('auth.masuk');
     }
 
     public function login(Request $request)
