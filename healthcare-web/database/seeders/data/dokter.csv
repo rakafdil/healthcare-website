@@ -588,3 +588,295 @@
 588,Dr. Dea Dalila,Neurologi,09:00-15:00,290
 589,Dr. Aziel Irvan,Kardiologi,10:00-16:00,291
 590,Dr. Kiesha Alvaro,Orthopedi,07:00-13:00,292
+591,Dr. Siti Nurhaliza,Neurologi,07:30-13:30,2
+592,Dr. Budi Prasetyo,Penyakit Dalam,08:00-15:00,3
+593,Dr. Maya Sari,Anak,09:00-16:00,4
+594,Dr. Rizki Firmansyah,Bedah Umum,07:00-14:00,5
+595,Dr. Indira Putri,Kulit dan Kelamin,08:30-15:30,6
+596,Dr. Eko Wijaya,Mata,09:00-16:00,7
+597,Dr. Dewi Lestari,THT,08:00-14:00,8
+598,Dr. Rahman Hakim,Urologi,07:30-14:30,9
+599,Dr. Fitri Handayani,Kandungan,08:00-15:00,10
+600,Dr. Agus Setiawan,Paru,07:00-13:00,11
+601,Dr. Lina Marlina,Jiwa,09:00-16:00,12
+602,Dr. Hendra Kusuma,Anestesi,24:00-06:00,13
+603,Dr. Sri Mulyani,Patologi Klinik,08:00-14:00,14
+604,Dr. Bambang Sutrisno,Radiologi,07:30-15:30,15
+605,Dr. Ratna Sari,Rehabilitasi Medik,08:00-15:00,16
+606,Dr. Dedi Kurniawan,Bedah Saraf,07:00-14:00,17
+607,Dr. Ani Widiastuti,Gizi Klinik,08:30-15:30,18
+608,Dr. Faisal Ahmad,Bedah Plastik,09:00-16:00,19
+609,Dr. Nurul Hidayah,Geriatri,08:00-14:00,20
+610,Dr. Wahyu Pratama,Orthopedi,07:30-13:30,21
+611,Dr. Lia Permata,Kardiologi,08:00-15:00,22
+612,Dr. Gunawan Santoso,Neurologi,07:00-14:00,23
+613,Dr. Rini Susanti,Penyakit Dalam,08:30-15:30,24
+614,Dr. Irfan Maulana,Anak,09:00-16:00,25
+615,Dr. Yuni Astuti,Bedah Umum,08:00-14:00,26
+616,Dr. Dimas Prasetya,Kulit dan Kelamin,07:30-14:30,27
+617,Dr. Mega Wulandari,Mata,08:00-15:00,28
+618,Dr. Ridwan Kamil,THT,07:00-13:00,29
+619,Dr. Sari Indah,Urologi,08:30-15:30,30
+620,Dr. Tony Setiawan,Kandungan,09:00-16:00,31
+621,Dr. Eka Putri,Paru,08:00-14:00,32
+622,Dr. Bayu Aji,Jiwa,07:30-14:30,33
+623,Dr. Wati Ningrum,Anestesi,20:00-02:00,34
+624,Dr. Hadi Surya,Patologi Klinik,08:00-15:00,35
+625,Dr. Novi Rahmawati,Radiologi,07:00-14:00,36
+626,Dr. Arief Budiman,Rehabilitasi Medik,08:30-15:30,37
+627,Dr. Sinta Dewi,Bedah Saraf,09:00-16:00,38
+628,Dr. Joko Susilo,Gizi Klinik,08:00-14:00,39
+629,Dr. Rina Maharani,Bedah Plastik,07:30-14:30,40
+630,Dr. Farid Hasan,Geriatri,08:00-15:00,41
+631,Dr. Dian Safitri,Orthopedi,07:00-13:00,42
+632,Dr. Rudi Hartono,Kardiologi,08:30-15:30,43
+633,Dr. Nita Sari,Neurologi,09:00-16:00,44
+634,Dr. Andi Wijayanto,Penyakit Dalam,08:00-14:00,45
+635,Dr. Laila Fitri,Anak,07:30-14:30,46
+636,Dr. Hendro Gunawan,Bedah Umum,08:00-15:00,47
+637,Dr. Vina Amelia,Kulit dan Kelamin,07:00-14:00,48
+638,Dr. Reza Pratama,Mata,08:30-15:30,49
+639,Dr. Dewi Anggraini,THT,09:00-16:00,50
+640,Dr. Gilang Ramadhan,Urologi,08:00-14:00,51
+641,Dr. Tuti Suryani,Kandungan,07:30-14:30,52
+642,Dr. Aris Munandar,Paru,08:00-15:00,53
+643,Dr. Putri Ayu,Jiwa,07:00-14:00,54
+644,Dr. Yoga Pradana,Anestesi,22:00-04:00,55
+645,Dr. Mira Sartika,Patologi Klinik,08:30-15:30,56
+646,Dr. Zaki Fuadi,Radiologi,09:00-16:00,57
+647,Dr. Ratih Puspita,Rehabilitasi Medik,08:00-14:00,58
+648,Dr. Herman Syah,Bedah Saraf,07:30-14:30,59
+649,Dr. Lestari Wulan,Gizi Klinik,08:00-15:00,60
+650,Dr. Asep Saputra,Bedah Plastik,07:00-14:00,61
+651,Dr. Melia Sari,Geriatri,08:30-15:30,62
+652,Dr. Doni Pratama,Orthopedi,09:00-16:00,63
+653,Dr. Erna Wijayanti,Kardiologi,08:00-14:00,64
+654,Dr. Fahmi Rahman,Neurologi,07:30-14:30,65
+655,Dr. Shinta Bella,Penyakit Dalam,08:00-15:00,66
+656,Dr. Rico Ananda,Anak,07:00-14:00,67
+657,Dr. Wulan Dari,Bedah Umum,08:30-15:30,68
+658,Dr. Danny Arianto,Kulit dan Kelamin,09:00-16:00,69
+659,Dr. Siska Maharani,Mata,08:00-14:00,70
+660,Dr. Andre Gunawan,THT,07:30-14:30,71
+661,Dr. Intan Permata,Urologi,08:00-15:00,72
+662,Dr. Hafiz Akbar,Kandungan,07:00-14:00,73
+663,Dr. Elsa Pratiwi,Paru,08:30-15:30,74
+664,Dr. Ryan Saputra,Jiwa,09:00-16:00,75
+665,Dr. Diana Sari,Anestesi,21:00-03:00,76
+666,Dr. Firman Hidayat,Patologi Klinik,08:00-14:00,77
+667,Dr. Lia Kusuma,Radiologi,07:30-14:30,78
+668,Dr. Beni Setiawan,Rehabilitasi Medik,08:00-15:00,79
+669,Dr. Citra Dewi,Bedah Saraf,07:00-14:00,80
+670,Dr. Galih Prasetyo,Gizi Klinik,08:30-15:30,81
+671,Dr. Yeny Fitriani,Bedah Plastik,09:00-16:00,82
+672,Dr. Usman Ali,Geriatri,08:00-14:00,83
+673,Dr. Karina Sari,Orthopedi,07:30-14:30,84
+674,Dr. Aldy Firmansyah,Kardiologi,08:00-15:00,85
+675,Dr. Novi Susanti,Neurologi,07:00-14:00,86
+676,Dr. Rangga Pradana,Penyakit Dalam,08:30-15:30,87
+677,Dr. Fitriya Nur,Anak,09:00-16:00,88
+678,Dr. Bagas Saputra,Bedah Umum,08:00-14:00,89
+679,Dr. Sari Wulandari,Kulit dan Kelamin,07:30-14:30,90
+680,Dr. Rizky Maulana,Mata,08:00-15:00,91
+681,Dr. Anisa Putri,THT,07:00-14:00,92
+682,Dr. Tegar Pangestu,Urologi,08:30-15:30,93
+683,Dr. Maharani Sari,Kandungan,09:00-16:00,94
+684,Dr. Fajar Nugroho,Paru,08:00-14:00,95
+685,Dr. Indah Permata,Jiwa,07:30-14:30,96
+686,Dr. Dedi Setiawan,Anestesi,23:00-05:00,97
+687,Dr. Winda Sari,Patologi Klinik,08:00-15:00,98
+688,Dr. Haris Pratama,Radiologi,07:00-14:00,99
+689,Dr. Riska Amelia,Rehabilitasi Medik,08:30-15:30,100
+690,Dr. Aji Santoso,Bedah Saraf,09:00-16:00,101
+691,Dr. Nadia Putri,Gizi Klinik,08:00-14:00,102
+692,Dr. Kevin Pratama,Bedah Plastik,07:30-14:30,103
+693,Dr. Sinta Maharani,Geriatri,08:00-15:00,104
+694,Dr. Rahmat Hidayat,Orthopedi,07:00-13:00,105
+695,Dr. Dina Suryani,Kardiologi,08:30-15:30,106
+696,Dr. Ilham Akbar,Neurologi,09:00-16:00,107
+697,Dr. Retno Wulan,Penyakit Dalam,08:00-14:00,108
+698,Dr. Feri Gunawan,Anak,07:30-14:30,109
+699,Dr. Yuli Astuti,Bedah Umum,08:00-15:00,110
+700,Dr. Dicki Prasetya,Kulit dan Kelamin,07:00-14:00,111
+701,Dr. Sari Purnama,Mata,08:30-15:30,112
+702,Dr. Irvan Maulana,THT,09:00-16:00,113
+703,Dr. Desi Rahmawati,Urologi,08:00-14:00,114
+704,Dr. Bobby Setiawan,Kandungan,07:30-14:30,115
+705,Dr. Anggun Sari,Paru,08:00-15:00,116
+706,Dr. Rachmat Ali,Jiwa,07:00-14:00,117
+707,Dr. Tiara Dewi,Anestesi,20:00-02:00,118
+708,Dr. Gita Pratama,Patologi Klinik,08:30-15:30,119
+709,Dr. Ade Firmansyah,Radiologi,09:00-16:00,120
+710,Dr. Lilis Suryani,Rehabilitasi Medik,08:00-14:00,121
+711,Dr. Jefri Gunawan,Bedah Saraf,07:30-14:30,122
+712,Dr. Widya Sari,Gizi Klinik,08:00-15:00,123
+713,Dr. Danu Pradana,Bedah Plastik,07:00-14:00,124
+714,Dr. Siska Wulandari,Geriatri,08:30-15:30,125
+715,Dr. Roni Setiawan,Orthopedi,09:00-16:00,126
+716,Dr. Maya Indah,Kardiologi,08:00-14:00,127
+717,Dr. Gilang Saputra,Neurologi,07:30-14:30,128
+718,Dr. Dewi Susanti,Penyakit Dalam,08:00-15:00,129
+719,Dr. Arman Hidayat,Anak,07:00-14:00,130
+720,Dr. Rina Puspita,Bedah Umum,08:30-15:30,131
+721,Dr. Dicky Pratama,Kulit dan Kelamin,09:00-16:00,132
+722,Dr. Vivi Amelia,Mata,08:00-14:00,133
+723,Dr. Andri Gunawan,THT,07:30-14:30,134
+724,Dr. Maharani Putri,Urologi,08:00-15:00,135
+725,Dr. Rizal Firmansyah,Kandungan,07:00-14:00,136
+726,Dr. Nuri Sari,Paru,08:30-15:30,137
+727,Dr. Edwin Pratama,Jiwa,09:00-16:00,138
+728,Dr. Sari Handayani,Anestesi,22:00-04:00,139
+729,Dr. Eko Saputra,Patologi Klinik,08:00-14:00,140
+730,Dr. Dian Purnama,Radiologi,07:30-14:30,141
+731,Dr. Ahmad Wijaya,Rehabilitasi Medik,08:00-15:00,142
+732,Dr. Lia Suryani,Bedah Saraf,07:00-14:00,143
+733,Dr. Bayu Setiawan,Gizi Klinik,08:30-15:30,144
+734,Dr. Tika Amelia,Bedah Plastik,09:00-16:00,145
+735,Dr. Faisal Hidayat,Geriatri,08:00-14:00,146
+736,Dr. Rani Kusuma,Orthopedi,07:30-14:30,147
+737,Dr. Dedy Pratama,Kardiologi,08:00-15:00,148
+738,Dr. Intan Sari,Neurologi,07:00-14:00,149
+739,Dr. Hendi Gunawan,Penyakit Dalam,08:30-15:30,150
+740,Dr. Sinta Wulandari,Anak,09:00-16:00,151
+741,Dr. Ryan Maulana,Bedah Umum,08:00-14:00,152
+742,Dr. Devi Rahmawati,Kulit dan Kelamin,07:30-14:30,153
+743,Dr. Tony Pradana,Mata,08:00-15:00,154
+744,Dr. Wulan Sari,THT,07:00-14:00,155
+745,Dr. Irfan Setiawan,Urologi,08:30-15:30,156
+746,Dr. Mega Putri,Kandungan,09:00-16:00,157
+747,Dr. Adi Firmansyah,Paru,08:00-14:00,158
+748,Dr. Rini Handayani,Jiwa,07:30-14:30,159
+749,Dr. Dimas Gunawan,Anestesi,21:00-03:00,160
+750,Dr. Sari Puspita,Patologi Klinik,08:00-15:00,161
+751,Dr. Wahyu Saputra,Radiologi,07:00-14:00,162
+752,Dr. Lina Amelia,Rehabilitasi Medik,08:30-15:30,163
+753,Dr. Budi Hidayat,Bedah Saraf,09:00-16:00,164
+754,Dr. Yuni Wulandari,Gizi Klinik,08:00-14:00,165
+755,Dr. Reza Setiawan,Bedah Plastik,07:30-14:30,166
+756,Dr. Indira Sari,Geriatri,08:00-15:00,167
+757,Dr. Fajar Pradana,Orthopedi,07:00-13:00,168
+758,Dr. Dewi Kusuma,Kardiologi,08:30-15:30,169
+759,Dr. Galih Maulana,Neurologi,09:00-16:00,170
+760,Dr. Ratna Putri,Penyakit Dalam,08:00-14:00,171
+761,Dr. Danny Gunawan,Anak,07:30-14:30,172
+762,Dr. Vina Suryani,Bedah Umum,08:00-15:00,173
+763,Dr. Rico Setiawan,Kulit dan Kelamin,07:00-14:00,174
+764,Dr. Elsa Handayani,Mata,08:30-15:30,175
+765,Dr. Andre Pratama,THT,09:00-16:00,176
+766,Dr. Siska Amelia,Urologi,08:00-14:00,177
+767,Dr. Hafiz Hidayat,Kandungan,07:30-14:30,178
+768,Dr. Diana Wulandari,Paru,08:00-15:00,179
+769,Dr. Firman Saputra,Jiwa,07:00-14:00,180
+770,Dr. Lia Puspita,Anestesi,23:00-05:00,181
+771,Dr. Beni Gunawan,Patologi Klinik,08:30-15:30,182
+772,Dr. Citra Sari,Radiologi,09:00-16:00,183
+773,Dr. Galih Setiawan,Rehabilitasi Medik,08:00-14:00,184
+774,Dr. Yeny Kusuma,Bedah Saraf,07:30-14:30,185
+775,Dr. Usman Pradana,Gizi Klinik,08:00-15:00,186
+776,Dr. Karina Putri,Bedah Plastik,07:00-14:00,187
+777,Dr. Aldy Maulana,Geriatri,08:30-15:30,188
+778,Dr. Novi Handayani,Orthopedi,09:00-16:00,189
+779,Dr. Rangga Gunawan,Kardiologi,08:00-14:00,190
+780,Dr. Fitriya Amelia,Neurologi,07:30-14:30,191
+781,Dr. Bagas Hidayat,Penyakit Dalam,08:00-15:00,192
+782,Dr. Sari Suryani,Anak,07:00-14:00,193
+783,Dr. Rizky Setiawan,Bedah Umum,08:30-15:30,194
+784,Dr. Anisa Wulandari,Kulit dan Kelamin,09:00-16:00,195
+785,Dr. Tegar Pradana,Mata,08:00-14:00,196
+786,Dr. Maharani Kusuma,THT,07:30-14:30,197
+787,Dr. Fajar Gunawan,Urologi,08:00-15:00,198
+788,Dr. Indah Sari,Kandungan,07:00-14:00,199
+789,Dr. Dedi Maulana,Paru,08:30-15:30,200
+790,Dr. Winda Putri,Jiwa,09:00-16:00,201
+791,Dr. Haris Setiawan,Anestesi,20:00-02:00,202
+792,Dr. Riska Handayani,Patologi Klinik,08:00-14:00,203
+793,Dr. Aji Pradana,Radiologi,07:30-14:30,204
+794,Dr. Nadia Amelia,Rehabilitasi Medik,08:00-15:00,205
+795,Dr. Kevin Hidayat,Bedah Saraf,07:00-14:00,206
+796,Dr. Sinta Suryani,Gizi Klinik,08:30-15:30,207
+797,Dr. Rahmat Gunawan,Bedah Plastik,09:00-16:00,208
+798,Dr. Dina Wulandari,Geriatri,08:00-14:00,209
+799,Dr. Ilham Setiawan,Orthopedi,07:30-14:30,210
+800,Dr. Retno Kusuma,Kardiologi,08:00-15:00,211
+801,Dr. Feri Pradana,Neurologi,07:00-14:00,212
+802,Dr. Yuli Putri,Penyakit Dalam,08:30-15:30,213
+803,Dr. Dicki Maulana,Anak,09:00-16:00,214
+804,Dr. Sari Handayani,Bedah Umum,08:00-14:00,215
+805,Dr. Irvan Gunawan,Kulit dan Kelamin,07:30-14:30,216
+806,Dr. Desi Amelia,Mata,08:00-15:00,217
+807,Dr. Bobby Hidayat,THT,07:00-14:00,218
+808,Dr. Anggun Suryani,Urologi,08:30-15:30,219
+809,Dr. Rachmat Setiawan,Kandungan,09:00-16:00,220
+810,Dr. Tiara Wulandari,Paru,08:00-14:00,221
+811,Dr. Gita Kusuma,Jiwa,07:30-14:30,222
+812,Dr. Ade Pradana,Anestesi,22:00-04:00,223
+813,Dr. Lilis Putri,Patologi Klinik,08:00-15:00,224
+814,Dr. Jefri Maulana,Radiologi,07:00-14:00,225
+815,Dr. Widya Handayani,Rehabilitasi Medik,08:30-15:30,226
+816,Dr. Danu Gunawan,Bedah Saraf,09:00-16:00,227
+817,Dr. Siska Amelia,Gizi Klinik,08:00-14:00,228
+818,Dr. Roni Hidayat,Bedah Plastik,07:30-14:30,229
+819,Dr. Maya Suryani,Geriatri,08:00-15:00,230
+820,Dr. Gilang Setiawan,Orthopedi,07:00-13:00,231
+821,Dr. Dewi Wulandari,Kardiologi,08:30-15:30,232
+822,Dr. Arman Kusuma,Neurologi,09:00-16:00,233
+823,Dr. Rina Pradana,Penyakit Dalam,08:00-14:00,234
+824,Dr. Dicky Putri,Anak,07:30-14:30,235
+825,Dr. Vivi Maulana,Bedah Umum,08:00-15:00,236
+826,Dr. Andri Handayani,Kulit dan Kelamin,07:00-14:00,237
+827,Dr. Maharani Gunawan,Mata,08:30-15:30,238
+828,Dr. Rizal Amelia,THT,09:00-16:00,239
+829,Dr. Nuri Hidayat,Urologi,08:00-14:00,240
+830,Dr. Edwin Suryani,Kandungan,07:30-14:30,241
+831,Dr. Sari Setiawan,Paru,08:00-15:00,242
+832,Dr. Eko Wulandari,Jiwa,07:00-14:00,243
+833,Dr. Dian Kusuma,Anestesi,21:00-03:00,244
+834,Dr. Ahmad Pradana,Patologi Klinik,08:30-15:30,245
+835,Dr. Lia Putri,Radiologi,09:00-16:00,246
+836,Dr. Bayu Maulana,Rehabilitasi Medik,08:00-14:00,247
+837,Dr. Tika Handayani,Bedah Saraf,07:30-14:30,248
+838,Dr. Faisal Gunawan,Gizi Klinik,08:00-15:00,249
+839,Dr. Rani Amelia,Bedah Plastik,07:00-14:00,250
+840,Dr. Dedy Hidayat,Geriatri,08:30-15:30,251
+841,Dr. Intan Suryani,Orthopedi,09:00-16:00,252
+842,Dr. Hendi Setiawan,Kardiologi,08:00-14:00,253
+843,Dr. Sinta Wulandari,Neurologi,07:30-14:30,254
+844,Dr. Ryan Kusuma,Penyakit Dalam,08:00-15:00,255
+845,Dr. Devi Pradana,Anak,07:00-14:00,256
+846,Dr. Tony Putri,Bedah Umum,08:30-15:30,257
+847,Dr. Wulan Maulana,Kulit dan Kelamin,09:00-16:00,258
+848,Dr. Irfan Handayani,Mata,08:00-14:00,259
+849,Dr. Mega Gunawan,THT,07:30-14:30,260
+850,Dr. Adi Amelia,Urologi,08:00-15:00,261
+851,Dr. Rini Hidayat,Kandungan,07:00-14:00,262
+852,Dr. Dimas Suryani,Paru,08:30-15:30,263
+853,Dr. Sari Setiawan,Jiwa,09:00-16:00,264
+854,Dr. Wahyu Wulandari,Anestesi,23:00-05:00,265
+855,Dr. Lina Kusuma,Patologi Klinik,08:00-14:00,266
+856,Dr. Budi Pradana,Radiologi,07:30-14:30,267
+857,Dr. Yuni Putri,Rehabilitasi Medik,08:00-15:00,268
+858,Dr. Reza Maulana,Bedah Saraf,07:00-14:00,269
+859,Dr. Indira Handayani,Gizi Klinik,08:30-15:30,270
+860,Dr. Fajar Gunawan,Bedah Plastik,09:00-16:00,271
+861,Dr. Dewi Amelia,Geriatri,08:00-14:00,272
+862,Dr. Galih Hidayat,Orthopedi,07:30-14:30,273
+863,Dr. Ratna Suryani,Kardiologi,08:00-15:00,274
+864,Dr. Danny Setiawan,Neurologi,07:00-14:00,275
+865,Dr. Vina Wulandari,Penyakit Dalam,08:30-15:30,276
+866,Dr. Rico Kusuma,Anak,09:00-16:00,277
+867,Dr. Elsa Pradana,Bedah Umum,08:00-14:00,278
+868,Dr. Andre Putri,Kulit dan Kelamin,07:30-14:30,279
+869,Dr. Siska Maulana,Mata,08:00-15:00,280
+870,Dr. Hafiz Handayani,THT,07:00-14:00,281
+871,Dr. Diana Gunawan,Urologi,08:30-15:30,282
+872,Dr. Firman Amelia,Kandungan,09:00-16:00,283
+873,Dr. Lia Hidayat,Paru,08:00-14:00,284
+874,Dr. Beni Suryani,Jiwa,07:30-14:30,285
+875,Dr. Citra Setiawan,Anestesi,20:00-02:00,286
+876,Dr. Galih Wulandari,Patologi Klinik,08:00-15:00,287
+877,Dr. Yeny Kusuma,Radiologi,07:00-14:00,288
+878,Dr. Usman Pradana,Rehabilitasi Medik,08:30-15:30,289
+879,Dr. Karina Putri,Bedah Saraf,09:00-16:00,290
+880,Dr. Aldy Maulana,Gizi Klinik,08:00-14:00,291
+881,Dr. Novi Handayani,Bedah Plastik,07:30-14:30,292
+882,Dr. Ahmad Santoso,Kardiologi,08:00-14:00,1
