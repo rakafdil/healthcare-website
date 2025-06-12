@@ -220,7 +220,12 @@ class SistemPakarController extends Controller
         // Hapus session diagnosis
         session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gender', 'diagnosis.result']);
 
-        return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
+        if ($diagnosis['session']) {
+            session()->forget('diagnosis.session');
+            return redirect()->route('sistem-pakar.history', ['history_id' => $session->id_session]);
+        } else {
+            return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
+        }
     }
 
     public function destroyHistory($id)

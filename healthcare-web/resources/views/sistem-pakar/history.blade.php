@@ -8,7 +8,7 @@
             <div class="bg-gray-50 border-b border-gray-200 p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <a href="{{ url()->previous() }}"
+                        <a href="{{ route('sistem-pakar.index') }}"
                             class="mr-4 text-gray-700 hover:text-blue-600 transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
