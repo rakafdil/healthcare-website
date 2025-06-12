@@ -4,24 +4,27 @@ use App\Models\History;
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Password;
-use App\Http\Controllers\BlogController;
+use App\Http\Controllers\KategoriPenyakitController;
+use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\SistemPakarController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
 })->name('home');
 
-Route::get('/blog/blog', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/blog/search', [BlogController::class, 'search'])->name('blog.search');
-
-Route::get('/baca-blog', function () {
-    return view('baca-blog');
-})->name('baca-blog');
+//artikel controller
+Route::resource('kategori', KategoriPenyakitController::class);
+//route artikel
+Route::get('/artikel', [ArtikelController::class, 'index']);
+Route::get('/artikel/search', [ArtikelController::class, 'search'])->name('artikel.search');
+Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
+Route::get('/artikel/syncFromAPI', [ArtikelController::class, 'syncFromAPI']);
 
 // Tampilan awal sistem pakar
 Route::get('/sistem-pakar', [SistemPakarController::class, 'index'])->name('sistem-pakar.index');
@@ -49,9 +52,7 @@ Route::get('/rumah-sakit', function () {
     return view('rumah-sakit');
 })->name('rumah-sakit');
 
-Route::get('/blog', function () {
-    return view('blog');
-});
+
 
 Route::get('/tentang-kita', function () {
     return view('about');
@@ -135,6 +136,6 @@ Route::post('/logout', function () {
 })->name('logout');
 
 // Dasboard routes
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+Route::get('/dashboard', ['\App\Http\Controllers\DashboardController', 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
