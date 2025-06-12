@@ -6,9 +6,9 @@ use App\Models\Gejala;
 use Error;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use App\Models\History;
 use \App\Models\DiagnosisSession;
 use Carbon\Carbon;
+use \App\Models\DiagnosisResult;
 
 class SistemPakarController extends Controller
 {
@@ -92,11 +92,10 @@ class SistemPakarController extends Controller
         $user = auth()->user();
         $sessions = [];
         if ($user !== null) {
-            $history = History::find($user->id);
             $sessions = DiagnosisSession::where('user_id', $user->id)
                 ->orderByDesc('created_at')
                 ->get();
-            return view('sistem-pakar.index', compact('history', 'sessions'));
+            return view('sistem-pakar.index', compact('sessions'));
         } else {
             return view('sistem-pakar.index', compact('sessions'));
         }
@@ -130,8 +129,10 @@ class SistemPakarController extends Controller
         $date_time = Carbon::parse($session->created_at);
         $tanggal = $date_time->format('d-m-Y');
         $waktu = $date_time->format('H:i:s');
+        $umur = $session->umur ?? null;
+        $gender = $session->gender ?? null;
 
-        return view('sistem-pakar.history', compact('gejala', 'results', 'tanggal', 'waktu', 'id_session'));
+        return view('sistem-pakar.history', compact('gejala', 'results', 'tanggal', 'waktu', 'id_session', 'umur', 'gender'));
     }
 
     public function submitStep(Request $request)
@@ -145,6 +146,13 @@ class SistemPakarController extends Controller
         }
         if ($request->has('gender')) {
             session(['diagnosis.gender' => $request->input('gender')]);
+        }
+
+        if ($step === 2 && session('diagnosis.umur') == null) {
+            abort(404, 'Data tidak ditemukan');
+        }
+        if (($step === 3 || $step === 4 || $step === 5) && session('diagnosis.result') == null) {
+            abort(404, 'Data tidak ditemukan');
         }
 
         return view('sistem-pakar.process', [
@@ -162,13 +170,31 @@ class SistemPakarController extends Controller
             return redirect()->route('sistem-pakar.index')->with('error', 'Session tidak valid.');
         }
 
-        // 1. Simpan session diagnosis
-        $session = DiagnosisSession::create([
-            'user_id' => $user->id,
-            'created_at' => now(),
-        ]);
+        // Simpan session diagnosis
+        if ($diagnosis['session'] !== null) {
+            $session = DiagnosisSession::where('id_session', $diagnosis['session'])
+                ->with(['gejalas', 'results'])
+                ->firstOrFail();
 
-        // 2. Simpan gejala ke tabel pivot session_gejala
+            // Update data umur dan gender
+            $session->umur = $diagnosis['umur'];
+            $session->gender = $diagnosis['gender'];
+            $session->created_at = now();
+            $session->save();
+
+            // Hapus data gejala & hasil lama
+            $session->gejalas()->detach();
+            DiagnosisResult::where('id_session', $session->id_session)->delete();
+        } else {
+            $session = DiagnosisSession::create([
+                'user_id' => $user->id,
+                'created_at' => now(),
+                'umur' => $diagnosis['umur'],
+                'gender' => $diagnosis['gender']
+            ]);
+        }
+
+        // Simpan gejala ke tabel pivot session_gejala
         if (!empty($diagnosis['gejala'])) {
             foreach ($diagnosis['gejala'] as $gejalaInd) {
                 $gejala = Gejala::where('nama_gejala_ind', $gejalaInd)->first();
@@ -178,10 +204,10 @@ class SistemPakarController extends Controller
             }
         }
 
-        // 3. Simpan hasil diagnosis ke diagnosis_result
+        // Simpan hasil diagnosis ke diagnosis_result
         if (!empty($diagnosis['result'])) {
             foreach ($diagnosis['result'] as $result) {
-                \App\Models\DiagnosisResult::create([
+                DiagnosisResult::create([
                     'id_session' => $session->id_session,
                     'nama_penyakit' => $result->disease ?? '',
                     'probabilitas' => $result->probability ?? 0,
@@ -194,7 +220,56 @@ class SistemPakarController extends Controller
         // Hapus session diagnosis
         session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gender', 'diagnosis.result']);
 
-        return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
+        if ($diagnosis['session']) {
+            session()->forget('diagnosis.session');
+            return redirect()->route('sistem-pakar.history', ['history_id' => $session->id_session]);
+        } else {
+            return redirect()->route('sistem-pakar.index')->with('success', 'Hasil diagnosis berhasil disimpan.');
+        }
     }
 
+    public function destroyHistory($id)
+    {
+        $session = DiagnosisSession::where('id_session', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // Delete related records first
+        $session->gejalas()->detach();
+        $session->results()->delete();
+
+        // Delete the session
+        $session->delete();
+
+        return redirect()
+            ->route('sistem-pakar.index')
+            ->with('success', 'Riwayat berhasil dihapus');
+    }
+
+    public function retake($id)
+    {
+        $session = DiagnosisSession::where('id_session', $id)
+            ->with(['gejalas', 'results'])
+            ->firstOrFail();
+
+        // Store the symptoms in session for reuse
+        session()->put('diagnosis.umur', $session->umur);
+        session()->put('diagnosis.gender', $session->gender);
+        session()->put('diagnosis.gejala', $session->gejalas->pluck('nama_gejala_ind')->toArray());
+
+        // Store the results as an array of objects
+        $results = $session->results->map(function ($result) {
+            return (object) [
+                'disease' => $result->nama_penyakit,
+                'probability' => $result->probabilitas,
+                'description' => $result->deskripsi,
+                'precautions' => json_decode($result->precautions)
+            ];
+        })->toArray();
+
+        session()->put('diagnosis.result', $results);
+        session()->put('diagnosis.session', $id);
+
+        return redirect()->route('sistem-pakar.process', ['step' => 1]);
+    }
 }

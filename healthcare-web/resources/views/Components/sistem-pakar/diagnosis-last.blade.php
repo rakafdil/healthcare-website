@@ -10,7 +10,7 @@
                         <button
                             class="kondisi-btn w-full text-left py-4 px-6 rounded-xl transition-all duration-300 bg-blue-200 font-semibold"
                             data-index="{{ $loop->index }}" onclick="selectKondisi({{ $loop->index }})">
-                            {{ $data->disease }} ({{ $data->probability }}%)
+                            {{ $data->disease }} ({{ $data->probability * 100 }}%)
                         </button>
                     @endforeach
 
@@ -20,7 +20,7 @@
             <!-- Detail Kondisi (Right Panel) -->
             <div class="w-full md:w-3/4 pl-0 md:pl-6">
                 <!-- Title at the top -->
-                <h1 class="text-2xl font-semibold mb-6 text-center" id="kondisiTitle">Flu</h1>
+                <h1 class="text-2xl font-semibold mb-6 text-center" id="kondisiTitle"></h1>
 
                 <!-- Centered tabs -->
                 <div class="flex justify-center mb-6 border-b">
@@ -35,39 +35,23 @@
                     </div>
                 </div>
 
-                <!-- Loading indicator -->
-                <div id="loadingIndicator" class="hidden text-center py-8">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                    <p class="mt-2 text-gray-600">Mencari rumah sakit terdekat...</p>
-                </div>
-
-                <!-- Location status -->
-                <div id="locationStatus" class="hidden mb-4 p-3 rounded-lg"></div>
 
                 <!-- Blog Content -->
                 <div id="blogContent" class="grid grid-cols-1 gap-6">
-                    <!-- Sample blog articles -->
-                    <div
-                        class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="w-full md:w-1/3 h-48">
-                                <img src="https://via.placeholder.com/300x200" alt="Article image"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="w-full md:w-2/3 p-4">
-                                <h3 class="font-semibold mb-2">5 Langkah Mudah Mengatasi Flu</h3>
-                                <p class="text-sm text-gray-600 mb-4">Panduan lengkap untuk mengatasi gejala flu dengan
-                                    cepat dan efektif.</p>
-                                <a href="#"
-                                    class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">Baca
-                                    Artikel</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Rumah Sakit Content -->
                 <div id="rumahSakitContent" class="hidden">
+                    <!-- Loading indicator -->
+                    <div id="loadingIndicator" class="hidden text-center py-8">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        <p class="mt-2 text-gray-600">Mencari rumah sakit terdekat...</p>
+                    </div>
+
+                    <!-- Location status -->
+                    <div id="locationStatus" class="hidden mb-4 p-3 rounded-lg"></div>
+
                     <div id="hospitalStats" class="grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white p-4 rounded-lg shadow-sm text-center">
                             <div class="text-2xl font-bold text-blue-600" id="totalHospitals">-</div>
@@ -107,19 +91,8 @@
         let hospitals = [];
 
         // Sample diagnosis data
-        const diagnosisResults = [{
-                disease: 'Flu',
-                probability: 0.852
-            },
-            {
-                disease: 'Demam',
-                probability: 0.728
-            },
-            {
-                disease: 'Alergi',
-                probability: 0.453
-            }
-        ];
+        const diagnosisResults = @json($datas);
+        console.log('Diagnosis Results:', diagnosisResults);
 
         // Sample blog data for each condition
         const kondisiData = {
@@ -531,5 +504,9 @@
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             updateContent();
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            selectKondisi(0);
         });
     </script>

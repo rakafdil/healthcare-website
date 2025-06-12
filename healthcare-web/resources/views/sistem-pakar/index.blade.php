@@ -1,6 +1,7 @@
 <x-layout title="Healthcare Alomany - Sistem Pakar">
 
-    <x-hero.sistem-pakar />
+    <x-hero hero_img="{{ asset('assets/foto fitur sistem pakar.png') }}" img_alt="foto fitur sistem pakar"
+        text1="SISTEM PAKAR" text2="DIAGNOSA PENYAKIT" route="{{ route('home') }}" />
 
     <div class="px-4 md:px-8 lg:px-20
     py-8">
@@ -65,43 +66,47 @@
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-2xl font-semibold text-blue-600 border-b-2 border-gray-200 pb-3 mb-4">Riwayat Pengecekan
                 </h2>
-
-                @isset($history->history_penyakit)
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr>
-                                    <th class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200">
-                                        Tanggal</th>
-                                    <th class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200">
-                                        Waktu</th>
-                                    <th class="text-left py-3 px-4 bg-gray-50 text-gray-700 border-b-2 border-gray-200">
-                                        Detail</th>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-center  bg-gray-50 text-gray-700 border-b-2 border-gray-200">
+                                    Tanggal
+                                </th>
+                                <th class="py-3 px-4 text-center  bg-gray-50 text-gray-700 border-b-2 border-gray-200">Waktu
+                                </th>
+                                <th class="py-3 px-4 text-center  bg-gray-50 text-gray-700 border-b-2 border-gray-200">
+                                    Detail
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($sessions as $session)
+                                <tr class="hover:bg-blue-50 transition-colors duration-200">
+                                    <td class="py-3 px-4 border-b border-gray-200 text-center">
+                                        {{ \Carbon\Carbon::parse($session->created_at)->format('d-m-Y') }}
+                                    </td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-center">
+                                        {{ \Carbon\Carbon::parse($session->created_at)->format('H:i:s') }}
+                                    </td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-center">
+                                        <a href="{{ route('sistem-pakar.history', ['history_id' => $session->id_session]) }}"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm transition-colors duration-200">
+                                            Lihat Detail
+                                        </a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($sessions as $session)
-                                    <tr class="hover:bg-blue-50 transition-colors duration-200">
-                                        <td class="py-3 px-4 border-b border-gray-200">
-                                            {{ \Carbon\Carbon::parse($session->created_at)->format('d-m-Y') }}
-                                        </td>
-                                        <td class="py-3 px-4 border-b border-gray-200">
-                                            {{ \Carbon\Carbon::parse($session->created_at)->format('H:i:s') }}
-                                        </td>
-                                        <td class="py-3 px-4 border-b border-gray-200">
-                                            <a href="{{ route('sistem-pakar.history', ['history_id' => $session->id_session]) }}"
-                                                class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm transition-colors duration-200">
-                                                Lihat Detail
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <p class="text-gray-500 text-center py-6">Belum ada riwayat pemeriksaan.</p>
-                @endisset
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center py-6 text-gray-500">
+                                        Belum ada riwayat pemeriksaan.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         @endauth
     </div>

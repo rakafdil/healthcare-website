@@ -1,32 +1,33 @@
 <x-layout title="Healthcare Alomany - Beranda">
 
-    <div class="w-full h-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+    <div class="w-full min-h-screen relative overflow-hidden">
         <!-- Background Image -->
         <img src="{{ asset('assets/Desktop - 2.png') }}" class="absolute inset-0 w-full h-full object-cover z-0"
-            alt="Full Width Image">
+            alt="Full Width Image" />
+
         <!-- Optional Overlay -->
         <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-white/5 backdrop-blur-sm z-10"></div>
 
-        <!-- Container untuk semua konten -->
-        <div class="relative z-20 flex flex-col h-full px-8 max-w-screen-xl mx-auto">
-            <!-- Hero Content - Menggunakan ukuran tinggi yang lebih kecil -->
-            <div class="flex flex-col justify-center text-right h-3/5 pt-20">
-                <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+        <!-- Container -->
+        <div class="relative z-20 flex flex-col h-full px-4 md:px-8 max-w-screen-xl mx-auto">
+            <!-- Hero Content -->
+            <div class="flex flex-col justify-center text-right h-[60vh] pt-28 sm:pt-32">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
                     SELAMAT DATANG<br />
-                    <span>DI </span><span class="text-blue-500 mr-[5%]">HEALTHCARE</span>
+                    <span>DI </span><span class="text-blue-500 mr-0 md:mr-[5%]">HEALTHCARE</span>
                 </h1>
-                <div class="w-[12%] h-[3px] bg-white mt-6 ml-auto mr-[23%]"></div>
+                <div class="w-24 h-[3px] bg-white mt-6 ml-auto mr-0 md:mr-[23%]"></div>
                 <a href="tentang-kita"
-                    class="mt-6 mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-screen-xl ml-auto hover:bg-blue-100 transition">
+                    class="mt-6 mr-0 md:mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-max ml-auto hover:bg-blue-100 transition">
                     Tentang Kita
                 </a>
             </div>
 
 
-            <!-- Feature Cards with Uniform Icon Sizes -->
-            <div class="w-full flex justify-between space-x-4 mt-16 mb-10">
-                <!-- Sistem Pakar -->
-                <div class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
+            <!-- Feature Cards -->
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 mb-10">
+                <!-- Card Template (gunakan untuk keempat card) -->
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
@@ -40,14 +41,14 @@
                     </svg>
                     <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Sistem Pakar</h3>
                     <p class="text-gray-600 mb-4">Diagnosa Penyakit</p>
-                    <a href="{{ route('sistem-pakar.index') }}"
-                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Ke
-                        Halaman</a>
+                    <a href="sistem-pakar"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
                 </div>
 
                 <!-- Rumah Sakit -->
-                <div
-                    class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up animation-delay-100">
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
@@ -56,14 +57,15 @@
                     </svg>
                     <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Rumah Sakit</h3>
                     <p class="text-gray-600 mb-4">Cek Ketersedian kamar</p>
-                    <a href="{{ route('rumah-sakit') }}"
-                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Ke
-                        Halaman</a>
+                    <a href="rumah-sakit"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
                 </div>
 
+
                 <!-- Blog Kesehatan -->
-                <div
-                    class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up animation-delay-200">
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
                         class="w-12 h-12 text-blue-500 mb-4">
                         <path
@@ -73,15 +75,15 @@
                     </svg>
                     <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Blog Kesehatan</h3>
                     <p class="text-gray-600 mb-4">Berisi Artikel Peduli Kesehatan</p>
-                    <a href="/blog"
-                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Ke
-                        Halaman</a>
+                    <a href="artikel"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
                 </div>
 
 
                 <!-- Hasil Analisa -->
-                <div
-                    class="w-1/4 h-full bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up animation-delay-300">
+                <div class="bg-white shadow-lg rounded-3xl p-4 opacity-0 animate-fade-in-up">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-12 h-12 text-blue-500 mb-4">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
@@ -90,15 +92,16 @@
                         </g>
                     </svg>
                     <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Hasil Analisa</h3>
-                    <p class="text-gray-600 mb-4">Berisi Jurnal Sistem Pakar</p>
-                    <a href="#"
-                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">Masuk Ke
-                        Halaman</a>
+                    <p class="text-gray-600 mb-4">Hasil analisa diagnosa penyakit</p>
+                    <a href="sistem-pakar"
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
+                        Masuk Ke Halaman
+                    </a>
                 </div>
             </div>
-
         </div>
     </div>
+
 
     <!-- sistem pakar -->
     <div class="mt-8">
@@ -116,7 +119,7 @@
                                     Pakar yang dimaksud disini ialah orang yang mempunyai keahlian khusus yang dapat
                                     menyelesaikan masalah yang tidak dapat diselesaikan orang awam. Contohnya dokter,
                                     mekanik, psikolog dan lain-lain.</p>
-                                <a href="#"
+                                <a href="sistem-pakar"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-blue-50 transition ml-16">Sistem
                                     Pakar</a>
                             </div>
@@ -140,7 +143,7 @@
                                     analisis dan pemrosesan data, dan membandingkan data tersebut dengan basis
                                     pengetahuan tentang berbagai macam penyakit. Setelah itu, sistem akan memberikan
                                     hasil diagnosa yang sesuai dengan gejala-gejala yang dirasakan oleh pasien.</p>
-                                <a href="#"
+                                <a href="sistem-pakar"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Diagnosa
                                     Penyakit</a>
                             </div>
@@ -168,7 +171,7 @@
                                     tidak dapat menggantikan peran dokter, tidak mempertimbangkan faktor emosional
                                     pasien, memiliki pengetahuan yang masih terbatas, serta menimbulkan ketergantungan
                                     terhadap teknologi.</p>
-                                <a href="#"
+                                <a href="sistem-pakar"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Diagnosa
                                     Penyakit</a>
                             </div>
@@ -240,7 +243,7 @@
                                     COVID-19 maupun non-COVID di seluruh Indonesia. Namun, karena data dari pusat dapat
                                     berubah sewaktu-waktu, kemungkinan kesalahan informasi bisa terjadi. Jika menemukan
                                     ketidaksesuaian, silakan hubungi kontak kami untuk melaporkan.</p>
-                                <a href="#"
+                                <a href="rumah-sakit"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition mr-16">Cek
                                     Ketersediaan</a>
                             </div>
@@ -267,7 +270,7 @@
                                     wilayah tersebut. Informasi yang ditampilkan mencakup nama rumah sakit, lokasi,
                                     serta ketersediaan layanan rumah sakit yang dapat membantu masyarakat dalam mencari
                                     rumah sakit yang sesuai dengan kebutuhan mereka.</p>
-                                <a href="#"
+                                <a href="rumah-sakit"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-purple-50 transition mr-16">Cek
                                     Ketersediaan</a>
                             </div>
@@ -309,7 +312,7 @@
             </div>
         </div>
     </div>
-    <!-- blog -->
+    <!-- artikel -->
     <div class="mb-8">
         <div id="fullPage3" class="w-full">
             <!-- Carousel Container -->
@@ -327,9 +330,9 @@
                                     yang berguna untuk menjaga kesehatan secara umum. Pengguna dapat menjelajahi
                                     berbagai topik, mulai dari tips hidup sehat, pola makan yang baik, hingga cara
                                     menjaga kesehatan mental.</p>
-                                <a href="#"
+                                <a href="artikel"
                                     class="bg-white text-black font-semibold px-6 py-2 rounded-full shadow-md hover:bg-green-50 transition ml-16">Baca
-                                    Blog</a>
+                                    Artikel</a>
                             </div>
 
                             <div class="md:w-1/2 flex justify-center mb-6 md:mb-0">
@@ -355,24 +358,29 @@
 
 </x-layout>
 
-<!-- CSS untuk Carousel -->
+<!-- Responsive CSS untuk Carousel -->
 <style>
     .carousel-container {
         overflow: hidden;
         position: relative;
+        width: 100%;
+        max-width: 100%;
     }
 
     .carousel-slides {
         display: flex;
         transition: transform 0.5s ease;
+        width: 100%;
     }
 
     .section {
         flex: 0 0 100%;
-        min-height: 500px;
+        min-height: 400px;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
     .carousel-button {
@@ -392,36 +400,96 @@
     }
 
     .carousel-button-left {
-        left: 20px;
+        left: 10px;
     }
 
     .carousel-button-right {
-        right: 20px;
+        right: 10px;
     }
 
     .carousel-dots {
         position: absolute;
-        bottom: 20px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 10px;
+        gap: 8px;
     }
 
     .carousel-dot {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.5);
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .carousel-dot.active {
         background-color: white;
         transform: scale(1.2);
     }
+
+    /* ======= Responsive Breakpoints ======= */
+
+    /* Small devices (mobile) */
+    @media (max-width: 600px) {
+        .section {
+            min-height: 300px;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .carousel-button {
+            width: 30px;
+            height: 30px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+        }
+    }
+
+    /* Medium devices (tablet) */
+    @media (min-width: 601px) and (max-width: 1024px) {
+        .section {
+            min-height: 400px;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .carousel-button {
+            width: 35px;
+            height: 35px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+        }
+    }
+
+    /* Large devices (desktop) */
+    @media (min-width: 1025px) {
+        .section {
+            min-height: 500px;
+            padding: 30px;
+            font-size: 18px;
+        }
+
+        .carousel-button {
+            width: 40px;
+            height: 40px;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+        }
+    }
 </style>
+
 
 <!-- JS untuk Carousel -->
 <script>

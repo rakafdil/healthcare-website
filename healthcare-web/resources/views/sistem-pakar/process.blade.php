@@ -1,19 +1,66 @@
 {{-- resources/views/symptoms-page.blade.php --}}
 
 <x-layout title="Healthcare Alomany - Melakukan Diagnosa - Sistem Pakar">
-    <x-hero.sistem-pakar />
+    <x-hero hero_img="{{ asset('assets/foto fitur sistem pakar.png') }}" img_alt="foto fitur sistem pakar"
+        text1="SISTEM PAKAR" text2="DIAGNOSA PENYAKIT" route="{{ route('sistem-pakar.index') }}" />
 
     <div class="flex justify-center">
         <h1 class="text-3xl font-bold m-6 text-black">Diagnosa Penyakit</h1>
     </div>
     {{-- <pre>{{ print_r(session()->all(), true) }}</pre> --}}
+    {{-- @dd(session()) --}}
+    <div class="flex my-6 justify-center">
+        @foreach (range(1, 4) as $i)
+            @php
+                // Set step names
+                $stepName = match ($i) {
+                    1 => ['Info'],
+                    2 => ['Gejala'],
+                    3 => ['Kondisi'],
+                    4 => ['Artikel &', 'Perawatan'], // Array untuk multiple lines
+                };
 
-    <x-sistem-pakar.symptoms-steps :current_step="$step" :total_steps="5" />
+                // Default: enabled
+                $disabled = false;
+
+                // Logic to disable based on session
+                if (session('diagnosis.gender') === null && $i > 1) {
+                    $disabled = true; // Step 2 to 4
+                } elseif (session('diagnosis.gejala') === null && $i > 2) {
+                    $disabled = true; // Step 3 to 4
+                } elseif (session('diagnosis.result') === null && $i > 3) {
+                    $disabled = true; // Step 4
+                }
+
+                // Style class for disabled state
+                $linkClass = $disabled
+                    ? 'border-gray-400 text-gray-400 pointer-events-none cursor-not-allowed'
+                    : ($step == $i
+                        ? 'bg-blue-500 text-white border-blue-500'
+                        : 'border-black text-gray-600 hover:bg-blue-100 hover:border-blue-500');
+            @endphp
+
+            <div class="flex flex-col items-center mx-4 px-6">
+                <div
+                    class="h-16 flex flex-col justify-center items-center text-center text-2xl font-medium text-gray-700 mb-2">
+                    @foreach ($stepName as $line)
+                        <div>{{ $line }}</div>
+                    @endforeach
+                </div>
+                <a href="{{ $disabled ? '#' : url('/sistem-pakar/symptoms') . '?step=' . $i }}"
+                    class="w-12 h-12 flex items-center justify-center rounded-full border transition {{ $linkClass }}">
+                    {{ $i }}
+                </a>
+            </div>
+        @endforeach
+    </div>
+
     <div class="px-20 py-8 text-2xl">
 
         @if ($step == 1)
             <div class="justify-self-center text-center">
-                <form id="diagnosisForm" method="POST" action="{{ url('/sistem-pakar/symptoms?step=' . ($step + 1)) }}">
+                <form id="diagnosisForm" method="POST"
+                    action="{{ url('/sistem-pakar/symptoms?step=' . ($step + 1)) }}">
                     @csrf
 
                     <label class="block mb-2 pb-3" for="umur">Umur</label>
@@ -127,7 +174,6 @@
                 </div>
 
             </form>
-
             <script>
                 // Get grouped symptoms data from controller
                 const allSymptomsData = @json($allSymptoms->toArray());
@@ -484,18 +530,18 @@
                         :precautions="$item->precautions" />
                 @endif
             @endforeach
-        @elseif($step == 4 || $step == 5)
+        @elseif($step == 4)
             <x-sistem-pakar.diagnosis-last :step="$step" :datas="session('diagnosis.result')" />
         @endif
 
-        @if ($step == 3 || $step == 4 || $step == 5)
+        @if ($step == 3 || $step == 4)
             <div class="mt-8 flex justify-between">
                 <button type="button"
                     onclick="saveScrollAndGo('{{ url('/sistem-pakar/symptoms?step=' . ($step - 1)) }}')"
                     class="w-3/14 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
                     Kembali
                 </button>
-                @if ($step == 5)
+                @if ($step == 4)
                     <form id="finishForm" method="POST" action="{{ url('/sistem-pakar/symptoms/finish') }}">
                         @csrf
                         <button type="submit"
