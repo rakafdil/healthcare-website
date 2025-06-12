@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\User;
 use App\Models\History;
 use App\Models\SistemPakar;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\KategoriPenyakitController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\SistemPakarController;
@@ -75,12 +78,40 @@ Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
+// Route lupa password
 Route::get('/lupa-password', function () {
-    return view('lupa-password');
+    return view('auth.lupa-password');
 })->name('password.request');
 
 Route::post('/lupa-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 
+
+// Route untuk form reset password
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->name('password.reset');
+
+// Route untuk handle reset password
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password),
+            ])->save();
+        }
+    );
+
+    return $status == Password::PASSWORD_RESET
+        ? redirect()->route('masuk')->with('status', __($status))
+        : back()->withErrors(['email' => [__($status)]]);
+})->name('password.update');
 
 // Route register menggunakan RegisterController
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
