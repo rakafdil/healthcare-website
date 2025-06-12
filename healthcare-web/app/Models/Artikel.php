@@ -20,6 +20,7 @@ class Artikel extends Model
     'gambar',
     'bahasan_penyakit', 
     'isi',
+    'link',
     'kategori_penyakit_id'
     ];
 

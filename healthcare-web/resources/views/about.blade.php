@@ -20,7 +20,7 @@
                             <a href="/sistem-pakar" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
                                 Coba Diagnosis Sekarang
                             </a>
-                            <a href="/blog" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-medium transition duration-300">
+                            <a href="/artikel" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-medium transition duration-300">
                                 Baca Artikel Kesehatan
                             </a>
                         </div>
@@ -240,7 +240,7 @@
                             </svg>
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-1">Rifki Cahyono</h3>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-1">Rifqi Cahyono</h3>
                             <p class="text-blue-600 mb-3">Content Recommendation & Medical Content Lead</p>
                             <p class="text-gray-600 text-sm">
                                 Mengembangkan sistem rekomendasi blog/artikel terkait penyakit dan bertanggung jawab atas kualitas konten edukasi medis di platform.

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Artikel; // gunakan model Blog, sesuai nama file kamu
+use App\Models\Artikel; 
 
 class ArtikelTableSeeder extends Seeder
 {

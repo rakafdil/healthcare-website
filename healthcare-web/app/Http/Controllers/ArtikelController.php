@@ -48,7 +48,7 @@ public function syncFromAPI()
             'access_key' => env('MEDIASTACK_ACCESS_KEY'),
             'categories' => 'health',
             'sort' => 'published_desc',
-            'limit' => 100 // mulai dengan sedikit dulu untuk testing
+            'limit' => 100
         ]);
         $ch = curl_init(sprintf('%s?%s', 'https://api.mediastack.com/v1/news', $queryString));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -86,6 +86,7 @@ public function syncFromAPI()
                 'gambar' => $newsData['image'],
                 'bahasan_penyakit' => $newsData['categories'] ?? '',
                 'isi' => $newsData['description'] ?? '',
+                'link' =>  $newsData['url'] ?? '',
                 'created_at' => $newsData['published_at'],
                 'kategori_penyakit_id' => null // sesuaikan dengan ID kategori yang ada
             ]
