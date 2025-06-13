@@ -57,11 +57,6 @@ Route::middleware(['auth'])->group(function () {
         ->name('sistem-pakar.history.retake');
 });
 
-Route::get('/rumah-sakit', function () {
-    return view('rumah-sakit');
-})->name('rumah-sakit');
-
-
 
 Route::get('/tentang-kita', function () {
     return view('about');
@@ -117,6 +112,13 @@ Route::post('/reset-password', function (Request $request) {
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
+// ------------------------------
+// Route Rumah Sakit
+// ------------------------------
+Route::get('/rumah-sakit', function () {
+    return view('rumah-sakit');
+})->name('rumah-sakit');
+
 // Route peta
 Route::get('/peta', function () {
     return view('peta');
@@ -138,11 +140,6 @@ Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])-
 
 // Route detail alternatif
 Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])->name('detail.alt');
-
-// Fallback jika ID tidak disediakan
-Route::get('/detail', function () {
-    return redirect('/peta');
-});
 
 // API Routes
 Route::prefix('api')->group(function () {
