@@ -138,9 +138,6 @@ Route::prefix('api/hospital')->group(function () {
 
 Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('detail');
 
-// Route detail alternatif
-Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])->name('detail.alt');
-
 // API Routes
 Route::prefix('api')->group(function () {
     Route::get('/hospital/{id}', [HospitalController::class, 'getHospitalData']);
