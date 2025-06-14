@@ -115,36 +115,75 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 // ------------------------------
 // Route Rumah Sakit
 // ------------------------------
-Route::get('/rumah-sakit', function () {
-    return view('rumah-sakit');
-})->name('rumah-sakit');
+Route::get('/rumah-sakit', [HospitalController::class, 'showHospitalForm'])->name('rumah-sakit');
 
-// Route peta
-Route::get('/peta', function () {
-    return view('peta');
+// Group routes untuk rumah sakit
+Route::prefix('rumah-sakit')->name('rumah-sakit.')->group(function () {
+    
+    // Route untuk menampilkan peta
+    Route::get('/peta', [HospitalController::class, 'showMap'])->name('peta');
+    
+    // Route untuk detail rumah sakit
+    Route::get('/{id}', [HospitalController::class, 'showHospitalDetail'])
+        ->where('id', '[0-9]+')
+        ->name('detail');
+    
+    // Route alternatif untuk detail (jika masih dibutuhkan)
+    Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])
+        ->where('id', '[0-9]+')
+        ->name('detail.alt');
 });
 
-Route::get('/peta', [HospitalController::class, 'showMap'])->name('peta');
-
-// API routes
-Route::prefix('api/hospital')->group(function () {
-    Route::get('capacity/{id}', [HospitalController::class, 'getHospitalCapacity']);
-    Route::get('doctors/{id}', [HospitalController::class, 'getHospitalDoctors']);
-    Route::get('specialties/{id}', [HospitalController::class, 'getHospitalSpecialties']);
-    Route::get('doctors/{hospitalId}/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty']);
-    Route::get('data/{id}', [HospitalController::class, 'getHospitalData']);
-    Route::get('debug/{hospitalId?}', [HospitalController::class, 'debugDoctors']);
-});
-
-Route::get('/hospital/{id}', [HospitalController::class, 'showHospitalDetail'])->name('detail');
-
-// API Routes
-Route::prefix('api')->group(function () {
-    Route::get('/hospital/{id}', [HospitalController::class, 'getHospitalData']);
-    Route::get('/hospital/capacity/{placeId}', [HospitalController::class, 'getHospitalCapacity']);
+// API Routes - tetap menggunakan prefix api
+Route::prefix('api')->name('api.')->group(function () {
+    
+    // API untuk rumah sakit
+    Route::prefix('rumah-sakit')->name('rumah-sakit.')->group(function () {
+        Route::get('/nearby', [HospitalController::class, 'getNearbyHospitals'])->name('nearby');
+        Route::get('/stats', [HospitalController::class, 'getHospitalStats'])->name('stats');
+        Route::get('/{id}/data', [HospitalController::class, 'getHospitalData'])
+            ->where('id', '[0-9]+')
+            ->name('data');
+        Route::get('/{id}/capacity', [HospitalController::class, 'getHospitalCapacity'])
+            ->where('id', '[0-9]+')
+            ->name('capacity');
+        Route::get('/{id}/doctors', [HospitalController::class, 'getHospitalDoctors'])
+            ->where('id', '[0-9]+')
+            ->name('doctors');
+        Route::get('/{id}/specialties', [HospitalController::class, 'getHospitalSpecialties'])
+            ->where('id', '[0-9]+')
+            ->name('specialties');
+        Route::get('/{hospitalId}/doctors/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty'])
+            ->where('hospitalId', '[0-9]+')
+            ->name('doctors.specialty');
+        Route::get('/debug/{hospitalId?}', [HospitalController::class, 'debugDoctors'])
+            ->where('hospitalId', '[0-9]+')
+            ->name('debug');
+    });
+    
+    // Backward compatibility - alias untuk route lama
+    Route::prefix('hospital')->group(function () {
+        Route::get('/capacity/{id}', [HospitalController::class, 'getHospitalCapacity'])
+            ->where('id', '[0-9]+');
+        Route::get('/doctors/{id}', [HospitalController::class, 'getHospitalDoctors'])
+            ->where('id', '[0-9]+');
+        Route::get('/specialties/{id}', [HospitalController::class, 'getHospitalSpecialties'])
+            ->where('id', '[0-9]+');
+        Route::get('/doctors/{hospitalId}/specialty/{specialty}', [HospitalController::class, 'getDoctorsBySpecialty'])
+            ->where('hospitalId', '[0-9]+');
+        Route::get('/data/{id}', [HospitalController::class, 'getHospitalData'])
+            ->where('id', '[0-9]+');
+        Route::get('/debug/{hospitalId?}', [HospitalController::class, 'debugDoctors'])
+            ->where('hospitalId', '[0-9]+');
+    });
+    
+    // Route lama untuk kompatibilitas
     Route::get('/nearby-hospitals', [HospitalController::class, 'getNearbyHospitals']);
-    Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']); // Alias lama
-    Route::get('/hospitals', [HospitalController::class, 'getAllHospitals']);
+    Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']);
+    Route::get('/hospital/{id}', [HospitalController::class, 'getHospitalData'])
+        ->where('id', '[0-9]+');
+    Route::get('/hospital/capacity/{placeId}', [HospitalController::class, 'getHospitalCapacity'])
+        ->where('placeId', '[0-9]+');
 });
 
 // ------------------------------

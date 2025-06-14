@@ -151,13 +151,13 @@
 
                 <div class="flex items-center gap-x-6">
                     <!-- Social Media Icons -->
-                    <a href="#" class="text-white hover:text-gray-200">
+                    <a href="https://wa.me/628135951733" class="text-white hover:text-gray-200">
                         <img src="{{ asset('assets/whatsapp.png') }}" alt="WhatsApp" class="h-6 w-6">
                     </a>
-                    <a href="#" class="text-white hover:text-gray-200">
+                    <a href="https://www.facebook.com/" class="text-white hover:text-gray-200">
                         <img src="{{ asset('assets/facebook.png') }}" alt="facebook" class="h-6 w-6">
                     </a>
-                    <a href="#" class="text-white hover:text-gray-200">
+                    <a href="mailto:alomani@gmail.com" class="text-white hover:text-gray-200">
                         <img src="{{ asset('assets/email.png') }}" alt="email" class="h-6 w-6">
                     </a>
                 </div>
