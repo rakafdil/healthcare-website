@@ -16,7 +16,7 @@
                     SELAMAT DATANG<br />
                     <span>DI </span><span class="text-blue-500 mr-0 md:mr-[5%]">HEALTHCARE</span>
                 </h1>
-                <div class="w-24 h-[3px] bg-white mt-6 ml-auto mr-0 md:mr-[23%]"></div>
+                <div class="w-96 h-0.5 bg-white mt-6 ml-auto mr-0 md:mr-[3%]"></div>
                 <a href="tentang-kita"
                     class="mt-6 mr-0 md:mr-[23%] bg-white text-blue-500 font-semibold px-6 py-2 rounded-full shadow-md max-w-max ml-auto hover:bg-blue-100 transition">
                     Tentang Kita

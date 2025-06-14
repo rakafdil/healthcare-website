@@ -38,20 +38,20 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                         @foreach ($artikels as $artikel)
                             <div class="bg-white shadow-lg rounded-lg flex flex-col h-full">
-                               {{-- Opsi 2: Menggunakan onerror JavaScript (Lebih sederhana) --}}
-<img src="{{ $artikel->gambar ?? '/images/placeholder.jpg' }}" 
-     alt="Gambar Artikel" 
-     class="w-full h-48 sm:h-52 lg:h-48 object-cover rounded-t-md"
-     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        {{-- Opsi 2: Menggunakan onerror JavaScript (Lebih sederhana) --}}
+                            <img src="{{ $artikel->gambar ?? '/images/placeholder.jpg' }}" 
+                                alt="Gambar Artikel" 
+                                class="w-full h-48 sm:h-52 lg:h-48 object-cover rounded-t-md"
+                                onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-<div class="w-full h-48 sm:h-52 lg:h-48 bg-gray-200 rounded-t-md flex items-center justify-center" style="display: none;">
-    <div class="text-center text-gray-500">
-        <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-        </svg>
-        <p class="text-sm">Tidak ada gambar</p>
-    </div>
-</div>
+                            <div class="w-full h-48 sm:h-52 lg:h-48 bg-gray-200 rounded-t-md flex items-center justify-center" style="display: none;">
+                                <div class="text-center text-gray-500">
+                                    <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="text-sm">Tidak ada gambar</p>
+                                </div>
+                            </div>
                                 <div class="flex flex-col flex-1 justify-between p-4 sm:p-6">
                                     <div>
                                         <h3 class="text-lg sm:text-xl font-semibold mb-2 line-clamp-2">
@@ -80,16 +80,26 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             @foreach ($artikels as $artikel)
                                 <div class="bg-white shadow-lg rounded-lg flex flex-col h-full">
-                                    @if ($artikel->gambar)
-                                        <img src="{{ $artikel->gambar }}" alt="Gambar Artikel"
-                                            class="w-full h-48 sm:h-52 lg:h-48 object-cover rounded-t-md">
-                                    @endif
+                                    {{-- Opsi 2: Menggunakan onerror JavaScript (Lebih sederhana) --}}
+                                    <img src="{{ $artikel->gambar ?? '/images/placeholder.jpg' }}" 
+                                        alt="Gambar Artikel" 
+                                        class="w-full h-48 sm:h-52 lg:h-48 object-cover rounded-t-md"
+                                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                                    <div class="w-full h-48 sm:h-52 lg:h-48 bg-gray-200 rounded-t-md flex items-center justify-center" style="display: none;">
+                                        <div class="text-center text-gray-500">
+                                            <svg class= "w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                            </svg>
+                                            <p class="text-sm">Tidak ada gambar</p>
+                                        </div>
+                                    </div>
                                     <div class="flex flex-col flex-1 justify-between p-4 sm:p-6">
                                         <div>
                                             <h3 class="text-lg sm:text-xl font-semibold mb-2 line-clamp-2">
                                                 {{ $artikel->judul }}</h3>
                                             <p class="text-gray-600 text-sm sm:text-base line-clamp-3">
-                                                {{ $artikel->bahasan_penyakit }}</p>
+                                                {{ $artikel->isi }}</p>
                                         </div>
                                         <div class="mt-4">
                                             <a href="{{ $artikel->link }}" target="_blank"
