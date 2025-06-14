@@ -88,7 +88,7 @@ public function syncFromAPI()
                 'isi' => $newsData['description'] ?? '',
                 'link' =>  $newsData['url'] ?? '',
                 'created_at' => $newsData['published_at'],
-                'kategori_penyakit_id' => null // sesuaikan dengan ID kategori yang ada
+                
             ]
         );
         $syncCount++;

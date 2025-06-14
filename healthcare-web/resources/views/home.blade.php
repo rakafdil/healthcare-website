@@ -73,7 +73,7 @@
                         </path>
                         <path d="M7 11h5v2H7zm0 4h10v2H7z"></path>
                     </svg>
-                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Blog Kesehatan</h3>
+                    <h3 class="text-xl font-semibold mb-2 border-t-2 border-black pt-1">Artikel Kesehatan</h3>
                     <p class="text-gray-600 mb-4">Berisi Artikel Peduli Kesehatan</p>
                     <a href="artikel"
                         class="inline-block bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
@@ -322,7 +322,7 @@
                         style="--tw-gradient-from: #822DFF; --tw-gradient-to: #FFFFFF;">
                         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center">
                             <div class="md:w-1/2 text-white md:pl-8">
-                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black ml-16">Blog Kesehatan</h1>
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black ml-16">Artikel Kesehatan</h1>
                                 <p class="text-lg mb-6 text-black leading-relaxed text-justify ml-16">Fitur ini berisi
                                     artikel-artikel tentang kesehatan dan gaya hidup sehat yang dapat dibaca oleh
                                     pengunjung. Artikel-artikel ini ditujukan untuk membantu meningkatkan kesadaran

@@ -18,16 +18,12 @@ return new class extends Migration
             $table->string('gambar')->nullable();
             $table->string('bahasan_penyakit', 100)->nullable();
             $table->text('isi')->nullable();
-            $table->string('link')->nullable();
+            $table->text('link')->nullable();
             $table->dateTime('created_at')->nullable(); // ganti jadi dateTime biar akurat
             $table->dateTime('updated_at')->nullable(); // ✅ Tambahkan ini
             
            
-            $table->unsignedBigInteger('kategori_penyakit_id')->nullable(); // ✅ ini aman
-
-
-            $table->foreign('kategori_penyakit_id')->references('id')->on('kategori_penyakit')->onDelete('set null');
-
+          
 
         });
 

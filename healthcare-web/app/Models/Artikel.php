@@ -21,13 +21,9 @@ class Artikel extends Model
     'bahasan_penyakit', 
     'isi',
     'link',
-    'kategori_penyakit_id'
     ];
 
-     public function kategori()
-    {
-        return $this->belongsTo(KategoriPenyakit::class, 'kategori_penyakit_id');
-    }
+     
 
     // Tentukan kolom yang tidak bisa diisi (bisa kosong jika tidak ada)
     // protected $guarded = ['id'];

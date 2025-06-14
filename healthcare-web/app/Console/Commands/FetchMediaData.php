@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\ArtikelController;
 use Exception;
 
 class FetchMediaData extends Command
@@ -80,39 +79,23 @@ class FetchMediaData extends Command
             
             foreach ($apiResult['data'] as $newsData) {
                 try {
-                    // Skip artikel yang tidak memiliki gambar
-                    if (empty($newsData['image'])) {
-                        $bar->advance();
-                        continue;
-                    }
-                    
-                    // Handle categories dengan aman
-                    $categories = 'Health'; // default
-                    if (isset($newsData['categories'])) {
-                        if (is_array($newsData['categories'])) {
-                            $categories = implode(', ', $newsData['categories']);
-                        } else {
-                            $categories = $newsData['categories'];
-                        }
-                    }
-                    
                     \App\Models\Artikel::updateOrCreate(
-                        ['judul' => $newsData['title'] ?? 'Untitled'], // cek duplikat berdasarkan judul
+                        ['judul' => $newsData['title']], // Sama seperti controller
                         [
                             'penulis' => $newsData['author'] ?? 'Admin',
-                            'gambar' => $newsData['image'],
-                            'bahasan_penyakit' => $categories,
-                            'isi' => $newsData['description'] ?? 'No description available',
+                            'gambar' => $newsData['image'] ?? null,
+                            'bahasan_penyakit' => $newsData['categories'] ?? '', // Sama seperti controller
+                            'isi' => $newsData['description'] ?? '',
                             'link' => $newsData['url'] ?? '',
-                            'created_at' => isset($newsData['published_at']) ? $newsData['published_at'] : now(),
-                            'kategori_penyakit_id' => null
+                            'created_at' => $newsData['published_at'] ?? now(),
                         ]
                     );
                     $syncCount++;
                     
                 } catch (Exception $articleError) {
-                    // Log error tapi lanjutkan ke artikel berikutnya
+                    // Log error dengan detail untuk debugging
                     $this->warn("⚠️  Gagal menyimpan artikel: " . ($newsData['title'] ?? 'Unknown'));
+                    $this->error("   Error: " . $articleError->getMessage());
                 }
                 
                 $bar->advance();

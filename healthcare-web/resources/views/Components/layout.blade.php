@@ -69,9 +69,8 @@
                                 </x-nav-link>
                                 <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')" :mobile="true"> Rumah Sakit
                                 </x-nav-link>
-                                <x-nav-link href="/artikel" :active="request()->is('artikel') || request()->is('artikel/*')">
-                            Blog
-                        </x-nav-link>
+                                <x-nav-link href="/artikel" :active="request()->is('artikel') || request()->is('artikel/*')" :mobile="true"> Artikel
+                                </x-nav-link>
                             </div>
                         </div>
                         <div class="py-6">
