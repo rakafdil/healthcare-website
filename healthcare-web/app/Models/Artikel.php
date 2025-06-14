@@ -19,7 +19,6 @@ class Artikel extends Model
     'judul',
     'penulis',
     'gambar',
-    'bahasan_penyakit', 
     'isi',
     'link',
     ];
@@ -27,7 +26,7 @@ class Artikel extends Model
 
     public static function getArticlesByDisease($disease)
     {
-        return self::where('bahasan_penyakit', 'LIKE', "%{$disease}%")
+        return self::where( 'LIKE', "%{$disease}%")
             ->orWhere('judul', 'LIKE', "%{$disease}%")
             ->take(3)
             ->get();

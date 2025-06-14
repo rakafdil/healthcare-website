@@ -33,7 +33,6 @@ class ArtikelController extends Controller
 
         $artikels = Artikel::where('judul', 'LIKE', "%{$query}%")
             ->orWhere('isi', 'LIKE', "%{$query}%")
-            ->orWhere('bahasan_penyakit', 'LIKE', "%{$query}%")
             ->paginate(3)
             ->appends(['query' => $query]); // tetap menyimpan query saat pindah halaman
 
@@ -99,7 +98,6 @@ class ArtikelController extends Controller
                         [
                             'penulis' => $newsData['author'] ?? 'Admin',
                             'gambar' => $newsData['image'],
-                            'bahasan_penyakit' => $newsData['categories'] ?? '',
                             'isi' => $newsData['description'] ?? '',
                             'link' => $newsData['url'] ?? '',
                             'created_at' => $newsData['published_at'],

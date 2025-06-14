@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('judul', 255)->nullable();
             $table->string('penulis', 100)->nullable();
             $table->string('gambar')->nullable();
-            $table->string('bahasan_penyakit', 100)->nullable();
             $table->text('isi')->nullable();
             $table->text('link')->nullable();
             $table->dateTime('created_at')->nullable(); // ganti jadi dateTime biar akurat

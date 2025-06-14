@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             GejalaSeeder::class,
             UserSeeder::class,
             HospitalSeeder::class,
-            DokterSeeder::class
+            DokterSeeder::class,
+            ArtikelTableSeeder::class
         ]);
     }
 }

@@ -84,7 +84,7 @@ class FetchMediaData extends Command
                         [
                             'penulis' => $newsData['author'] ?? 'Admin',
                             'gambar' => $newsData['image'] ?? null,
-                            'bahasan_penyakit' => $newsData['categories'] ?? '', // Sama seperti controller
+                            
                             'isi' => $newsData['description'] ?? '',
                             'link' => $newsData['url'] ?? '',
                             'created_at' => $newsData['published_at'] ?? now(),
