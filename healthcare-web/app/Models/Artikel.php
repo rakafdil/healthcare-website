@@ -16,18 +16,18 @@ class Artikel extends Model
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
 
-    'judul',
-    'penulis',
-    'gambar',
-    'isi',
-    'link',
+        'judul',
+        'penulis',
+        'gambar',
+        'isi',
+        'link',
     ];
 
 
     public static function getArticlesByDisease($disease)
     {
-        return self::where( 'LIKE', "%{$disease}%")
-            ->orWhere('judul', 'LIKE', "%{$disease}%")
+        return self::where('judul', 'LIKE', "%{$disease}%")
+            ->orWhere('isi', 'LIKE', "%{$disease}%")
             ->take(3)
             ->get();
     }

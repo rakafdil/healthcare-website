@@ -67,8 +67,8 @@ class FetchMediaData extends Command
                 throw new Exception('API Error: ' . $apiResult['error']['message']);
             }
             
-            $this->info('✅ Data berhasil diambil dari API');
-            $this->info('📝 Mulai menyimpan artikel ke database...');
+            $this->info('Data berhasil diambil dari API');
+            $this->info('Mulai menyimpan artikel ke database...');
             
             $syncCount = 0;
             $totalArticles = count($apiResult['data']);
@@ -94,7 +94,7 @@ class FetchMediaData extends Command
                     
                 } catch (Exception $articleError) {
                     // Log error dengan detail untuk debugging
-                    $this->warn("⚠️  Gagal menyimpan artikel: " . ($newsData['title'] ?? 'Unknown'));
+                    $this->warn(" Gagal menyimpan artikel: " . ($newsData['title'] ?? 'Unknown'));
                     $this->error("   Error: " . $articleError->getMessage());
                 }
                 
@@ -104,12 +104,12 @@ class FetchMediaData extends Command
             $bar->finish();
             $this->newLine();
             
-            $this->info("✅ Sync berhasil!");
-            $this->info("📊 Total artikel yang ditemukan: {$totalArticles}");
-            $this->info("💾 Total artikel yang disimpan: {$syncCount}");
+            $this->info("Sync berhasil!");
+            $this->info("Total artikel yang ditemukan: {$totalArticles}");
+            $this->info("Total artikel yang disimpan: {$syncCount}");
             
             if (isset($apiResult['pagination'])) {
-                $this->info("📄 Pagination info:");
+                $this->info("Pagination info:");
                 $this->line("   - Limit: " . ($apiResult['pagination']['limit'] ?? 'N/A'));
                 $this->line("   - Offset: " . ($apiResult['pagination']['offset'] ?? 'N/A'));
                 $this->line("   - Count: " . ($apiResult['pagination']['count'] ?? 'N/A'));
@@ -119,8 +119,8 @@ class FetchMediaData extends Command
             return Command::SUCCESS;
             
         } catch (Exception $e) {
-            $this->error('❌ Error: ' . $e->getMessage());
-            $this->error('💡 Pastikan:');
+            $this->error('Error: ' . $e->getMessage());
+            $this->error('Pastikan:');
             $this->error('   - Koneksi internet stabil');
             $this->error('   - API key MediaStack valid');
             $this->error('   - Database dapat diakses');

@@ -110,12 +110,14 @@ def predict():
     # Top 5 predicted classes and their probabilities
     top5_idx = np.argsort(proba[0])[-5:][::-1]
     top5_proba = np.sort(proba[0])[-5:][::-1]
+    top5_diseases_eng = [diseases[i] for i in top5_idx]
     top5_diseases = [diseases_translated[diseases[i]] for i in top5_idx]
     
     # Build response
     response = []
     for i in range(5):
         disease = top5_diseases[i]
+        disease_eng = top5_diseases_eng[i]
         probability = float(top5_proba[i])
         
         # Disease description
@@ -130,7 +132,7 @@ def predict():
         print(disease, probability, disp, precautions)
         # Add to response
         response.append({
-            'disease': disease,
+            'disease': disease_eng,
             'probability': probability,
             'description': disp,
             'precautions': precautions
