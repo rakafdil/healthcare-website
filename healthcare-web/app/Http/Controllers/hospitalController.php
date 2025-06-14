@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Log;
 
 class HospitalController extends Controller
 {
+
+    public function showHospitalForm()
+    {
+        return view('rumah-sakit'); // Menampilkan form pilihan lokasi
+    }
     // Method untuk menampilkan view peta
     public function showMap()
     {
@@ -261,7 +266,7 @@ class HospitalController extends Controller
             $hospital = RumahSakit::where('id_rumah_sakit', $id)->first();
             
             if (!$hospital) {
-                return redirect()->route('peta')->with('error', 'Rumah sakit tidak ditemukan');
+                return redirect()->route('rumah-sakit.peta')->with('error', 'Rumah sakit tidak ditemukan');
             }
             
             return view('detail', [
@@ -274,7 +279,7 @@ class HospitalController extends Controller
                 'error' => $e->getMessage()
             ]);
             
-            return redirect()->route('peta')->with('error', 'Terjadi kesalahan saat memuat detail rumah sakit');
+            return redirect()->route('rumah-sakit.peta')->with('error', 'Terjadi kesalahan saat memuat detail rumah sakit');
         }
     }
 

@@ -163,8 +163,8 @@
             DEFAULT_ZOOM: 13,
             USER_ZOOM: 14,
             API_ENDPOINTS: {
-                NEARBY_HOSPITALS: '/api/nearby-hospitals',
-                HOSPITAL_STATS: '/api/hospital-stats'
+                NEARBY_HOSPITALS: '/api/rumah-sakit/nearby',
+                HOSPITAL_STATS: '/api/rumah-sakit/stats'
             }
         };
 
@@ -959,7 +959,7 @@
             }
 
             static showDetail(hospitalId) {
-                window.location.href = `/hospital/${hospitalId}`;
+                window.location.href = `/rumah-sakit/${hospitalId}`;
             }
 
             static refresh() {

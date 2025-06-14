@@ -15,7 +15,7 @@
             Pilih Lokasi Rumah Sakit
         </h2>
 
-        <form id="locationForm" action="/peta" method="GET" class="space-y-5">
+        <form id="locationForm" action="{{ route('rumah-sakit.peta') }}" method="GET" class="space-y-5">
             <div>
                 <select 
                     class="w-full p-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" 

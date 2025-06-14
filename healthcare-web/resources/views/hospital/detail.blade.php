@@ -86,7 +86,7 @@
                 initializeDateNavigation();
             } else {
                 showError('Hospital ID tidak ditemukan');
-                setTimeout(() => window.location.href = '{{ route('peta') }}', 3000);
+                setTimeout(() => window.location.href = '{{ route("rumah-sakit.peta") }}', 3000);
             }
         });
 
@@ -94,7 +94,7 @@
         async function updateCapacityDisplay() {
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                const response = await fetch(`/api/hospital/capacity/${hospitalId}`, {
+                const response = await fetch(`/api/rumah-sakit/${hospitalId}/capacity` , {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -139,7 +139,7 @@
         async function loadHospitalDoctors(id) {
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                const response = await fetch(`/api/hospital/doctors/${id}`, {
+                const response = await fetch(`/api/rumah-sakit/${id}/doctors`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

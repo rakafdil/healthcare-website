@@ -10,7 +10,7 @@
         <!-- Garis di atas tombol -->
         <div class="w-30 h-0.5 bg-white my-4 rounded-full"></div>
 
-<form action="{{ url('peta') }}" method="GET">
+<form action="{{ route('rumah-sakit.peta') }}" method="GET">
     <input type="hidden" name="provinsi">
     <input type="hidden" name="kabupaten">
     <input type="hidden" name="kota">
