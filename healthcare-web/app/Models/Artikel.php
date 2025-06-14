@@ -10,23 +10,31 @@ class Artikel extends Model
     use HasFactory;
 
     // Tentukan nama tabel jika tidak sesuai dengan konvensi Laravel
-    protected $table = 'tabel_artikel'; 
+    protected $table = 'tabel_artikel';
     protected $guarded = ['id'];
 
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
-    'judul',
-    'penulis',
-    'gambar',
-    'bahasan_penyakit', 
-    'isi',
-    'link',
-    'kategori_penyakit_id'
+        'judul',
+        'penulis',
+        'gambar',
+        'bahasan_penyakit',
+        'isi',
+        'link',
+        'kategori_penyakit_id'
     ];
 
-     public function kategori()
+    public function kategori()
     {
         return $this->belongsTo(KategoriPenyakit::class, 'kategori_penyakit_id');
+    }
+
+    public static function getArticlesByDisease($disease)
+    {
+        return self::where('bahasan_penyakit', 'LIKE', "%{$disease}%")
+            ->orWhere('judul', 'LIKE', "%{$disease}%")
+            ->take(3)
+            ->get();
     }
 
     // Tentukan kolom yang tidak bisa diisi (bisa kosong jika tidak ada)

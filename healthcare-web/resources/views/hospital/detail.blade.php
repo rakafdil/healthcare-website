@@ -23,7 +23,7 @@
         .nav-arrow:hover {
             color: #007bff;
         }
-        
+
         .btn:hover {
             transform: translateY(-2px);
         }
@@ -41,20 +41,26 @@
         <!-- Hospital Info - Menggunakan data dari database -->
         <div class="bg-white rounded-lg p-5 mb-8 shadow-md">
             <div id="hospitalDetails" class="hospital-details">
-                <h3 id="hospitalName" class="text-xl mb-2.5 text-gray-800">{{ $hospital->nama ?? 'Nama tidak tersedia' }}</h3>
-                <p id="hospitalAddress" class="my-2 text-gray-600 text-sm">Alamat: {{ $hospital->alamat ?? 'Alamat tidak tersedia' }}</p>
-                <p id="hospitalCapacity" class="my-2 text-gray-600 text-sm">Kapasitas: <span id="capacityDisplay">{{ $hospital->kapasitas ?? 'Tidak diketahui' }}</span></p>
+                <h3 id="hospitalName" class="text-xl mb-2.5 text-gray-800">
+                    {{ $hospital->nama ?? 'Nama tidak tersedia' }}</h3>
+                <p id="hospitalAddress" class="my-2 text-gray-600 text-sm">Alamat:
+                    {{ $hospital->alamat ?? 'Alamat tidak tersedia' }}</p>
+                <p id="hospitalCapacity" class="my-2 text-gray-600 text-sm">Kapasitas: <span
+                        id="capacityDisplay">{{ $hospital->kapasitas ?? 'Tidak diketahui' }}</span></p>
                 <p id="hospitalRating" class="my-2 text-gray-600 text-sm">Rating: {{ $hospital->rating ?? 0 }}/5</p>
             </div>
         </div>
 
         <h3 class="text-center my-4 text-lg font-bold">Jadwal Praktik Harian</h3>
-        <h4 class="text-center my-2.5 text-base font-bold" id="hospitalNameSchedule">{{ $hospital->nama ?? 'Nama tidak tersedia' }}</h4>
+        <h4 class="text-center my-2.5 text-base font-bold" id="hospitalNameSchedule">
+            {{ $hospital->nama ?? 'Nama tidak tersedia' }}</h4>
 
         <div class="flex justify-center items-center my-5">
-            <div class="text-xl cursor-pointer px-4 select-none nav-arrow transition-colors duration-200 hover:text-blue-600" id="prevDate">&#10094;</div>
+            <div class="text-xl cursor-pointer px-4 select-none nav-arrow transition-colors duration-200 hover:text-blue-600"
+                id="prevDate">&#10094;</div>
             <div class="font-bold mx-5" id="currentDate">-</div>
-            <div class="text-xl cursor-pointer px-4 select-none nav-arrow transition-colors duration-200 hover:text-blue-600" id="nextDate">&#10095;</div>
+            <div class="text-xl cursor-pointer px-4 select-none nav-arrow transition-colors duration-200 hover:text-blue-600"
+                id="nextDate">&#10095;</div>
         </div>
 
         <!-- Doctors List - Menggunakan data dari database -->
@@ -80,7 +86,7 @@
                 initializeDateNavigation();
             } else {
                 showError('Hospital ID tidak ditemukan');
-                setTimeout(() => window.location.href = '{{ route("peta") }}', 3000);
+                setTimeout(() => window.location.href = '{{ route('peta') }}', 3000);
             }
         });
 
@@ -97,15 +103,15 @@
                 });
 
                 const capacityData = await response.json();
-                
+
                 if (capacityData.success) {
                     const current = capacityData.current || 0;
                     const total = capacityData.total || 0;
                     const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
-                    
+
                     let statusClasses = 'bg-red-100 text-red-800';
                     let statusText = 'Penuh';
-                    
+
                     if (percentage >= 70) {
                         statusClasses = 'bg-green-100 text-green-800';
                         statusText = 'Tersedia Banyak';
@@ -117,13 +123,15 @@
                         statusText = 'Tersedia Sedikit';
                     }
 
-                    const capacityHtml = `${current}/${total} <span class="inline-block py-1 px-2 rounded-xl text-xs font-bold ml-2.5 ${statusClasses}">${statusText}</span>`;
+                    const capacityHtml =
+                        `${current}/${total} <span class="inline-block py-1 px-2 rounded-xl text-xs font-bold ml-2.5 ${statusClasses}">${statusText}</span>`;
                     document.getElementById('capacityDisplay').innerHTML = capacityHtml;
                 }
             } catch (error) {
                 console.error('Error loading capacity:', error);
                 // Gunakan data fallback dari server
-                document.getElementById('capacityDisplay').textContent = hospitalData ? hospitalData.kapasitas : 'Tidak diketahui';
+                document.getElementById('capacityDisplay').textContent = hospitalData ? hospitalData.kapasitas :
+                    'Tidak diketahui';
             }
         }
 
@@ -140,7 +148,7 @@
                 });
 
                 const doctorsData = await response.json();
-                
+
                 if (doctorsData.success) {
                     updateDoctorsList(doctorsData.doctors);
                 } else {
@@ -158,7 +166,8 @@
             doctorsList.innerHTML = '';
 
             if (doctors.length === 0) {
-                doctorsList.innerHTML = '<div class="text-center py-5 text-gray-600">Tidak ada dokter yang bertugas hari ini</div>';
+                doctorsList.innerHTML =
+                    '<div class="text-center py-5 text-gray-600">Tidak ada dokter yang bertugas hari ini</div>';
             } else {
                 doctors.forEach(doctor => {
                     const doctorCard = document.createElement('div');
@@ -169,15 +178,15 @@
                         </div>
                         <div class="flex-1">
                             <p class="my-1.5">
-                                <span class="inline-block w-28 font-bold">Nama Dokter :</span> 
+                                <span class="inline-block w-28 font-bold">Nama Dokter :</span>
                                 ${doctor.name || 'Nama tidak tersedia'}
                             </p>
                             <p class="my-1.5">
-                                <span class="inline-block w-28 font-bold">Spesialis :</span> 
+                                <span class="inline-block w-28 font-bold">Spesialis :</span>
                                 ${doctor.specialty || 'Umum'}
                             </p>
                             <p class="my-1.5">
-                                <span class="inline-block w-28 font-bold">Jam Praktek :</span> 
+                                <span class="inline-block w-28 font-bold">Jam Praktek :</span>
                                 ${doctor.schedule || 'Jadwal tidak tersedia'}
                             </p>
                         </div>
@@ -194,7 +203,7 @@
         // Initialize date navigation
         function initializeDateNavigation() {
             updateDateDisplay();
-            
+
             document.getElementById('prevDate').addEventListener('click', () => {
                 currentDate.setDate(currentDate.getDate() - 1);
                 updateDateDisplay();
@@ -212,11 +221,11 @@
         function updateDateDisplay() {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
-            
+
             const dayName = days[currentDate.getDay()];
             const date = currentDate.getDate();
             const month = months[currentDate.getMonth()];
-            
+
             document.getElementById('currentDate').textContent = `${dayName}, ${date} ${month}`;
         }
 

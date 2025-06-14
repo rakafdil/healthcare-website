@@ -27,7 +27,9 @@
                     <div class="flex gap-8">
                         <a href="#"
                             class="px-4 py-2 border-b-2 border-blue-500 text-blue-500 transition-colors duration-200 tab-link"
-                            id="blogTab" data-tab="blog" onclick="switchTab('blog'); return false;">Blog</a>
+                            id="blogTab" data-tab="blog" onclick="switchTab('blog'); return false;">
+                            Artikel Terkait
+                        </a>
                         <a href="#"
                             class="px-4 py-2 border-b-2 border-transparent text-gray-500 transition-colors duration-200 tab-link"
                             id="rumahSakitTab" data-tab="hospital" onclick="switchTab('hospital'); return false;">Rumah
@@ -94,48 +96,6 @@
         const diagnosisResults = @json($datas);
         console.log('Diagnosis Results:', diagnosisResults);
 
-        // Sample blog data for each condition
-        const kondisiData = {
-            0: {
-                articles: [{
-                        title: "5 Langkah Mudah Mengatasi Flu",
-                        excerpt: "Panduan lengkap untuk mengatasi gejala flu dengan cepat dan efektif.",
-                        image: "https://via.placeholder.com/300x200"
-                    },
-                    {
-                        title: "Pencegahan Flu yang Efektif",
-                        excerpt: "Tips mencegah penularan flu di lingkungan kerja dan rumah.",
-                        image: "https://via.placeholder.com/300x200"
-                    }
-                ]
-            },
-            1: {
-                articles: [{
-                        title: "Cara Menurunkan Demam Secara Alami",
-                        excerpt: "Metode alami untuk menurunkan demam tanpa obat-obatan kimia.",
-                        image: "https://via.placeholder.com/300x200"
-                    },
-                    {
-                        title: "Kapan Harus ke Dokter Saat Demam",
-                        excerpt: "Tanda-tanda demam yang memerlukan penanganan medis segera.",
-                        image: "https://via.placeholder.com/300x200"
-                    }
-                ]
-            },
-            2: {
-                articles: [{
-                        title: "Mengenal Berbagai Jenis Alergi",
-                        excerpt: "Panduan lengkap tentang alergi makanan, udara, dan kulit.",
-                        image: "https://via.placeholder.com/300x200"
-                    },
-                    {
-                        title: "Tips Hidup dengan Alergi",
-                        excerpt: "Cara mengelola kehidupan sehari-hari dengan kondisi alergi.",
-                        image: "https://via.placeholder.com/300x200"
-                    }
-                ]
-            }
-        };
 
         // Function to get user location
         function getUserLocation() {
@@ -471,34 +431,51 @@
         // Function to update content based on current tab and selected condition
         function updateContent() {
             if (currentTab === 'blog') {
-                // Populate blog content
                 const blogContent = document.getElementById('blogContent');
-                const kondisi = kondisiData[currentKondisi];
+                const currentResult = diagnosisResults[currentKondisi];
 
-                if (kondisi && kondisi.articles) {
+                if (currentResult && currentResult.articles && currentResult.articles.length > 0) {
                     blogContent.innerHTML = '';
 
-                    kondisi.articles.forEach(article => {
+                    currentResult.articles.forEach(article => {
                         const articleCard = document.createElement('div');
                         articleCard.className =
                             'border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300';
                         articleCard.innerHTML = `
-                            <div class="flex flex-col md:flex-row">
-                                <div class="w-full md:w-1/3 h-48">
-                                    <img src="${article.image}" alt="Article image" class="w-full h-full object-cover">
-                                </div>
-                                <div class="w-full md:w-2/3 p-4">
-                                    <h3 class="font-semibold mb-2">${article.title}</h3>
-                                    <p class="text-sm text-gray-600 mb-4">${article.excerpt}</p>
-                                    <a href="#" class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">Baca Artikel</a>
-                                </div>
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/3 h-48">
+                                <img src="${article.gambar || 'https://via.placeholder.com/300x200'}"
+                                     alt="Article image"
+                                     class="w-full h-full object-cover">
                             </div>
-                        `;
+                            <div class="w-full md:w-2/3 p-4">
+                                <h3 class="font-semibold mb-2">${article.judul}</h3>
+                                <p class="text-sm text-gray-600 mb-4">${article.isi.substring(0, 200)}...</p>
+                                <a href="${article.link}"
+                                   target="_blank"
+                                   class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
+                                    Baca Artikel
+                                </a>
+                            </div>
+                        </div>
+                    `;
                         blogContent.appendChild(articleCard);
                     });
+                } else {
+                    blogContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-gray-400 mb-4">
+                            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada artikel terkait</h3>
+                        <p class="text-gray-500">Artikel untuk kondisi ini belum tersedia</p>
+                    </div>
+                `;
                 }
             }
-            // Hospital content is handled separately in loadHospitalData()
         }
 
         // Initialize when page loads
