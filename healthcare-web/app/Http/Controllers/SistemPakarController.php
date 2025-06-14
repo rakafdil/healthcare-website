@@ -67,7 +67,6 @@ class SistemPakarController extends Controller
             $articles = Artikel::getArticlesByDisease($result->disease);
             $result->articles = $articles;
         }
-
         session(['diagnosis.result' => $resultObject]);
         return redirect()->route('sistem-pakar.process', ['step' => 3]);
 
@@ -173,7 +172,7 @@ class SistemPakarController extends Controller
         }
 
         // Simpan session diagnosis
-        if ($diagnosis['session'] !== null) {
+        if (session()->has('diagnosis.session')) {
             $session = DiagnosisSession::where('id_session', $diagnosis['session'])
                 ->with(['gejalas', 'results'])
                 ->firstOrFail();
@@ -222,7 +221,7 @@ class SistemPakarController extends Controller
         // Hapus session diagnosis
         session()->forget(['diagnosis.gejala', 'diagnosis.umur', 'diagnosis.gender', 'diagnosis.result']);
 
-        if ($diagnosis['session']) {
+        if (session()->has('diagnosis.session')) {
             session()->forget('diagnosis.session');
             return redirect()->route('sistem-pakar.history', ['history_id' => $session->id_session]);
         } else {
