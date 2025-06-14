@@ -113,7 +113,7 @@
                         <div class="hidden md:flex gap-x-8">
                             <x-nav-link href="/sistem-pakar" :active="request()->is('sistem-pakar') || request()->is('sistem-pakar/*')"> Sistem Pakar </x-nav-link>
                             <x-nav-link href="/rumah-sakit" :active="request()->is('rumah-sakit') || request()->is('rumah-sakit/*')"> Rumah Sakit </x-nav-link>
-                            <x-nav-link href="/artikel" :active="request()->is('artikel') || request()->is('artikel/*')"> Blog </x-nav-link>
+                            <x-nav-link href="/artikel" :active="request()->is('artikel') || request()->is('artikel/*')"> Artikel </x-nav-link>
                             @auth
                                 <form method="POST" action="{{ route('logout') }}" class="inline">
                                     @csrf
