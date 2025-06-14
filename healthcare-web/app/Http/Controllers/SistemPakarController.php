@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use \App\Models\DiagnosisSession;
 use Carbon\Carbon;
 use \App\Models\DiagnosisResult;
+use \App\Models\Artikel;
 
 class SistemPakarController extends Controller
 {
@@ -62,12 +63,13 @@ class SistemPakarController extends Controller
         //     }
         // }
 
-        // Kirim ke view
+        foreach ($resultObject as &$result) {
+            $articles = Artikel::getArticlesByDisease($result->disease);
+            $result->articles = $articles;
+        }
+
         session(['diagnosis.result' => $resultObject]);
-        return view('sistem-pakar.process', [
-            'step' => 3,
-            'result' => $resultObject,
-        ]);
+        return redirect()->route('sistem-pakar.process', ['step' => 3]);
 
     }
 
