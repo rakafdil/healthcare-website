@@ -23,8 +23,6 @@ class SistemPakarController extends Controller
         $symptoms = array_map(function ($symptom) {
             return $this->getEngName($symptom);
         }, $symptoms);
-        // dd($symptoms);
-        // Remove null values from the array
         $symptoms = array_filter($symptoms, function ($value) {
             return !is_null($value);
         });
@@ -43,7 +41,7 @@ class SistemPakarController extends Controller
         ]);
         // Ambil response JSON
         $result = json_decode($response->getBody()->getContents(), true);
-        // dd($result);
+
         // Bersihkan precaution yang null atau NaN
         foreach ($result as $disease) {
             if (isset($disease['precautions']) && is_array($disease['precautions'])) {
@@ -53,15 +51,7 @@ class SistemPakarController extends Controller
             }
         }
 
-        // Convert ke object (biar bisa pake -> di Blade, opsional sih)
         $resultObject = json_decode(json_encode($result));
-        // foreach ($resultObject as $key => $result) {
-
-        //     dd($key);
-        //     if (isset($result->probability) && $result->probability <= 0) {
-        //         unset($resultObject[$key]);
-        //     }
-        // }
 
         foreach ($resultObject as &$result) {
             $articles = Artikel::getArticlesByDisease($result->disease);
@@ -101,14 +91,6 @@ class SistemPakarController extends Controller
             return view('sistem-pakar.index', compact('sessions'));
         }
     }
-
-    // public function start()
-    // {
-    //     $user = auth()->user();
-    //     $history = History::where('user_id', $user->id)->get();
-
-    //     return view('sistem-pakar.index', compact('history'));
-    // }
 
     public function history(Request $request)
     {
