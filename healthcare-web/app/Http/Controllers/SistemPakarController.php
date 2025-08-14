@@ -57,6 +57,8 @@ class SistemPakarController extends Controller
             $articles = Artikel::getArticlesByDisease($result->disease);
             $result->articles = $articles;
         }
+
+        dd($resultObject);
         session(['diagnosis.result' => $resultObject]);
         return redirect()->route('sistem-pakar.process', ['step' => 3]);
 
