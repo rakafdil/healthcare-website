@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgentController;
 use App\Models\User;
 use App\Models\History;
 use App\Models\SistemPakar;
@@ -16,6 +17,10 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Auth;
+
+
+Route::get('/agent/validation', [AgentController::class, 'validateData']);
+Route::get('/agent/predict', [AgentController::class, 'predictDisease']);
 
 Route::get('/', function () {
     return view('home'); // Pastikan nama view-nya benar
@@ -119,15 +124,15 @@ Route::get('/rumah-sakit', [HospitalController::class, 'showHospitalForm'])->nam
 
 // Group routes untuk rumah sakit
 Route::prefix('rumah-sakit')->name('rumah-sakit.')->group(function () {
-    
+
     // Route untuk menampilkan peta
     Route::get('/peta', [HospitalController::class, 'showMap'])->name('peta');
-    
+
     // Route untuk detail rumah sakit
     Route::get('/{id}', [HospitalController::class, 'showHospitalDetail'])
         ->where('id', '[0-9]+')
         ->name('detail');
-    
+
     // Route alternatif untuk detail (jika masih dibutuhkan)
     Route::get('/detail/{id?}', [HospitalController::class, 'showHospitalDetail'])
         ->where('id', '[0-9]+')
@@ -136,7 +141,7 @@ Route::prefix('rumah-sakit')->name('rumah-sakit.')->group(function () {
 
 // API Routes - tetap menggunakan prefix api
 Route::prefix('api')->name('api.')->group(function () {
-    
+
     // API untuk rumah sakit
     Route::prefix('rumah-sakit')->name('rumah-sakit.')->group(function () {
         Route::get('/nearby', [HospitalController::class, 'getNearbyHospitals'])->name('nearby');
@@ -160,7 +165,7 @@ Route::prefix('api')->name('api.')->group(function () {
             ->where('hospitalId', '[0-9]+')
             ->name('debug');
     });
-    
+
     // Backward compatibility - alias untuk route lama
     Route::prefix('hospital')->group(function () {
         Route::get('/capacity/{id}', [HospitalController::class, 'getHospitalCapacity'])
@@ -176,7 +181,7 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::get('/debug/{hospitalId?}', [HospitalController::class, 'debugDoctors'])
             ->where('hospitalId', '[0-9]+');
     });
-    
+
     // Route lama untuk kompatibilitas
     Route::get('/nearby-hospitals', [HospitalController::class, 'getNearbyHospitals']);
     Route::get('/hospitals/nearby', [HospitalController::class, 'getNearbyHospitals']);
